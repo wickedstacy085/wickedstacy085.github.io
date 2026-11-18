@@ -1,9 +1,21 @@
 /*-- scss:defaults --*/
-$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+$font-family-sans-serif: "Source Sans 3", "Source Sans Pro", system-ui, -apple-system, "Segoe UI", sans-serif;
 $headings-font-weight: 600;
+$link-decoration: none;
 
 /*-- scss:rules --*/
-.case-meta { font-size: .95rem; opacity: .85; margin-bottom: 1.5rem; }
-.result-box { border-left: 4px solid $primary; padding: .75rem 1rem; margin: 1.25rem 0;
-              background: rgba($primary, .06); border-radius: 4px; }
-.quarto-listing .listing-title { font-weight: 600; }
+// Узкая колонка текста, как на академических сайтах: 65–75 знаков в строке.
+main.content { max-width: 760px; }
+p, li { line-height: 1.6; }
+h2 { margin-top: 2rem; font-size: 1.35rem; }
+h3 { font-size: 1.1rem; }
+
+.case-meta { font-size: .9rem; color: $text-muted; margin-bottom: 1.5rem; }
+
+// Аннотация: только тонкая линия слева, без заливки.
+.result-box { border-left: 3px solid $border-color; padding: .25rem 0 .25rem 1rem; margin: 1.5rem 0; }
+
+// Таблицы без зебры, с тонкими линиями.
+table { font-size: .92rem; font-variant-numeric: tabular-nums; }
+
+.btn-sm { margin: 0 .25rem .5rem 0; }
