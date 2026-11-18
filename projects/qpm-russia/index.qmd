@@ -14,7 +14,7 @@ execute:
 ---
 
 ::: {.case-meta}
-Пет-проект, 2026 ·
+Проект, 2026 ·
 [Код](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia) ·
 [Данные](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia/data) ·
 [README](https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/README.md)
