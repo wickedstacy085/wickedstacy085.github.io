@@ -2,9 +2,11 @@
   {
     "listing": "/projects.html",
     "items": [
+      "/projects/thesis-bankruptcy/index.html",
       "/projects/qpm-russia/index.html",
       "/projects/housing-vecm/index.html",
       "/projects/financial-econometrics/index.html",
+      "/projects/consumer-survey/index.html",
       "/projects/ou-process/index.html"
     ]
   }
