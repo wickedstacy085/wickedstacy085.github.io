@@ -2,11 +2,11 @@
 title: "Проекты"
 listing:
   contents: projects/*/index.qmd
-  type: grid
+  type: default
   sort: "order"
-  fields: [title, description, categories, date]
-  categories: true
-  grid-columns: 2
-page-layout: full
+  fields: [title, date, description, categories]
+  date-format: "YYYY"
+  categories: false
+  image-placeholder: ""
 title-block-banner: false
 ---

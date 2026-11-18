@@ -10,8 +10,8 @@ website:
   description: "Эконометрика временных рядов и макропрогнозирование"
   site-url: "https://wickedstacy085.github.io"
   repo-url: "https://github.com/wickedstacy085/wickedstacy085.github.io"
-  repo-actions: [source]
   page-navigation: true
+  open-graph: true
   navbar:
     left:
       - href: index.qmd
@@ -28,8 +28,8 @@ website:
         href: "mailto:anastasiasmirnova085@gmail.com"
         aria-label: Email
   page-footer:
-    left: "© 2026 Анастасия Смирнова"
-    right: "Собрано на [Quarto](https://quarto.org)"
+    left: "Анастасия Смирнова, 2026 · текст CC BY 4.0, код MIT"
+    right: "[Исходный код сайта](https://github.com/wickedstacy085/wickedstacy085.github.io)"
 
 format:
   html:
@@ -38,7 +38,7 @@ format:
       dark: [darkly, assets/custom.scss]
     toc: true
     code-fold: true
-    code-tools: true
+    code-tools: false
     code-copy: true
     fig-width: 8
     fig-height: 4.5
