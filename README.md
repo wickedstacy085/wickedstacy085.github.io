@@ -5,9 +5,11 @@
 
 | Проект | Методы | Язык | README |
 |---|---|---|---|
+| [ВКР: региональные факторы банкротств](projects/thesis-bankruptcy/) | панельные данные: Pool, FE, RE, Driscoll–Kraay, GMM | Stata | — |
 | [Малая QPM-модель России](projects/qpm-russia/) | IS, кривая Филлипса, правило ставки, UIP; рациональные ожидания | Python | [README](projects/qpm-russia/README.md) |
 | [Цены на жильё в Германии](projects/housing-vecm/) | ARIMA, VAR, VECM, тест Йохансена, скользящая проверка прогнозов | R | [README](projects/housing-vecm/README.md) |
 | [Финансовая эконометрика](projects/financial-econometrics/) | МНК, MLE, модель Фамы–Френча | Python | — |
+| [Опросы покупателей](projects/consumer-survey/) | разведочный анализ | Python | — |
 | [Процесс Орнштейна–Уленбека](projects/ou-process/) | симуляция стохастического процесса | Python | — |
 
 ## Структура
