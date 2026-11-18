@@ -4,21 +4,21 @@
     "href": "index.html",
     "title": "Анастасия Смирнова",
     "section": "",
-    "text": "Экономист (НИУ ВШЭ, 2025). Строю и проверяю модели временных рядов, от ARIMA и VAR до VECM и полуструктурных QPM, и превращаю результаты в короткие выводы для принятия решений."
+    "text": "GitHub Резюме, PDF anastasiasmirnova085@gmail.com\nЭкономист, НИУ ВШЭ (2025). Строю модели временных рядов для макроданных на R и Python. Код и данные всех проектов лежат на GitHub, страницы собираются из них автоматически."
   },
   {
-    "objectID": "index.html#избранные-проекты",
-    "href": "index.html#избранные-проекты",
+    "objectID": "index.html#проекты",
+    "href": "index.html#проекты",
     "title": "Анастасия Смирнова",
-    "section": "Избранные проекты",
-    "text": "Избранные проекты\n\nЦены на жильё в Германии: коинтеграция и прогноз: ARIMA → VAR → VECM на 12 макрорядах за 2005–2023; долгосрочная связь цен с безработицей.\nФинансовая эконометрика: МНК с проверкой гипотез, MLE, альфа Berkshire Hathaway в CAPM и Fama–French.\nПроцесс Орнштейна–Уленбека: возврат к среднему и период полураспада шока.\n\nВсе проекты →"
+    "section": "Проекты",
+    "text": "Проекты\nЦены на жильё в Германии: коинтеграция и прогноз\nARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы. Модель со ставкой по ипотеке прогнозирует лучше остальных, но на 2021–2023 годах уступает наивному прогнозу.\nФинансовая эконометрика\nРегрессия доходности акций, MLE для гамма-распределения, модель Фамы–Френча для Berkshire Hathaway — с разбором ошибки в исходном расчёте.\nПроцесс Орнштейна–Уленбека\nСимуляция возврата к среднему с точной дискретизацией."
   },
   {
     "objectID": "index.html#инструменты",
     "href": "index.html#инструменты",
     "title": "Анастасия Смирнова",
     "section": "Инструменты",
-    "text": "Инструменты\nR (vars, urca, forecast) · Python (statsmodels, scipy, pandas) · Quarto · Git · Excel / PowerPoint"
+    "text": "Инструменты\nR (vars, urca, forecast), Python (statsmodels, scipy, pandas), Quarto, Git, Excel, PowerPoint."
   },
   {
     "objectID": "cv.html",
@@ -32,14 +32,14 @@
     "href": "projects/ou-process/index.html",
     "title": "Процесс Орнштейна–Уленбека: возврат к среднему",
     "section": "",
-    "text": "Главное. Скорость возврата κ определяет период полураспада шока ln2/κ. Это та же величина, которую считают по α в VECM и по IRF в VAR."
+    "text": "Учебное задание School of Quants (2023), переписанное: в исходной версии каждый шаг считался от начальной точки, а не от предыдущей, и шумовой член не соответствовал точной дискретизации."
   },
   {
     "objectID": "projects/ou-process/index.html#модель",
     "href": "projects/ou-process/index.html#модель",
     "title": "Процесс Орнштейна–Уленбека: возврат к среднему",
     "section": "Модель",
-    "text": "Модель\n\\(dX_t = \\kappa(\\theta - X_t)\\,dt + \\sigma\\,dW_t\\): модель Васичека для ставок и спредов."
+    "text": "Модель\n\\(dX_t = \\kappa(\\theta - X_t)\\,dt + \\sigma\\,dW_t\\). Та же динамика лежит в модели ставок Васичека. Шок затухает экспоненциально, половина его исчезает за ln2/κ."
   },
   {
     "objectID": "projects/ou-process/index.html#точная-дискретизация",
@@ -53,14 +53,14 @@
     "href": "projects/ou-process/index.html#проверка",
     "title": "Процесс Орнштейна–Уленбека: возврат к среднему",
     "section": "Проверка",
-    "text": "Проверка\nНа 10 000 траекториях эмпирические среднее и дисперсия сходятся к θ и σ²/2κ.\n\n\nКод\nt, x = simulate_ou(0, 0.5, 2, 0.2, T=10, n=2000, paths=10_000)\nprint(f\"mean {x[:, -1].mean():.4f} vs θ=0.5;  var {x[:, -1].var():.5f} vs σ²/2κ={0.2**2/4:.5f}\")\n\n\nmean 0.5003 vs θ=0.5;  var 0.01015 vs σ²/2κ=0.01000"
+    "text": "Проверка\nНа 10 000 траекториях выборочные среднее и дисперсия должны совпасть с теоретическими θ и σ²/2κ.\n\n\nКод\nt, x = simulate_ou(0, 0.5, 2, 0.2, T=10, n=2000, paths=10_000)\nprint(f\"mean {x[:, -1].mean():.4f} vs θ=0.5;  var {x[:, -1].var():.5f} vs σ²/2κ={0.2**2/4:.5f}\")\n\n\nmean 0.5003 vs θ=0.5;  var 0.01015 vs σ²/2κ=0.01000"
   },
   {
     "objectID": "projects/housing-vecm/index.html",
     "href": "projects/housing-vecm/index.html",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "",
-    "text": "ВКР, НИУ ВШЭ «Эконометрическое прогнозирование цен на недвижимость в Германии» · 2025 · R · код на GitHub"
+    "text": "ВКР, НИУ ВШЭ, 2025: «Эконометрическое прогнозирование цен на недвижимость в Германии». Воспроизведение на открытых данных, 2026 · Код · Данные · README"
   },
   {
     "objectID": "projects/housing-vecm/index.html#вопрос",
@@ -81,7 +81,7 @@
     "href": "projects/housing-vecm/index.html#шаг-1.-свойства-рядов",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Шаг 1. Свойства рядов",
-    "text": "Шаг 1. Свойства рядов\nADF и KPSS проверяют противоположные нулевые гипотезы, поэтому о порядке интеграции судим по согласию тестов.\n\n\nКод\nknitr::kable(unit_root_table(y_all), digits = 2)\n\n\n\n\nТаблица 1: Тесты единичного корня (TRUE = стационарен на 5%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvariable\nadf_level\nadf_level_I0\nkpss_level\nkpss_level_I0\nadf_diff\nadf_diff_I0\nkpss_diff\nkpss_diff_I0\n\n\n\n\nIndex\n-0.23\nFALSE\n1.70\nFALSE\n-3.12\nTRUE\n0.25\nTRUE\n\n\nUnemployment\n-2.86\nFALSE\n1.68\nFALSE\n-3.77\nTRUE\n0.79\nFALSE\n\n\nMRate\n-1.70\nFALSE\n1.34\nFALSE\n-4.54\nTRUE\n0.39\nTRUE\n\n\nGDP\n-1.16\nFALSE\n1.80\nFALSE\n-6.90\nTRUE\n0.05\nTRUE\n\n\nHICP\n2.12\nFALSE\n1.70\nFALSE\n-4.53\nTRUE\n0.56\nFALSE\n\n\nConstruction\n1.66\nFALSE\n1.63\nFALSE\n-3.56\nTRUE\n0.46\nTRUE"
+    "text": "Шаг 1. Свойства рядов\nУ ADF нулевая гипотеза — единичный корень, у KPSS — стационарность. Ряд считаем I(1), если оба теста это показывают.\n\n\nКод\nknitr::kable(unit_root_table(y_all), digits = 2)\n\n\n\n\nТаблица 1: Тесты единичного корня (TRUE = стационарен на 5%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvariable\nadf_level\nadf_level_I0\nkpss_level\nkpss_level_I0\nadf_diff\nadf_diff_I0\nkpss_diff\nkpss_diff_I0\n\n\n\n\nIndex\n-0.23\nFALSE\n1.70\nFALSE\n-3.12\nTRUE\n0.25\nTRUE\n\n\nUnemployment\n-2.86\nFALSE\n1.68\nFALSE\n-3.77\nTRUE\n0.79\nFALSE\n\n\nMRate\n-1.70\nFALSE\n1.34\nFALSE\n-4.54\nTRUE\n0.39\nTRUE\n\n\nGDP\n-1.16\nFALSE\n1.80\nFALSE\n-6.90\nTRUE\n0.05\nTRUE\n\n\nHICP\n2.12\nFALSE\n1.70\nFALSE\n-4.53\nTRUE\n0.56\nFALSE\n\n\nConstruction\n1.66\nFALSE\n1.63\nFALSE\n-3.56\nTRUE\n0.46\nTRUE"
   },
   {
     "objectID": "projects/housing-vecm/index.html#шаг-2.-var-и-импульсные-отклики",
@@ -95,21 +95,21 @@
     "href": "projects/housing-vecm/index.html#шаг-3.-коинтеграция-и-vecm",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Шаг 3. Коинтеграция и VECM",
-    "text": "Шаг 3. Коинтеграция и VECM\n\n\nКод\nknitr::kable(data.frame(`Гипотеза` = c(\"r = 0\", \"r ≤ 1\"), Trace = tr, `Крит. 5%` = cv,\n                        `Отвергается` = tr &gt; cv, check.names = FALSE, row.names = NULL), digits = 2)\n\n\n\n\nТаблица 2: Тест Йохансена (trace), цены на жильё и безработица\n\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nОтвергается\n\n\n\n\nr = 0\n17.42\n19.96\nFALSE\n\n\nr ≤ 1\n6.50\n9.24\nFALSE\n\n\n\n\n\n\n\n\nНормированный коинтеграционный вектор: Index + 43,50·Unemployment − 269,73. Коэффициент корректировки цен α = 0,001. Цены не корректируются к равновесию напрямую (α ≥ 0): подстройка идёт через рынок труда.\nДля сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24; вектор Index + 119,03·Unemployment − 911,12.\n\nДобавляем ставку по ипотеке\nПара «цены — безработица» не учитывает стоимость кредита. Именно рост ставок ЕЦБ в 2022 году развернул рынок жилья Германии. Ставка по ипотеке добавлена по экономической логике до проверки качества прогноза, и ниже показаны обе спецификации.\n\n\nКод\nknitr::kable(data.frame(`Гипотеза` = c(\"r = 0\", \"r ≤ 1\", \"r ≤ 2\"), Trace = tr3, `Крит. 5%` = cv3,\n                        `Отвергается` = tr3 &gt; cv3, check.names = FALSE, row.names = NULL), digits = 2)\n\n\n\n\nТаблица 3: Тест Йохансена (trace): цены, безработица, ставка по ипотеке\n\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nОтвергается\n\n\n\n\nr = 0\n51.78\n34.91\nTRUE\n\n\nr ≤ 1\n22.93\n19.96\nTRUE\n\n\nr ≤ 2\n7.24\n9.24\nFALSE"
+    "text": "Шаг 3. Коинтеграция и VECM\n\n\nКод\nknitr::kable(data.frame(`Гипотеза` = c(\"r = 0\", \"r ≤ 1\"), Trace = tr, `Крит. 5%` = cv,\n                        `Отвергается` = tr &gt; cv, check.names = FALSE, row.names = NULL), digits = 2)\n\n\n\n\nТаблица 2: Тест Йохансена (trace), цены на жильё и безработица\n\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nОтвергается\n\n\n\n\nr = 0\n17.42\n19.96\nFALSE\n\n\nr ≤ 1\n6.50\n9.24\nFALSE\n\n\n\n\n\n\n\n\nНормированный коинтеграционный вектор: Index + 43,50·Unemployment − 269,73. Коэффициент корректировки цен α = 0,001. Коэффициент неотрицательный, то есть цены к равновесию не возвращаются.\nДля сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24; вектор Index + 119,03·Unemployment − 911,12.\n\nДобавляем ставку по ипотеке\nПара «цены — безработица» не учитывает стоимость кредита. Цены на жильё в Германии начали падать в 2022 году, когда ЕЦБ поднял ставки. Ставку по ипотеке я добавила до того, как смотрела на качество прогноза; ниже показаны обе спецификации.\n\n\nКод\nknitr::kable(data.frame(`Гипотеза` = c(\"r = 0\", \"r ≤ 1\", \"r ≤ 2\"), Trace = tr3, `Крит. 5%` = cv3,\n                        `Отвергается` = tr3 &gt; cv3, check.names = FALSE, row.names = NULL), digits = 2)\n\n\n\n\nТаблица 3: Тест Йохансена (trace): цены, безработица, ставка по ипотеке\n\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nОтвергается\n\n\n\n\nr = 0\n51.78\n34.91\nTRUE\n\n\nr ≤ 1\n22.93\n19.96\nTRUE\n\n\nr ≤ 2\n7.24\n9.24\nFALSE"
   },
   {
     "objectID": "projects/housing-vecm/index.html#шаг-4.-качество-прогноза",
     "href": "projects/housing-vecm/index.html#шаг-4.-качество-прогноза",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Шаг 4. Качество прогноза",
-    "text": "Шаг 4. Качество прогноза\n\nОдна отложенная выборка\nМодели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.\n\n\nКод\nknitr::kable(res, digits = 2)\n\n\n\n\nТаблица 4: Точность прогноза индекса цен, горизонт 8 кварталов\n\n\n\n\n\n\nmodel\nMAE\nRMSE\nRMSE_vs_RW\n\n\n\n\nRandom walk\n5.98\n6.58\n1.00\n\n\nARIMA\n23.52\n30.68\n4.66\n\n\nVECM: цены + безработица\n19.67\n26.24\n3.99\n\n\nVECM: + ставка по ипотеке\n19.43\n25.96\n3.94\n\n\n\n\n\n\n\n\n\n\nКод\np &lt;- attr(res, \"paths\")\ncols &lt;- c(\"black\", \"grey60\", \"steelblue\", \"darkorange\", \"firebrick\")\nmatplot(p$time, p[, -1], type = \"l\", lty = 1, lwd = 2, col = cols, xlab = \"\", ylab = \"Индекс, 2015 = 100\")\nlegend(\"topleft\", c(\"Факт\", names(p)[-(1:2)]), lwd = 2, bty = \"n\", col = cols, cex = .85)\n\n\n\n\n\n\n\n\nРисунок 3: Факт и прогнозы на отложенной выборке\n\n\n\n\n\n\n\nСкользящая проверка\nОдна выборка может случайно оказаться удобной или неудобной для модели. Поэтому модели переоцениваются каждый квартал с IV кв. 2015 (расширяющееся окно) и делают прогноз на 1–4 квартала вперёд.\n\n\nКод\ntab &lt;- Reduce(function(a, b) merge(a, b, by = \"model\"),\n              list(setNames(r_all[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"Все\")),\n                   setNames(r_pre[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"До 2021\")),\n                   setNames(r_post[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"2021–2023\"))))\nnames(tab)[1] &lt;- \"Модель (RMSE / RMSE наивного)\"\nknitr::kable(tab[order(tab[[2]]), ], digits = 2, row.names = FALSE)\n\n\n\n\nТаблица 5: RMSE прогноза на 4 квартала: все точки, до 2021 года и на развороте 2021–2023\n\n\n\n\n\n\nМодель (RMSE / RMSE наивного)\nВсе\nДо 2021\n2021–2023\n\n\n\n\nVECM: + ставка по ипотеке\n0.95\n0.36\n1.48\n\n\nRandom walk\n1.00\n1.00\n1.00\n\n\nARIMA\n1.06\n0.38\n1.65\n\n\nVECM: цены + безработица\n1.07\n0.37\n1.67\n\n\n\n\n\n\n\n\n\n\nКод\nhz &lt;- aggregate(error ~ model + horizon, roll, function(x) sqrt(mean(x^2, na.rm = TRUE)))\nms &lt;- unique(hz$model); cols &lt;- c(\"grey60\", \"steelblue\", \"darkorange\", \"firebrick\")\nplot(NA, xlim = c(1, 4), ylim = range(hz$error), xlab = \"Горизонт, кварталов\", ylab = \"RMSE\", xaxt = \"n\")\naxis(1, 1:4)\nfor (i in seq_along(ms)) with(hz[hz$model == ms[i], ], lines(horizon, error, lwd = 2, col = cols[i], type = \"b\", pch = 19))\nlegend(\"topleft\", ms, col = cols, lwd = 2, bty = \"n\", cex = .85)\n\n\n\n\n\n\n\n\nРисунок 4: RMSE по горизонту прогноза, все точки"
+    "text": "Шаг 4. Качество прогноза\n\nОдна отложенная выборка\nМодели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.\n\n\nКод\nknitr::kable(res, digits = 2)\n\n\n\n\nТаблица 4: Точность прогноза индекса цен, горизонт 8 кварталов\n\n\n\n\n\n\nmodel\nMAE\nRMSE\nRMSE_vs_RW\n\n\n\n\nRandom walk\n5.98\n6.58\n1.00\n\n\nARIMA\n23.52\n30.68\n4.66\n\n\nVECM: цены + безработица\n19.67\n26.24\n3.99\n\n\nVECM: + ставка по ипотеке\n19.43\n25.96\n3.94\n\n\n\n\n\n\n\n\n\n\nКод\np &lt;- attr(res, \"paths\")\ncols &lt;- c(\"black\", \"grey60\", \"steelblue\", \"darkorange\", \"firebrick\")\nmatplot(p$time, p[, -1], type = \"l\", lty = 1, lwd = 2, col = cols, xlab = \"\", ylab = \"Индекс, 2015 = 100\")\nlegend(\"topleft\", c(\"Факт\", names(p)[-(1:2)]), lwd = 2, bty = \"n\", col = cols, cex = .85)\n\n\n\n\n\n\n\n\nРисунок 3: Факт и прогнозы на отложенной выборке\n\n\n\n\n\n\n\nСкользящая проверка\nРезультат на одной выборке зависит от того, какой период в неё попал. Поэтому модели переоцениваются каждый квартал с IV кв. 2015 (расширяющееся окно) и делают прогноз на 1–4 квартала вперёд.\n\n\nКод\ntab &lt;- Reduce(function(a, b) merge(a, b, by = \"model\"),\n              list(setNames(r_all[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"Все\")),\n                   setNames(r_pre[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"До 2021\")),\n                   setNames(r_post[, c(\"model\", \"RMSE_vs_RW\")], c(\"model\", \"2021–2023\"))))\nnames(tab)[1] &lt;- \"Модель (RMSE / RMSE наивного)\"\nknitr::kable(tab[order(tab[[2]]), ], digits = 2, row.names = FALSE)\n\n\n\n\nТаблица 5: RMSE прогноза на 4 квартала: все точки, до 2021 года и на развороте 2021–2023\n\n\n\n\n\n\nМодель (RMSE / RMSE наивного)\nВсе\nДо 2021\n2021–2023\n\n\n\n\nVECM: + ставка по ипотеке\n0.95\n0.36\n1.48\n\n\nRandom walk\n1.00\n1.00\n1.00\n\n\nARIMA\n1.06\n0.38\n1.65\n\n\nVECM: цены + безработица\n1.07\n0.37\n1.67\n\n\n\n\n\n\n\n\n\n\nКод\nhz &lt;- aggregate(error ~ model + horizon, roll, function(x) sqrt(mean(x^2, na.rm = TRUE)))\nms &lt;- unique(hz$model); cols &lt;- c(\"grey60\", \"steelblue\", \"darkorange\", \"firebrick\")\nplot(NA, xlim = c(1, 4), ylim = range(hz$error), xlab = \"Горизонт, кварталов\", ylab = \"RMSE\", xaxt = \"n\")\naxis(1, 1:4)\nfor (i in seq_along(ms)) with(hz[hz$model == ms[i], ], lines(horizon, error, lwd = 2, col = cols[i], type = \"b\", pch = 19))\nlegend(\"topleft\", ms, col = cols, lwd = 2, bty = \"n\", cex = .85)\n\n\n\n\n\n\n\n\nРисунок 4: RMSE по горизонту прогноза, все точки"
   },
   {
     "objectID": "projects/housing-vecm/index.html#выводы",
     "href": "projects/housing-vecm/index.html#выводы",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Выводы",
-    "text": "Выводы\n\nДолгосрочная связь цен на жильё с безработицей, найденная в ВКР на месячных данных, на квартальных открытых данных за тот же период устойчиво не воспроизводится. Результат чувствителен к частоте и источнику данных.\nРазворот 2021–2023 годов, когда ставки ЕЦБ резко выросли, — самый трудный участок для прогноза: ошибка наивного прогноза на нём в 1,3 раза выше, чем до него.\nДаже VECM со ставкой по ипотеке на развороте не обыгрывает наивный прогноз (148% его ошибки). При смене режима ставок точечные прогнозы стоит дополнять сценарным анализом. Добавление ставки улучшает прогноз по сравнению с парой «цены — безработица»."
+    "text": "Выводы\n\nСвязь цен на жильё с безработицей, найденная в ВКР на месячных данных, на квартальных данных Eurostat за тот же период на 5% не подтверждается.\nНа 2021–2023 годах ошибка наивного прогноза в 1,3 раза выше, чем на прогнозах до 2021 года.\nДаже VECM со ставкой по ипотеке на развороте не обыгрывает наивный прогноз (148% его ошибки). При резкой смене ставок точечный прогноз стоит дополнять сценариями. Добавление ставки улучшает прогноз по сравнению с парой «цены — безработица»."
   },
   {
     "objectID": "projects/housing-vecm/index.html#ограничения-и-дальнейшие-шаги",
@@ -119,45 +119,52 @@
     "text": "Ограничения и дальнейшие шаги\n\nСтруктурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.\nРасполагаемые доходы и предложение жилья (разрешения на строительство) как дополнительные драйверы.\nБайесовский VAR как альтернатива на короткой квартальной выборке."
   },
   {
-    "objectID": "projects/financial-econometrics/index.html",
-    "href": "projects/financial-econometrics/index.html",
-    "title": "Финансовая эконометрика: МНК, MLE и факторные модели",
-    "section": "",
-    "text": "School of Quants · 2023–2024 · Python · ноутбук"
+    "objectID": "projects/housing-vecm/index.html#воспроизведение",
+    "href": "projects/housing-vecm/index.html#воспроизведение",
+    "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
+    "section": "Воспроизведение",
+    "text": "Воспроизведение\n\nСклонировать репозиторий: git clone https://github.com/wickedstacy085/wickedstacy085.github.io.\nУстановить R ≥ 4.3 и пакеты: install.packages(c(\"vars\", \"urca\", \"forecast\", \"readr\", \"dplyr\", \"purrr\", \"tibble\", \"zoo\", \"knitr\", \"rmarkdown\")).\nВыполнить quarto render projects/housing-vecm/index.qmd.\n\nВсе таблицы и рисунки на этой странице строит этот файл с функциями из R/, полная сборка занимает около минуты. Случайность есть только в бутстрэп-интервалах IRF (рис. 2). Версии пакетов последней сборки:\n\n\nR version 4.6.2 (2026-10-29) \n\n\nvars 1.6.1\nurca 1.3.4\nforecast 9.0.2\nreadr 2.2.0\ndplyr 1.2.1\nknitr 1.52"
   },
   {
-    "objectID": "projects/financial-econometrics/index.html#регрессия-доходности",
-    "href": "projects/financial-econometrics/index.html#регрессия-доходности",
-    "title": "Финансовая эконометрика: МНК, MLE и факторные модели",
-    "section": "1. Регрессия доходности",
-    "text": "1. Регрессия доходности\nВопрос. Объясняют ли цена, P/E, дивидендная доходность и капитализация доходность акций (n = 100)?\nЛогика. H₀: все коэффициенты равны 0. Проверка t- и F-тестами (F = 6,07, модель значима), затем допущений МНК: линейность, гомоскедастичность, нормальность остатков, VIF.\nРезультат. Значимы цена акции и капитализация; P/E и дивидендная доходность незначимы. ⟨R² = …⟩. Точечный прогноз доходности для заданного профиля компании: 15,8%."
+    "objectID": "projects/financial-econometrics/index.html",
+    "href": "projects/financial-econometrics/index.html",
+    "title": "Финансовая эконометрика: МНК, MLE и факторная модель",
+    "section": "",
+    "text": "School of Quants, домашнее задание по статистике · 2023 · Python"
+  },
+  {
+    "objectID": "projects/financial-econometrics/index.html#регрессия-доходности-акций",
+    "href": "projects/financial-econometrics/index.html#регрессия-доходности-акций",
+    "title": "Финансовая эконометрика: МНК, MLE и факторная модель",
+    "section": "Регрессия доходности акций",
+    "text": "Регрессия доходности акций\nДанные — 100 компаний. Доходность акции регрессирована на цену акции, P/E, дивидендную доходность и капитализацию.\n\n\n\n\nКоэффициент\np-value\n\n\n\n\nКонстанта\n−8,53\n0,464\n\n\nЦена акции\n−0,131\n0,001\n\n\nP/E\n0,393\n0,068\n\n\nДивидендная доходность\n5,889\n0,109\n\n\nКапитализация\n0,738\n0,001\n\n\n\nR² = 0,204, F = 6,07 (p = 0,0002). На 5% значимы цена акции и капитализация. VIF у всех регрессоров меньше 1,1, мультиколлинеарности нет. Тест Харке–Бера нормальность остатков не отвергает (p = 0,28). По графику остатков видна гетероскедастичность, поэтому стандартные ошибки стоит пересчитать в форме HC."
   },
   {
     "objectID": "projects/financial-econometrics/index.html#метод-максимального-правдоподобия",
     "href": "projects/financial-econometrics/index.html#метод-максимального-правдоподобия",
-    "title": "Финансовая эконометрика: МНК, MLE и факторные модели",
-    "section": "2. Метод максимального правдоподобия",
-    "text": "2. Метод максимального правдоподобия\nПараметры распределения оценены численной максимизацией лог-правдоподобия (scipy.optimize, loggamma), и проведено сравнение с методом моментов."
+    "title": "Финансовая эконометрика: МНК, MLE и факторная модель",
+    "section": "Метод максимального правдоподобия",
+    "text": "Метод максимального правдоподобия\nПараметры гамма-распределения оценены численной минимизацией отрицательного лог-правдоподобия (scipy.optimize.minimize, SLSQP): k = 9,61, θ = 0,47."
   },
   {
-    "objectID": "projects/financial-econometrics/index.html#capm-и-famafrench-для-brk-a",
-    "href": "projects/financial-econometrics/index.html#capm-и-famafrench-для-brk-a",
-    "title": "Финансовая эконометрика: МНК, MLE и факторные модели",
-    "section": "3. CAPM и Fama–French для BRK-A",
-    "text": "3. CAPM и Fama–French для BRK-A\nОценены рыночная бета, нагрузки на SMB и HML и альфа с проверкой значимости. Скользящее окно в 12 месяцев показывает смену инвестиционного стиля.\n\n\nКод\n# Ключевой фрагмент: регрессия избыточной доходности на три фактора\nimport statsmodels.formula.api as smf\nmodel = smf.ols(\"excess_ret ~ mkt_rf + smb + hml\", data=df).fit(cov_type=\"HAC\", cov_kwds={\"maxlags\": 6})\nmodel.summary()"
+    "objectID": "projects/financial-econometrics/index.html#трёхфакторная-модель-для-berkshire-hathaway",
+    "href": "projects/financial-econometrics/index.html#трёхфакторная-модель-для-berkshire-hathaway",
+    "title": "Финансовая эконометрика: МНК, MLE и факторная модель",
+    "section": "Трёхфакторная модель для Berkshire Hathaway",
+    "text": "Трёхфакторная модель для Berkshire Hathaway\nИзбыточная годовая доходность BRK-A за 2000–2023 годы регрессирована на факторы Фамы–Френча (Mkt−RF, SMB, HML). Знаки нагрузок: SMB &lt; 0 (крупные компании), HML &gt; 0 (стоимостные акции). Альфа в исходном расчёте — 7,4% в год (p = 0,036).\nОшибка в исходном расчёте. Годовые доходности фонда сопоставлены с месячными значениями факторов за декабрь (resample('Y').last()), а не с факторами за весь год. Правильно — накопить месячные факторы за год: \\(\\prod_{m}(1 + f_m) - 1\\). Пока расчёт не исправлен, оценку альфы 7,4% нельзя считать результатом."
   },
   {
-    "objectID": "projects/financial-econometrics/index.html#чему-это-учит-для-макроанализа",
-    "href": "projects/financial-econometrics/index.html#чему-это-учит-для-макроанализа",
-    "title": "Финансовая эконометрика: МНК, MLE и факторные модели",
-    "section": "Чему это учит для макроанализа",
-    "text": "Чему это учит для макроанализа\nТот же цикл проверки гипотез и диагностики остатков применяется к любой эконометрической модели: спецификация, оценка, допущения, интерпретация на языке решения."
+    "objectID": "projects/financial-econometrics/index.html#что-исправить",
+    "href": "projects/financial-econometrics/index.html#что-исправить",
+    "title": "Финансовая эконометрика: МНК, MLE и факторная модель",
+    "section": "Что исправить",
+    "text": "Что исправить\n\nАгрегировать факторы до годовых, как описано выше, или перейти на месячные данные: 23 годовых наблюдения мало для четырёх параметров.\nСтандартные ошибки HC или HAC.\nУбрать абсолютные пути к файлам и зафиксировать версии пакетов."
   },
   {
     "objectID": "projects.html",
     "href": "projects.html",
     "title": "Проекты",
     "section": "",
-    "text": "Цены на жильё в Германии: коинтеграционный анализ и прогноз\n\n\n\nR\n\nVAR\n\nVECM\n\nкоинтеграция\n\nпрогнозирование\n\n\n\nARIMA → VAR → VECM: долгосрочная связь цен на жильё с рынком труда и честная проверка прогноза на отложенной выборке. Воспроизводимый расчёт на открытых данных Eurostat и…\n\n\n\n1 июн. 2025 г.\n\n\n\n\n\n\n\n\n\n\nФинансовая эконометрика: МНК, MLE и факторные модели\n\n\n\nPython\n\nstatsmodels\n\nCAPM\n\nFama–French\n\nMLE\n\n\n\nЧто объясняет доходность акций и есть ли у Berkshire Hathaway альфа сверх факторных премий.\n\n\n\n1 мар. 2024 г.\n\n\n\n\n\n\n\n\n\n\nПроцесс Орнштейна–Уленбека: возврат к среднему\n\n\n\nPython\n\nстохастические процессы\n\nсимуляция\n\n\n\nТочная дискретизация OU, роль κ и θ, период полураспада шока как мост к интерпретации IRF.\n\n\n\n1 нояб. 2023 г.\n\n\n\n\n\n\nНет подходящих элементов"
+    "text": "Цены на жильё в Германии: коинтеграционный анализ и прогноз\n\n\n\nR\n\nVAR\n\nVECM\n\nкоинтеграция\n\nпрогнозирование\n\n\n\n\nСвязаны ли цены на жильё в Германии с безработицей и ставкой по ипотеке и какая модель лучше их прогнозирует. ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы.\n\n\n\n\n\n\n2025\n\n\n\n\n\n\n\nФинансовая эконометрика: МНК, MLE и факторная модель\n\n\n\nPython\n\nstatsmodels\n\nMLE\n\nFama–French\n\n\n\n\nУчебный проект School of Quants: регрессия доходности акций с проверкой допущений МНК, оценка гамма-распределения методом максимального правдоподобия и трёхфакторная модель Фамы–Френча для Berkshire Hathaway.\n\n\n\n\n\n\n2023\n\n\n\n\n\n\n\nПроцесс Орнштейна–Уленбека: возврат к среднему\n\n\n\nPython\n\nстохастические процессы\n\nсимуляция\n\n\n\n\nСимуляция процесса Орнштейна–Уленбека с точной дискретизацией: как скорость возврата κ задаёт период полураспада шока.\n\n\n\n\n\n\n2023\n\n\n\n\n\nНет подходящих элементов"
   }
 ]

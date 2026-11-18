@@ -26,41 +26,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -85,9 +50,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-23a770d2b5738474000f6663141a88ba.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-d6d492365cf62d2a4a89d301e1247ae1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-23a770d2b5738474000f6663141a88ba.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-ac0bab8d307d0a820e12ec9ccf8efb6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-dd7450f46c74bb5283727850002baca3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-ac0bab8d307d0a820e12ec9ccf8efb6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -125,9 +90,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     }
 
     const options = {
-      valueNames: ['listing-title','listing-description','listing-categories','listing-date',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
+      valueNames: ['listing-title','listing-date','listing-description','listing-categories',{ data: ['index'] },{ data: ['categories'] },{ data: ['listing-date-sort'] },{ data: ['listing-file-modified-sort'] }],
       
-      searchColumns: ["listing-title","listing-author","listing-date","listing-image","listing-description","listing-categories"],
+      searchColumns: ["listing-date","listing-title","listing-author","listing-image","listing-description"],
     };
 
     window['quarto-listings'] = window['quarto-listings'] || {};
@@ -169,6 +134,8 @@ window.Quarto = {
 };
 </script>
 
+<meta property="og:title" content="Проекты – Анастасия Смирнова">
+<meta property="og:site_name" content="Анастасия Смирнова">
 </head>
 
 <body class="nav-fixed quarto-light"><a id="quarto-skip-link" class="visually-hidden-focusable" href="#quarto-document-content">Skip to main content</a><script id="quarto-html-before-body" type="application/javascript">
@@ -391,24 +358,24 @@ window.Quarto = {
     </nav>
 </header>
 <!-- content -->
-<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-full page-navbar">
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
         
-    <h5 class="quarto-listing-category-title">Категории</h5><div class="quarto-listing-category category-default"><div class="category" data-category="">Все <span class="quarto-category-count">(3)</span></div><div class="category" data-category="Q0FQTQ==">CAPM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="RmFtYSVFMiU4MCU5M0ZyZW5jaA==">Fama–French <span class="quarto-category-count">(1)</span></div><div class="category" data-category="TUxF">MLE <span class="quarto-category-count">(1)</span></div><div class="category" data-category="UHl0aG9u">Python <span class="quarto-category-count">(2)</span></div><div class="category" data-category="Ug==">R <span class="quarto-category-count">(1)</span></div><div class="category" data-category="c3RhdHNtb2RlbHM=">statsmodels <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VkFS">VAR <span class="quarto-category-count">(1)</span></div><div class="category" data-category="VkVDTQ==">VECM <span class="quarto-category-count">(1)</span></div><div class="category" data-category="JUQwJUJBJUQwJUJFJUQwJUI4JUQwJUJEJUQxJTgyJUQwJUI1JUQwJUIzJUQxJTgwJUQwJUIwJUQxJTg2JUQwJUI4JUQxJThG">коинтеграция <span class="quarto-category-count">(1)</span></div><div class="category" data-category="JUQwJUJGJUQxJTgwJUQwJUJFJUQwJUIzJUQwJUJEJUQwJUJFJUQwJUI3JUQwJUI4JUQxJTgwJUQwJUJFJUQwJUIyJUQwJUIwJUQwJUJEJUQwJUI4JUQwJUI1">прогнозирование <span class="quarto-category-count">(1)</span></div><div class="category" data-category="JUQxJTgxJUQwJUI4JUQwJUJDJUQxJTgzJUQwJUJCJUQxJThGJUQxJTg2JUQwJUI4JUQxJThG">симуляция <span class="quarto-category-count">(1)</span></div><div class="category" data-category="JUQxJTgxJUQxJTgyJUQwJUJFJUQxJTg1JUQwJUIwJUQxJTgxJUQxJTgyJUQwJUI4JUQxJTg3JUQwJUI1JUQxJTgxJUQwJUJBJUQwJUI4JUQwJUI1JTIwJUQwJUJGJUQxJTgwJUQwJUJFJUQxJTg2JUQwJUI1JUQxJTgxJUQxJTgxJUQxJThC">стохастические процессы <span class="quarto-category-count">(1)</span></div></div></div>
+    </div>
 <!-- main -->
-<main class="content column-page-left" id="quarto-document-content" tabindex="-1">
+<main class="content" id="quarto-document-content" tabindex="-1">
 
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<div class="quarto-title-block"><div><h1 class="title">Проекты</h1><button type="button" class="btn code-tools-button" id="quarto-code-tools-source"><i class="bi"></i> Код</button></div></div>
+<h1 class="title">Проекты</h1>
 </div>
 
 
 
-<div class="quarto-title-meta column-page-left">
+<div class="quarto-title-meta">
 
     
   
@@ -423,18 +390,14 @@ window.Quarto = {
 
 
 
-<!-- -->
 
-
-<div class="quarto-listing quarto-listing-container-grid" id="listing-listing">
-<div class="list grid quarto-listing-cols-2">
-<div class="g-col-1" data-index="0" data-categories="UiUyQ1ZBUiUyQ1ZFQ00lMkMlRDAlQkElRDAlQkUlRDAlQjglRDAlQkQlRDElODIlRDAlQjUlRDAlQjMlRDElODAlRDAlQjAlRDElODYlRDAlQjglRDElOEYlMkMlRDAlQkYlRDElODAlRDAlQkUlRDAlQjMlRDAlQkQlRDAlQkUlRDAlQjclRDAlQjglRDElODAlRDAlQkUlRDAlQjIlRDAlQjAlRDAlQkQlRDAlQjglRDAlQjU=" data-listing-date-sort="1748736000000" data-listing-file-modified-sort="1795025433235" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="7" data-listing-word-count-sort="1363">
-<a href="./projects/housing-vecm/index.html" class="quarto-grid-link no-external-icon">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Цены на жильё в Германии: коинтеграционный анализ и прогноз
-</h5>
+<div class="quarto-listing quarto-listing-container-default" id="listing-listing">
+<div class="list quarto-listing-default">
+<div class="quarto-post image-right" data-index="0" data-categories="UiUyQ1ZBUiUyQ1ZFQ00lMkMlRDAlQkElRDAlQkUlRDAlQjglRDAlQkQlRDElODIlRDAlQjUlRDAlQjMlRDElODAlRDAlQjAlRDElODYlRDAlQjglRDElOEYlMkMlRDAlQkYlRDElODAlRDAlQkUlRDAlQjMlRDAlQkQlRDAlQkUlRDAlQjclRDAlQjglRDElODAlRDAlQkUlRDAlQjIlRDAlQjAlRDAlQkQlRDAlQjglRDAlQjU=" data-listing-date-sort="1748736000000" data-listing-file-modified-sort="1795031895850" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="8" data-listing-word-count-sort="1453">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./projects/housing-vecm/index.html" class="no-external-icon">Цены на жильё в Германии: коинтеграционный анализ и прогноз</a>
+</h3>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('Ug=='); return false;">R</div>
@@ -448,55 +411,55 @@ window.Quarto = {
 <div class="listing-category" onclick="window.quartoListingCategory('JUQwJUJGJUQxJTgwJUQwJUJFJUQwJUIzJUQwJUJEJUQwJUJFJUQwJUI3JUQwJUI4JUQxJTgwJUQwJUJFJUQwJUIyJUQwJUIwJUQwJUJEJUQwJUI4JUQwJUI1'); return false;">прогнозирование</div>
 
 </div>
-<div class="card-text listing-description">
-<p>ARIMA → VAR → VECM: долгосрочная связь цен на жильё с рынком труда и честная проверка прогноза на отложенной выборке. Воспроизводимый расчёт на открытых данных Eurostat и…</p>
+<div class="listing-description">
+<a href="./projects/housing-vecm/index.html" class="no-external-icon">
+<p>Связаны ли цены на жильё в Германии с безработицей и ставкой по ипотеке и какая модель лучше их прогнозирует. ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы.</p>
+</a>
 </div>
-<div class="card-attribution card-text-small end">
+</div>
+<div class="metadata">
+<a href="./projects/housing-vecm/index.html" class="no-external-icon">
 <div class="listing-date">
-1 июн. 2025 г.
+2025
+</div>
+</a>
 </div>
 </div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="1" data-categories="UHl0aG9uJTJDc3RhdHNtb2RlbHMlMkNDQVBNJTJDRmFtYSVFMiU4MCU5M0ZyZW5jaCUyQ01MRQ==" data-listing-date-sort="1709251200000" data-listing-file-modified-sort="1795025433235" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="1" data-listing-word-count-sort="181">
-<a href="./projects/financial-econometrics/index.html" class="quarto-grid-link no-external-icon">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Финансовая эконометрика: МНК, MLE и факторные модели
-</h5>
+<div class="quarto-post image-right" data-index="1" data-categories="UHl0aG9uJTJDc3RhdHNtb2RlbHMlMkNNTEUlMkNGYW1hJUUyJTgwJTkzRnJlbmNo" data-listing-date-sort="1700092800000" data-listing-file-modified-sort="1795031895850" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="236">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./projects/financial-econometrics/index.html" class="no-external-icon">Финансовая эконометрика: МНК, MLE и факторная модель</a>
+</h3>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
 
 <div class="listing-category" onclick="window.quartoListingCategory('c3RhdHNtb2RlbHM='); return false;">statsmodels</div>
 
-<div class="listing-category" onclick="window.quartoListingCategory('Q0FQTQ=='); return false;">CAPM</div>
+<div class="listing-category" onclick="window.quartoListingCategory('TUxF'); return false;">MLE</div>
 
 <div class="listing-category" onclick="window.quartoListingCategory('RmFtYSVFMiU4MCU5M0ZyZW5jaA=='); return false;">Fama–French</div>
 
-<div class="listing-category" onclick="window.quartoListingCategory('TUxF'); return false;">MLE</div>
-
 </div>
-<div class="card-text listing-description">
-<p>Что объясняет доходность акций и есть ли у Berkshire Hathaway альфа сверх факторных премий.</p>
+<div class="listing-description">
+<a href="./projects/financial-econometrics/index.html" class="no-external-icon">
+<p>Учебный проект School of Quants: регрессия доходности акций с проверкой допущений МНК, оценка гамма-распределения методом максимального правдоподобия и трёхфакторная модель Фамы–Френча для Berkshire Hathaway.</p>
+</a>
 </div>
-<div class="card-attribution card-text-small end">
+</div>
+<div class="metadata">
+<a href="./projects/financial-econometrics/index.html" class="no-external-icon">
 <div class="listing-date">
-1 мар. 2024 г.
+2023
+</div>
+</a>
 </div>
 </div>
-</div>
-</div></a>
-</div>
-<div class="g-col-1" data-index="2" data-categories="UHl0aG9uJTJDJUQxJTgxJUQxJTgyJUQwJUJFJUQxJTg1JUQwJUIwJUQxJTgxJUQxJTgyJUQwJUI4JUQxJTg3JUQwJUI1JUQxJTgxJUQwJUJBJUQwJUI4JUQwJUI1JTIwJUQwJUJGJUQxJTgwJUQwJUJFJUQxJTg2JUQwJUI1JUQxJTgxJUQxJTgxJUQxJThCJTJDJUQxJTgxJUQwJUI4JUQwJUJDJUQxJTgzJUQwJUJCJUQxJThGJUQxJTg2JUQwJUI4JUQxJThG" data-listing-date-sort="1698796800000" data-listing-file-modified-sort="1795025433235" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="232">
-<a href="./projects/ou-process/index.html" class="quarto-grid-link no-external-icon">
-<div class="quarto-grid-item card h-100 card-left">
-<div class="card-body post-contents">
-<h5 class="no-anchor card-title listing-title">
-Процесс Орнштейна–Уленбека: возврат к среднему
-</h5>
+<div class="quarto-post image-right" data-index="2" data-categories="UHl0aG9uJTJDJUQxJTgxJUQxJTgyJUQwJUJFJUQxJTg1JUQwJUIwJUQxJTgxJUQxJTgyJUQwJUI4JUQxJTg3JUQwJUI1JUQxJTgxJUQwJUJBJUQwJUI4JUQwJUI1JTIwJUQwJUJGJUQxJTgwJUQwJUJFJUQxJTg2JUQwJUI1JUQxJTgxJUQxJTgxJUQxJThCJTJDJUQxJTgxJUQwJUI4JUQwJUJDJUQxJTgzJUQwJUJCJUQxJThGJUQxJTg2JUQwJUI4JUQxJThG" data-listing-date-sort="1698796800000" data-listing-file-modified-sort="1795031895850" data-listing-date-modified-sort="NaN" data-listing-reading-time-sort="2" data-listing-word-count-sort="246">
+<div class="body">
+<h3 class="no-anchor listing-title">
+<a href="./projects/ou-process/index.html" class="no-external-icon">Процесс Орнштейна–Уленбека: возврат к среднему</a>
+</h3>
 <div class="listing-categories">
 
 <div class="listing-category" onclick="window.quartoListingCategory('UHl0aG9u'); return false;">Python</div>
@@ -506,16 +469,19 @@ window.Quarto = {
 <div class="listing-category" onclick="window.quartoListingCategory('JUQxJTgxJUQwJUI4JUQwJUJDJUQxJTgzJUQwJUJCJUQxJThGJUQxJTg2JUQwJUI4JUQxJThG'); return false;">симуляция</div>
 
 </div>
-<div class="card-text listing-description">
-<p>Точная дискретизация OU, роль κ и θ, период полураспада шока как мост к интерпретации IRF.</p>
+<div class="listing-description">
+<a href="./projects/ou-process/index.html" class="no-external-icon">
+<p>Симуляция процесса Орнштейна–Уленбека с точной дискретизацией: как скорость возврата κ задаёт период полураспада шока.</p>
+</a>
 </div>
-<div class="card-attribution card-text-small end">
+</div>
+<div class="metadata">
+<a href="./projects/ou-process/index.html" class="no-external-icon">
 <div class="listing-date">
-1 нояб. 2023 г.
+2023
 </div>
+</a>
 </div>
-</div>
-</div></a>
 </div>
 </div>
 <div class="listing-no-matching d-none">Нет подходящих элементов</div>
@@ -638,57 +604,6 @@ window.Quarto = {
         container: window.document.getElementById('quarto-embedded-source-code-modal')
       });
       clipboardModal.on('success', onCopySuccess);
-    }
-    const viewSource = window.document.getElementById('quarto-view-source') ||
-                       window.document.getElementById('quarto-code-tools-source');
-    if (viewSource) {
-      const sourceUrl = viewSource.getAttribute("data-quarto-source-url");
-      viewSource.addEventListener("click", function(e) {
-        if (sourceUrl) {
-          // rstudio viewer pane
-          if (/\bcapabilities=\b/.test(window.location)) {
-            window.open(sourceUrl);
-          } else {
-            window.location.href = sourceUrl;
-          }
-        } else {
-          const modal = new bootstrap.Modal(document.getElementById('quarto-embedded-source-code-modal'));
-          modal.show();
-        }
-        return false;
-      });
-    }
-    function toggleCodeHandler(show) {
-      return function(e) {
-        const cellDetails = window.document.querySelectorAll(".cell details.code-fold");
-        for (let i=0; i<cellDetails.length; i++) {
-          const details = cellDetails[i];
-          if (show) {
-            details.open = true;
-          } else {
-            details.removeAttribute("open");
-          }
-        }
-        const cellCodeDivs = window.document.querySelectorAll(".cell div.sourceCode.cell-code");
-        const fromCls = show ? "hidden" : "unhidden";
-        const toCls = show ? "unhidden" : "hidden";
-        for (let i=0; i<cellCodeDivs.length; i++) {
-          const codeDiv = cellCodeDivs[i];
-          if (codeDiv.classList.contains(fromCls)) {
-            codeDiv.classList.remove(fromCls);
-            codeDiv.classList.add(toCls);
-          } 
-        }
-        return false;
-      }
-    }
-    const hideAllCode = window.document.getElementById("quarto-hide-all-code");
-    if (hideAllCode) {
-      hideAllCode.addEventListener("click", toggleCodeHandler(false));
-    }
-    const showAllCode = window.document.getElementById("quarto-show-all-code");
-    if (showAllCode) {
-      showAllCode.addEventListener("click", toggleCodeHandler(true));
     }
       var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
       var mailtoRegex = new RegExp(/^mailto:/);
@@ -1094,31 +1009,18 @@ window.Quarto = {
   </script>
   <script type="application/javascript">
   window.quartoScrollableRegionsLabels = {"code":"Прокручиваемый код","output":"Прокручиваемый вывод"};
-  </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Исходный код</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Проекты"</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="an">listing:</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">  contents: projects/*/index.qmd</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">  type: grid</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">  sort: "order"</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">  fields: [title, description, categories, date]</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">  categories: true</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">  grid-columns: 2</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="an">page-layout:</span><span class="co"> full</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="an">title-block-banner:</span><span class="co"> false</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span></code></pre></div><button title="Скопировать текст" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
-</div></div></div></div></div>
+  </script>
 </div> <!-- /content -->
 <footer class="footer">
   <div class="nav-footer">
     <div class="nav-footer-left">
-<p>© 2026 Анастасия Смирнова</p>
+<p>Анастасия Смирнова, 2026 · текст CC BY 4.0, код MIT</p>
 </div>   
     <div class="nav-footer-center">
       &nbsp;
-    <div class="toc-actions"><ul><li><a href="https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects.qmd" class="toc-action"><i class="bi bi-github"></i>Показать код</a></li></ul></div></div>
+    </div>
     <div class="nav-footer-right">
-<p>Собрано на <a href="https://quarto.org">Quarto</a></p>
+<p><a href="https://github.com/wickedstacy085/wickedstacy085.github.io">Исходный код сайта</a></p>
 </div>
   </div>
 </footer>
