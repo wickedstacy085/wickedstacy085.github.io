@@ -1,19 +1,202 @@
 ---
 title: "Малая QPM-модель российской экономики"
-description: "Полуструктурная модель: IS, кривая Филлипса, правило Тейлора, UIP. IRF на шок ставки и прогноз инфляции."
-categories: [QPM, DSGE, Dynare, денежно-кредитная политика]
+description: "Полуструктурная модель по образцу МВФ: IS-кривая, кривая Филлипса, правило ставки и паритет процентных ставок. Импульсные отклики на шоки ставки и курса и траектория из текущего состояния экономики на данных Росстата, BIS и FRED за 2011–2026 годы."
+categories: [Python, QPM, денежно-кредитная политика]
 order: 0
-draft: true          # снять, когда проект готов: до этого страница не публикуется
+date: 2026-11-18
+author: Анастасия Смирнова
+format:
+  html:
+    code-tools: true
+execute:
+  echo: true
+  warning: false
 ---
 
-## Вопрос
-Как шок ключевой ставки и шок курса передаются в инфляцию и разрыв выпуска в России?
+::: {.case-meta}
+Пет-проект, 2026 ·
+[Код](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia) ·
+[Данные](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia/data) ·
+[README](https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/README.md)
+:::
+
+```{python}
+#| label: setup
+#| include: false
+import sys
+sys.path.insert(0, "py")
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import qpm
+
+plt.rcParams.update({"figure.dpi": 110, "axes.spines.top": False, "axes.spines.right": False,
+                     "axes.grid": True, "grid.alpha": .3, "font.size": 10})
+p = qpm.Params()
+P, Q, info = qpm.solve(p)
+df = qpm.load_data()
+g = qpm.build_gaps(df)
+last = g.index[-1]
+irf_i = qpm.irf(p, "e_i", 1.0, 16)
+irf_z = qpm.irf(p, "e_z", 10.0, 16)
+x0 = g.loc[last, qpm.VARS].to_numpy(float)
+path = qpm.simulate_from(p, x0, 8)
+path.index = pd.period_range(last + 1, periods=8, freq="Q")
+
+def fmt(x, d=1):
+    return f"{x:.{d}f}".replace(".", ",").replace("-", "−")
+
+def q(per):
+    return f"{['I', 'II', 'III', 'IV'][per.quarter - 1]} кв. {per.year}"
+
+pi_min = irf_i["pi"].min(); pi_min_t = int(irf_i["pi"].idxmin())
+y_min = irf_i["y"].min()
+pi_z_max = irf_z["pi"].max(); pi_z_t = int(irf_z["pi"].idxmax())
+infl_end = path["pi"].iloc[-1] + qpm.TARGET
+rate_end = path["i"].iloc[-1] + qpm.R_NEUTRAL + qpm.TARGET
+```
+
+::: {.result-box}
+**Аннотация.** Как повышение ключевой ставки и ослабление рубля передаются в инфляцию и выпуск
+в России? Я собрала малую полуструктурную модель (QPM) по образцу МВФ из четырёх уравнений,
+откалибровала её и решила с рациональными ожиданиями. Данные — Росстат, BIS и FRED за
+`{python} q(g.index[0])` – `{python} q(last)`. Неожиданное повышение ставки на 1 п.п. снижает
+квартальную инфляцию максимум на `{python} fmt(-pi_min, 2)` п.п. через `{python} pi_min_t` кв.,
+выпуск — на `{python} fmt(-y_min, 2)`%. Ослабление рубля на 10% повышает инфляцию на
+`{python} fmt(pi_z_max, 1)` п.п. через `{python} pi_z_t` кв. Параметры модели откалиброваны, а не
+оценены, поэтому это иллюстрация механизма, а не прогноз.
+:::
 
 ## Модель
-- IS: $\hat y_t = \beta_1 \hat y_{t-1} - \beta_2 (r_t - \bar r_t) - \beta_3 \hat z_t + \varepsilon^y_t$
-- Филлипс: $\pi_t = \alpha_1 \pi_{t+1} + (1-\alpha_1)\pi_{t-1} + \alpha_2 \hat y_t + \alpha_3 \Delta z_t + \varepsilon^\pi_t$
-- Тейлор: $i_t = \gamma_1 i_{t-1} + (1-\gamma_1)(\bar r_t + \pi^e_t + \gamma_2(\pi^e_t - \pi^*) + \gamma_3 \hat y_t) + \varepsilon^i_t$
-- UIP: $s_t = s^e_{t+1} + (i^*_t - i_t + prem_t)/4 + \varepsilon^s_t$
 
-## Данные, калибровка, IRF, прогноз, выводы
-Заполняется по ходу проекта.
+Все переменные — отклонения от равновесия, в процентах; инфляция и ставки — в годовом выражении.
+
+$$
+\begin{aligned}
+\text{IS:}\quad & \hat y_t = b_{lead}\,\hat y_{t+1} + b_{lag}\,\hat y_{t-1} - b_{rmci}\left[b_{rr}\,\hat r_t - (1-b_{rr})\,\hat z_t\right] + \varepsilon^y_t \\
+\text{Филлипс:}\quad & \hat\pi_t = a_{lead}\,\hat\pi_{t+1} + (1-a_{lead})\,\hat\pi_{t-1} + a_{rmc}\left[a_y\,\hat y_t + (1-a_y)\,\hat z_t\right] + \varepsilon^\pi_t \\
+\text{Ставка:}\quad & \hat\imath_t = g_{lag}\,\hat\imath_{t-1} + (1-g_{lag})\left[(1+g_\pi)\,\hat\pi_{t+1} + g_y\,\hat y_t\right] + \varepsilon^i_t \\
+\text{UIP:}\quad & \hat z_t = e_{lead}\,\hat z_{t+1} + (1-e_{lead})\,\hat z_{t-1} - \hat r_t/4 + \varepsilon^z_t \\
+\text{Фишер:}\quad & \hat r_t = \hat\imath_t - \hat\pi_{t+1}
+\end{aligned}
+$$
+
+$\hat y$ — разрыв выпуска, $\hat\pi$ — отклонение квартальной инфляции (SAAR) от цели 4%,
+$\hat\imath$ — отклонение ключевой ставки от нейтральной, $\hat r$ — разрыв реальной ставки,
+$\hat z$ — разрыв реального курса (рост — ослабление рубля). Модель решается итерацией матрицы
+решения $x_t = P x_{t-1} + Q\varepsilon_t$ (Binder, Pesaran 1995); решение проверяется по невязке
+и спектральному радиусу $P$.
+
+```{python}
+#| label: tbl-params
+#| tbl-cap: "Калибровка"
+labels = {
+    "b_lead": "IS: вес ожидаемого выпуска", "b_lag": "IS: инерция выпуска",
+    "b_rmci": "IS: влияние монетарных условий", "b_rr": "IS: вес реальной ставки (против курса)",
+    "a_lead": "Филлипс: вес ожиданий", "a_rmc": "Филлипс: влияние издержек",
+    "a_y": "Филлипс: вес разрыва выпуска (против курса)", "g_lag": "Правило: инерция ставки",
+    "g_pi": "Правило: реакция на инфляцию", "g_y": "Правило: реакция на разрыв выпуска",
+    "e_lead": "UIP: вес ожидаемого курса",
+}
+pd.DataFrame({"Параметр": list(labels), "Смысл": list(labels.values()),
+              "Значение": [getattr(p, k) for k in labels]}).style.hide(axis="index").format(precision=2)
+```
+
+Значения взяты из диапазонов Berg, Karam, Laxton (2006) для открытой экономики с плавающим
+курсом. Невязка решения — `{python} f"{info['residual']:.0e}"`, спектральный радиус $P$ —
+`{python} fmt(info['spectral_radius'], 2)`: решение единственное и устойчивое.
+
+## Данные и гэпы
+
+```{python}
+#| label: fig-gaps
+#| fig-cap: "Наблюдаемые гэпы, %. Выпуск и реальный курс — отклонение от HP-тренда (λ = 1600)."
+fig, ax = plt.subplots(2, 2, figsize=(9, 5.2), sharex=True)
+t = g.index.to_timestamp()
+for a, (col, title) in zip(ax.flat, [("y", "Разрыв выпуска"), ("infl_yoy", "Инфляция, % г/г"),
+                                     ("r", "Разрыв реальной ставки, п.п."), ("z", "Разрыв реального курса (+ = слабый рубль)")]):
+    a.plot(t, g[col], lw=1.6, color="#1f4e79")
+    a.axhline(qpm.TARGET if col == "infl_yoy" else 0, color="grey", lw=.8, ls="--")
+    a.set_title(title, fontsize=10, loc="left")
+fig.tight_layout()
+```
+
+Источники и коды рядов — в [`data/build_data.py`](https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/data/build_data.py).
+ВВП — с исключением сезонного фактора (Росстат), ИПЦ очищен от сезонности STL. Реальная ставка
+считается как ключевая минус инфляция г/г. Нейтральная реальная ставка — допущение
+`{python} fmt(qpm.R_NEUTRAL, 0)`%: HP-тренд реальной ставки на конце выборки уходит выше 10%
+из-за эффекта края фильтра.
+
+## Импульсные отклики
+
+```{python}
+#| label: fig-irf
+#| fig-cap: "Отклики на неожиданное повышение ставки на 1 п.п. и ослабление рубля на 10%, п.п."
+fig, ax = plt.subplots(1, 2, figsize=(9, 3.4), sharex=True)
+names = {"y": "Разрыв выпуска", "pi": "Инфляция (кв., SAAR)", "i": "Ключевая ставка", "z": "Реальный курс"}
+for a, (resp, title) in zip(ax, [(irf_i, "Шок ставки +1 п.п."), (irf_z, "Ослабление рубля на 10%")]):
+    for col, c in zip(["y", "pi", "i"], ["#1f4e79", "#c0392b", "#7f8c8d"]):
+        a.plot(resp.index, resp[col], lw=1.8, color=c, label=names[col])
+    a.axhline(0, color="black", lw=.6); a.set_title(title, fontsize=10, loc="left")
+    a.set_xlabel("кварталы")
+ax[0].legend(frameon=False, fontsize=8)
+fig.tight_layout()
+```
+
+После шока ставки рубль укрепляется на `{python} fmt(-irf_i['z'].iloc[0], 2)`%, а выпуск и
+инфляция снижаются с лагом: так работают два канала — процентный и курсовой. При ослаблении рубля
+на 10% ставка по правилу растёт до `{python} fmt(irf_z['i'].max(), 2)` п.п. выше нейтральной.
+
+## Траектория из текущего состояния
+
+Модель запущена из гэпов `{python} q(last)` без новых шоков. Это не прогноз: в модели нет
+бюджетной политики, цен на нефть и внешних ограничений, а гэпы на конце выборки ненадёжны.
+
+```{python}
+#| label: tbl-path
+#| tbl-cap: "Траектория без новых шоков"
+out = pd.DataFrame({
+    "Квартал": [q(x) for x in path.index],
+    "Инфляция, кв. SAAR, %": path["pi"] + qpm.TARGET,
+    "Ключевая ставка, %": path["i"] + qpm.R_NEUTRAL + qpm.TARGET,
+    "Разрыв выпуска, %": path["y"],
+})
+out.style.hide(axis="index").format(precision=1)
+```
+
+Через 8 кварталов квартальная инфляция в модели — `{python} fmt(infl_end)`%, ключевая ставка —
+`{python} fmt(rate_end)`%.
+
+## Записка
+
+- Текущее состояние (`{python} q(last)`): разрыв выпуска `{python} fmt(g.loc[last, 'y'], 2)`%,
+  инфляция `{python} fmt(g.loc[last, 'infl_yoy'])`% г/г, реальная ставка выше нейтральной (по допущению)
+  на `{python} fmt(g.loc[last, 'r'])` п.п., рубль крепче равновесия на `{python} fmt(-g.loc[last, 'z'])`%.
+- Повышение ставки сильнее всего снижает инфляцию через `{python} pi_min_t` кв.; решения,
+  принятые сегодня, отражаются в инфляции в основном через полгода–год.
+- Курсовой канал быстрый: ослабление рубля переходит в инфляцию за `{python} pi_z_t` кв.
+- Главный риск выводов — калибровка: при другом весе курса ($b_{rr}$, $a_y$) соотношение каналов меняется.
+
+## Ограничения и что дальше
+
+- Параметры откалиброваны, а не оценены. Следующий шаг — байесовская оценка или фильтр Калмана.
+- Гэпы получены HP-фильтром, на конце выборки он ненадёжен; в QPM их обычно оценивают фильтром Калмана
+  вместе с моделью.
+- Нейтральная ставка постоянна и задана допущением.
+- В модели нет нефти, бюджетного правила и внешнего спроса — ключевых для России каналов.
+
+## Воспроизведение
+
+1. `python data/build_data.py` — скачать данные и собрать `data/russia_q.csv`.
+2. `quarto render projects/qpm-russia/index.qmd` — посчитать модель и собрать страницу.
+
+Нужен Python ≥ 3.10 с numpy, pandas, scipy, statsmodels, matplotlib, openpyxl.
+
+```{python}
+#| label: versions
+#| echo: false
+import platform, scipy, statsmodels, matplotlib
+print("Python", platform.python_version())
+for m in (np, pd, scipy, statsmodels, matplotlib):
+    print(m.__name__, m.__version__)
+```
