@@ -1,0 +1,2719 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  results.log
+  log type:  text
+ opened on:  23 Mar 2025, 20:13:16
+
+. **************************************************************
+. * DATA PREPARATION
+. **************************************************************
+. import excel "hw_python\Untitled Folder 1\Panel_data.xlsx", sheet("Sheet1") firstrow
+
+. save Panel_data.dta, replace
+file Panel_data.dta saved
+
+. use Panel_data.dta, clear
+
+. 
+. capture rename A Region
+
+. capture rename B year
+
+. egen region_id = group(Region)
+(1 missing value generated)
+
+. duplicates report region_id year
+
+Duplicates in terms of region_id year
+
+--------------------------------------
+   copies | observations       surplus
+----------+---------------------------
+        1 |          511             0
+--------------------------------------
+
+. 
+. collapse (mean) Y1 Y2 unemployment log_debt_people log_median_income divorce_rate CPI housing_prices ///
+> interest_rate wages_to_social property_income_to_wages gambling log_hospital_beds log_graduates ///
+> industrial_SEZ innovative_SEZ tourist_SEZ log_VRP_dobycha log_VRP_obrabatyvayuschie log_VRP_energy ///
+> log_VRP_agriculture log_VRP_finance log_VRP_trade log_investment log_debt_firm log_housing_stock log_R_and_D ///
+> log_skilled_graduates business_income_to_wages, by(region_id year Region)
+
+. 
+. xtset region_id year
+       panel variable:  region_id (unbalanced)
+        time variable:  year, 2018 to 2023
+                delta:  1 unit
+
+. 
+. gen unemployment_sq = unemployment^2
+(1 missing value generated)
+
+. gen CPI_sq = CPI^2
+(1 missing value generated)
+
+. gen interest_rate_sq = interest_rate^2
+(1 missing value generated)
+
+. 
+. **************************************************************
+. * MODEL SPECIFICATIONS
+. **************************************************************
+. global modelY1 unemployment unemployment_sq log_debt_people log_median_income divorce_rate ///
+> CPI CPI_sq housing_prices interest_rate interest_rate_sq wages_to_social ///
+> property_income_to_wages gambling log_hospital_beds log_graduates industrial_SEZ innovative_SEZ ///
+> tourist_SEZ log_VRP_dobycha log_VRP_obrabatyvayuschie log_VRP_energy log_VRP_agriculture ///
+> log_VRP_finance log_VRP_trade
+
+. 
+. global modelY2 unemployment unemployment_sq log_investment log_debt_firm CPI CPI_sq ///
+> housing_prices log_housing_stock interest_rate interest_rate_sq log_R_and_D ///
+> log_median_income wages_to_social business_income_to_wages property_income_to_wages ///
+> log_skilled_graduates gambling industrial_SEZ innovative_SEZ tourist_SEZ log_VRP_dobycha ///
+> log_VRP_obrabatyvayuschie log_VRP_energy log_VRP_agriculture log_VRP_finance log_VRP_trade
+
+. 
+. **************************************************************
+. * BASE MODELS + Hausman + Comparative Table Y1
+. **************************************************************
+. reg Y1 $modelY1
+
+      Source |       SS       df       MS              Number of obs =     400
+-------------+------------------------------           F( 24,   375) =   43.46
+       Model |  166.230328    24  6.92626365           Prob > F      =  0.0000
+    Residual |  59.7660121   375  .159376032           R-squared     =  0.7355
+-------------+------------------------------           Adj R-squared =  0.7186
+       Total |   225.99634   399  .566406867           Root MSE      =  .39922
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   -.065213   .0361862    -1.80   0.072    -.1363663    .0059402
+          unemployment_sq |   .0020385   .0020208     1.01   0.314    -.0019349    .0060119
+          log_debt_people |   .5357713   .0676604     7.92   0.000       .40273    .6688125
+        log_median_income |   .2003332     .16466     1.22   0.225    -.1234395    .5241059
+             divorce_rate |   .1012822   .0359347     2.82   0.005     .0306235    .1719409
+                      CPI |  -.2229383   .6826433    -0.33   0.744    -1.565227     1.11935
+                   CPI_sq |     .00158   .0031558     0.50   0.617    -.0046254    .0077853
+           housing_prices |   .0026158   .0011304     2.31   0.021      .000393    .0048385
+            interest_rate |  -.0347501    .237308    -0.15   0.884    -.5013713     .431871
+         interest_rate_sq |   .0017847   .0189984     0.09   0.925     -.035572    .0391413
+          wages_to_social |  -.1332742   .0636576    -2.09   0.037    -.2584449   -.0081036
+ property_income_to_wages |    1.80964   1.112393     1.63   0.105    -.3776692    3.996949
+                 gambling |  -.0597485   .0956615    -0.62   0.533    -.2478487    .1283518
+        log_hospital_beds |  -.1852734   .1000445    -1.85   0.065    -.3819918    .0114451
+            log_graduates |   .0957308   .0478209     2.00   0.046        .0017    .1897615
+           industrial_SEZ |  -.0002723     .05542    -0.00   0.996    -.1092452    .1087006
+           innovative_SEZ |  -.1288851   .1041542    -1.24   0.217    -.3336846    .0759145
+              tourist_SEZ |  -.2130411   .0863467    -2.47   0.014    -.3828254   -.0432567
+          log_VRP_dobycha |   -.000779   .0128687    -0.06   0.952    -.0260828    .0245248
+log_VRP_obrabatyvayuschie |   -.024275   .0353138    -0.69   0.492     -.093713    .0451629
+           log_VRP_energy |  -.1679536   .0516831    -3.25   0.001    -.2695787   -.0663285
+      log_VRP_agriculture |   .0072999   .0310546     0.24   0.814     -.053763    .0683628
+          log_VRP_finance |  -.0451229   .0233971    -1.93   0.055    -.0911288     .000883
+            log_VRP_trade |  -.1341337   .0791556    -1.69   0.091    -.2897781    .0215108
+                    _cons |   4.749197   37.42903     0.13   0.899    -68.84788    78.34628
+-------------------------------------------------------------------------------------------
+
+. estimates store pool_y1
+
+. 
+. xtreg Y1 $modelY1, fe
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.8728                         Obs per group: min =         3
+       between = 0.0004                                        avg =       4.9
+       overall = 0.1610                                        max =         5
+
+                                                F(22,297)          =     92.64
+corr(u_i, Xb)  = -0.8240                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0435938   .0550154    -0.79   0.429    -.1518631    .0646756
+          unemployment_sq |   .0014539   .0022954     0.63   0.527    -.0030634    .0059713
+          log_debt_people |  -.0859176   .1739534    -0.49   0.622     -.428255    .2564198
+        log_median_income |   3.090842   .5317297     5.81   0.000     2.044407    4.137277
+             divorce_rate |   .0644178   .0486121     1.33   0.186    -.0312501    .1600857
+                      CPI |  -.1634386   .5085211    -0.32   0.748      -1.1642    .8373226
+                   CPI_sq |    .001009   .0023485     0.43   0.668    -.0036128    .0056308
+           housing_prices |   .0011552   .0011958     0.97   0.335    -.0011981    .0035085
+            interest_rate |  -.2816513   .2501532    -1.13   0.261    -.7739486     .210646
+         interest_rate_sq |   .0224483    .019665     1.14   0.255    -.0162522    .0611487
+          wages_to_social |  -.2663178   .1402577    -1.90   0.059    -.5423426    .0097069
+ property_income_to_wages |   2.218631   1.802603     1.23   0.219    -1.328862    5.766124
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0698462   .1071512     0.65   0.515    -.1410257     .280718
+            log_graduates |   .0961026   .2144794     0.45   0.654    -.3259893    .5181946
+           industrial_SEZ |   .0631574   .0740002     0.85   0.394    -.0824738    .2087886
+           innovative_SEZ |   .4497825   .2527218     1.78   0.076    -.0475699    .9471348
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |    .199259   .0819564     2.43   0.016     .0379702    .3605478
+log_VRP_obrabatyvayuschie |  -.2116318   .1468504    -1.44   0.151    -.5006308    .0773673
+           log_VRP_energy |    .251619   .1185735     2.12   0.035     .0182682    .4849697
+      log_VRP_agriculture |   .2003947   .1470576     1.36   0.174    -.0890123    .4898017
+          log_VRP_finance |  -.0053686    .024969    -0.22   0.830    -.0545072      .04377
+            log_VRP_trade |  -.0951586   .2189404    -0.43   0.664    -.5260297    .3357124
+                    _cons |  -27.89457   28.14636    -0.99   0.322    -83.28614      27.497
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  1.1558584
+                  sigma_e |  .26891657
+                      rho |  .94865097   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(80, 297) =     6.81             Prob > F = 0.0000
+
+. estimates store fe_y1
+
+. 
+. xtreg Y1 $modelY1, re
+
+Random-effects GLS regression                   Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.8542                         Obs per group: min =         3
+       between = 0.3569                                        avg =       4.9
+       overall = 0.7195                                        max =         5
+
+                                                Wald chi2(24)      =   1812.42
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0672989   .0417744    -1.61   0.107    -.1491751    .0145774
+          unemployment_sq |   .0019993   .0019981     1.00   0.317    -.0019168    .0059155
+          log_debt_people |   .4602335   .0909882     5.06   0.000     .2818999     .638567
+        log_median_income |   .7339763   .2448688     3.00   0.003     .2540422     1.21391
+             divorce_rate |   .0985202   .0399953     2.46   0.014     .0201308    .1769096
+                      CPI |   .0649925   .5224505     0.12   0.901    -.9589916    1.088977
+                   CPI_sq |    .000185   .0024141     0.08   0.939    -.0045466    .0049165
+           housing_prices |   .0023694   .0011212     2.11   0.035     .0001719    .0045668
+            interest_rate |   .0992446   .1945105     0.51   0.610    -.2819889    .4804781
+         interest_rate_sq |  -.0083391   .0154414    -0.54   0.589    -.0386037    .0219255
+          wages_to_social |   -.264968   .0805656    -3.29   0.001    -.4228737   -.1070622
+ property_income_to_wages |   1.861753   1.380868     1.35   0.178    -.8446996    4.568205
+                 gambling |   -.090615   .1673966    -0.54   0.588    -.4187063    .2374763
+        log_hospital_beds |  -.0200796   .0976374    -0.21   0.837    -.2114454    .1712862
+            log_graduates |   .0422812   .0734705     0.58   0.565    -.1017184    .1862807
+           industrial_SEZ |   .0426173   .0649795     0.66   0.512    -.0847402    .1699748
+           innovative_SEZ |   .0378817   .1560263     0.24   0.808    -.2679243    .3436877
+              tourist_SEZ |  -.1905951    .146143    -1.30   0.192      -.47703    .0958398
+          log_VRP_dobycha |   -.005833     .02111    -0.28   0.782    -.0472079    .0355418
+log_VRP_obrabatyvayuschie |  -.0673241   .0544939    -1.24   0.217    -.1741302     .039482
+           log_VRP_energy |  -.0964232   .0736642    -1.31   0.191    -.2408024     .047956
+      log_VRP_agriculture |   .0299525   .0513503     0.58   0.560    -.0706923    .1305973
+          log_VRP_finance |  -.0316961   .0226294    -1.40   0.161    -.0760488    .0126567
+            log_VRP_trade |  -.1934472   .1095814    -1.77   0.078    -.4082229    .0213284
+                    _cons |  -14.80789   28.70548    -0.52   0.606     -71.0696    41.45382
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .29176856
+                  sigma_e |  .26891657
+                      rho |  .54068967   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store re_y1
+
+. 
+. hausman fe_y1 re_y1
+
+Note: the rank of the differenced variance matrix (21) does not equal the number of coefficients being tested (22); be sure this is what you expect, or there may be problems computing the test.  Examine the output of your estimators for anything
+        unexpected and possibly consider scaling your variables so that the coefficients are on a similar scale.
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |     fe_y1        re_y1        Difference          S.E.
+-------------+----------------------------------------------------------------
+unemployment |   -.0435938    -.0672989        .0237051        .0357993
+unemployme~q |    .0014539     .0019993       -.0005454        .0011299
+log_debt_p~e |   -.0859176     .4602335       -.5461511        .1482597
+log_median~e |    3.090842     .7339763        2.356866        .4719912
+divorce_rate |    .0644178     .0985202       -.0341024        .0276318
+         CPI |   -.1634386     .0649925       -.2284311               .
+      CPI_sq |     .001009      .000185         .000824               .
+housing_pr~s |    .0011552     .0023694       -.0012142        .0004158
+interest_r~e |   -.2816513     .0992446       -.3808959        .1572968
+interest_r~q |    .0224483    -.0083391        .0307873        .0121768
+wages_to_s~l |   -.2663178     -.264968       -.0013499        .1148102
+property_i~s |    2.218631     1.861753        .3568784        1.158698
+log_hospit~s |    .0698462    -.0200796        .0899258        .0441398
+log_gradua~s |    .0961026     .0422812        .0538214        .2015031
+industrial~Z |    .0631574     .0426173        .0205401        .0354075
+innovative~Z |    .4497825     .0378817        .4119007        .1988067
+log_VRP_do~a |     .199259     -.005833         .205092         .079191
+log_VRP_ob~e |   -.2116318    -.0673241       -.1443077        .1363651
+log_VRP_en~y |     .251619    -.0964232        .3480422        .0929154
+log_VRP_ag~e |    .2003947     .0299525        .1704422        .1378009
+log_VRP_fi~e |   -.0053686    -.0316961        .0263275        .0105528
+log_VRP_tr~e |   -.0951586    -.1934472        .0982886        .1895436
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                 chi2(21) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =       34.12
+                Prob>chi2 =      0.0352
+                (V_b-V_B is not positive definite)
+
+. xttest0
+
+Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Y1[region_id,t] = Xb + u[region_id] + e[region_id,t]
+
+        Estimated results:
+                         |       Var     sd = sqrt(Var)
+                ---------+-----------------------------
+                      Y1 |   .5664069       .7526001
+                       e |   .0723161       .2689166
+                       u |   .0851289       .2917686
+
+        Test:   Var(u) = 0
+                             chibar2(01) =   148.26
+                          Prob > chibar2 =   0.0000
+
+. 
+. esttab pool_y1 fe_y1 re_y1 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y1              Y1              Y1   
+------------------------------------------------------------
+unemployment      -0.0652         -0.0436         -0.0673   
+                  (-1.80)         (-0.79)         (-1.61)   
+
+unemployme~q       0.0020          0.0015          0.0020   
+                   (1.01)          (0.63)          (1.00)   
+
+log_debt_p~e       0.5358***      -0.0859          0.4602***
+                   (7.92)         (-0.49)          (5.06)   
+
+log_median~e       0.2003          3.0908***       0.7340** 
+                   (1.22)          (5.81)          (3.00)   
+
+divorce_rate       0.1013**        0.0644          0.0985*  
+                   (2.82)          (1.33)          (2.46)   
+
+CPI               -0.2229         -0.1634          0.0650   
+                  (-0.33)         (-0.32)          (0.12)   
+
+CPI_sq             0.0016          0.0010          0.0002   
+                   (0.50)          (0.43)          (0.08)   
+
+housing_pr~s       0.0026*         0.0012          0.0024*  
+                   (2.31)          (0.97)          (2.11)   
+
+interest_r~e      -0.0348         -0.2817          0.0992   
+                  (-0.15)         (-1.13)          (0.51)   
+
+interest_r~q       0.0018          0.0224         -0.0083   
+                   (0.09)          (1.14)         (-0.54)   
+
+wages_to_s~l      -0.1333*        -0.2663         -0.2650** 
+                  (-2.09)         (-1.90)         (-3.29)   
+
+property_i~s       1.8096          2.2186          1.8618   
+                   (1.63)          (1.23)          (1.35)   
+
+gambling          -0.0597               .         -0.0906   
+                  (-0.62)               .         (-0.54)   
+
+log_hospit~s      -0.1853          0.0698         -0.0201   
+                  (-1.85)          (0.65)         (-0.21)   
+
+log_gradua~s       0.0957*         0.0961          0.0423   
+                   (2.00)          (0.45)          (0.58)   
+
+industrial~Z      -0.0003          0.0632          0.0426   
+                  (-0.00)          (0.85)          (0.66)   
+
+innovative~Z      -0.1289          0.4498          0.0379   
+                  (-1.24)          (1.78)          (0.24)   
+
+tourist_SEZ       -0.2130*              .         -0.1906   
+                  (-2.47)               .         (-1.30)   
+
+log_VRP_do~a      -0.0008          0.1993*        -0.0058   
+                  (-0.06)          (2.43)         (-0.28)   
+
+log_VRP_ob~e      -0.0243         -0.2116         -0.0673   
+                  (-0.69)         (-1.44)         (-1.24)   
+
+log_VRP_en~y      -0.1680**        0.2516*        -0.0964   
+                  (-3.25)          (2.12)         (-1.31)   
+
+log_VRP_ag~e       0.0073          0.2004          0.0300   
+                   (0.24)          (1.36)          (0.58)   
+
+log_VRP_fi~e      -0.0451         -0.0054         -0.0317   
+                  (-1.93)         (-0.22)         (-1.40)   
+
+log_VRP_tr~e      -0.1341         -0.0952         -0.1934   
+                  (-1.69)         (-0.43)         (-1.77)   
+
+_cons              4.7492        -27.8946        -14.8079   
+                   (0.13)         (-0.99)         (-0.52)   
+------------------------------------------------------------
+N                400.0000        400.0000        400.0000   
+r2                 0.7355          0.8728                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. **************************************************************
+. * BASE MODELS + Hausman + Comparative Table Y2
+. **************************************************************
+. reg Y2 $modelY2
+
+      Source |       SS       df       MS              Number of obs =     397
+-------------+------------------------------           F( 26,   370) =    3.81
+       Model |  .000283039    26  .000010886           Prob > F      =  0.0000
+    Residual |  .001057204   370  2.8573e-06           R-squared     =  0.2112
+-------------+------------------------------           Adj R-squared =  0.1558
+       Total |  .001340243   396  3.3845e-06           Root MSE      =  .00169
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0001255   .0001511     0.83   0.407    -.0001716    .0004226
+          unemployment_sq |  -7.10e-07   8.38e-06    -0.08   0.932    -.0000172    .0000158
+           log_investment |  -.0002468   .0002909    -0.85   0.397    -.0008188    .0003252
+            log_debt_firm |  -.0001367   .0001944    -0.70   0.482    -.0005191    .0002456
+                      CPI |  -.0001208   .0028576    -0.04   0.966    -.0057401    .0054984
+                   CPI_sq |   8.13e-07   .0000132     0.06   0.951    -.0000252    .0000268
+           housing_prices |   7.93e-06   5.35e-06     1.48   0.139    -2.59e-06    .0000185
+        log_housing_stock |  -.0004303     .00065    -0.66   0.508    -.0017084    .0008479
+            interest_rate |   .0001679   .0010337     0.16   0.871    -.0018648    .0022006
+         interest_rate_sq |  -.0000167   .0000825    -0.20   0.840     -.000179    .0001456
+              log_R_and_D |   .0002337   .0001072     2.18   0.030     .0000228    .0004446
+        log_median_income |  -.0018996   .0007184    -2.64   0.009    -.0033123    -.000487
+          wages_to_social |    .001052   .0002989     3.52   0.000     .0004642    .0016397
+ business_income_to_wages |   .0060101   .0013207     4.55   0.000      .003413    .0086072
+ property_income_to_wages |  -.0166854   .0051457    -3.24   0.001    -.0268039   -.0065668
+    log_skilled_graduates |  -.0003648   .0002935    -1.24   0.215    -.0009419    .0002123
+                 gambling |   .0011136   .0003928     2.83   0.005     .0003411     .001886
+           industrial_SEZ |  -.0005158   .0002363    -2.18   0.030    -.0009805   -.0000511
+           innovative_SEZ |   .0009316   .0004444     2.10   0.037     .0000577    .0018055
+              tourist_SEZ |  -.0006553   .0003777    -1.73   0.084    -.0013981    .0000875
+          log_VRP_dobycha |  -.0000224   .0000612    -0.37   0.715    -.0001428     .000098
+log_VRP_obrabatyvayuschie |   .0003794   .0001631     2.33   0.021     .0000587    .0007001
+           log_VRP_energy |   .0005313   .0002157     2.46   0.014     .0001072    .0009555
+      log_VRP_agriculture |   .0003246   .0001478     2.20   0.029      .000034    .0006153
+          log_VRP_finance |   .0001416   .0001063     1.33   0.184    -.0000675    .0003507
+            log_VRP_trade |  -.0001824   .0004129    -0.44   0.659    -.0009944    .0006296
+                    _cons |   .0066372   .1564666     0.04   0.966    -.3010381    .3143125
+-------------------------------------------------------------------------------------------
+
+. estimates store pool_y2
+
+. 
+. xtreg Y2 $modelY2, fe
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2655                         Obs per group: min =         3
+       between = 0.0107                                        avg =       5.0
+       overall = 0.0110                                        max =         5
+
+                                                F(24,293)          =      4.41
+corr(u_i, Xb)  = -0.9662                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000629   .0001536     0.41   0.682    -.0002394    .0003652
+          unemployment_sq |   3.21e-06   6.43e-06     0.50   0.618    -9.44e-06    .0000159
+           log_investment |  -.0000489    .000305    -0.16   0.873    -.0006491    .0005514
+            log_debt_firm |   -.000277   .0002193    -1.26   0.208    -.0007086    .0001546
+                      CPI |  -.0025106   .0013859    -1.81   0.071    -.0052383    .0002171
+                   CPI_sq |   .0000117   6.40e-06     1.83   0.068    -8.71e-07    .0000243
+           housing_prices |   7.64e-06   3.91e-06     1.96   0.051    -4.97e-08    .0000153
+        log_housing_stock |   .0042626   .0021985     1.94   0.053    -.0000643    .0085894
+            interest_rate |   .0005952   .0006957     0.86   0.393     -.000774    .0019644
+         interest_rate_sq |  -.0000444   .0000547    -0.81   0.417     -.000152    .0000632
+              log_R_and_D |  -.0002176   .0002895    -0.75   0.453    -.0007874    .0003521
+        log_median_income |  -.0029835   .0013182    -2.26   0.024    -.0055779    -.000389
+          wages_to_social |   .0002279   .0003801     0.60   0.549    -.0005202    .0009759
+ business_income_to_wages |   -.001088   .0024572    -0.44   0.658    -.0059241     .003748
+ property_income_to_wages |   .0012341   .0050938     0.24   0.809    -.0087911    .0112593
+    log_skilled_graduates |  -.0000906   .0004396    -0.21   0.837    -.0009557    .0007746
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0003083   .0002046    -1.51   0.133    -.0007108    .0000943
+           innovative_SEZ |  -.0011387   .0007062    -1.61   0.108    -.0025286    .0002513
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000496   .0002356     0.21   0.833    -.0004141    .0005134
+log_VRP_obrabatyvayuschie |   .0008337   .0004144     2.01   0.045     .0000182    .0016493
+           log_VRP_energy |   .0009517   .0003201     2.97   0.003     .0003218    .0015817
+      log_VRP_agriculture |   -.000379   .0004439    -0.85   0.394    -.0012526    .0004946
+          log_VRP_finance |   .0001696   .0000682     2.49   0.013     .0000354    .0003038
+            log_VRP_trade |   .0023112   .0006003     3.85   0.000     .0011298    .0034926
+                    _cons |   .0858656   .0756587     1.13   0.257    -.0630379    .2347691
+--------------------------+----------------------------------------------------------------
+                  sigma_u |   .0066654
+                  sigma_e |  .00074464
+                      rho |  .98767298   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(79, 293) =    21.07             Prob > F = 0.0000
+
+. estimates store fe_y2
+
+. 
+. xtreg Y2 $modelY2, re
+
+Random-effects GLS regression                   Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2183                         Obs per group: min =         3
+       between = 0.0656                                        avg =       5.0
+       overall = 0.0801                                        max =         5
+
+                                                Wald chi2(26)      =     86.86
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |    .000133   .0001383     0.96   0.336     -.000138     .000404
+          unemployment_sq |   1.31e-06   6.05e-06     0.22   0.829    -.0000105    .0000132
+           log_investment |  -.0001654   .0002752    -0.60   0.548    -.0007048     .000374
+            log_debt_firm |  -.0002597   .0001859    -1.40   0.162     -.000624    .0001047
+                      CPI |   -.002036   .0013868    -1.47   0.142     -.004754     .000682
+                   CPI_sq |   9.60e-06   6.41e-06     1.50   0.134    -2.96e-06    .0000222
+           housing_prices |   8.70e-06   3.72e-06     2.34   0.019     1.41e-06     .000016
+        log_housing_stock |  -.0018199   .0008736    -2.08   0.037    -.0035322   -.0001076
+            interest_rate |   .0005162   .0006012     0.86   0.391    -.0006622    .0016946
+         interest_rate_sq |  -.0000386   .0000474    -0.81   0.415    -.0001314    .0000542
+              log_R_and_D |   .0000113   .0001842     0.06   0.951    -.0003497    .0003724
+        log_median_income |  -.0020836   .0009161    -2.27   0.023    -.0038791   -.0002881
+          wages_to_social |   .0002609   .0002896     0.90   0.367    -.0003066    .0008285
+ business_income_to_wages |   .0020658   .0018957     1.09   0.276    -.0016497    .0057812
+ property_income_to_wages |  -.0007629   .0046607    -0.16   0.870    -.0098978    .0083719
+    log_skilled_graduates |  -.0002771   .0003675    -0.75   0.451    -.0009974    .0004432
+                 gambling |   .0009596   .0008693     1.10   0.270    -.0007443    .0026634
+           industrial_SEZ |  -.0002589   .0001962    -1.32   0.187    -.0006434    .0001256
+           innovative_SEZ |  -.0008034   .0005794    -1.39   0.166     -.001939    .0003323
+              tourist_SEZ |  -.0003832    .000743    -0.52   0.606    -.0018394     .001073
+          log_VRP_dobycha |   5.23e-06   .0001022     0.05   0.959    -.0001952    .0002056
+log_VRP_obrabatyvayuschie |   .0004007   .0002558     1.57   0.117    -.0001007    .0009021
+           log_VRP_energy |   .0007165   .0002628     2.73   0.006     .0002014    .0012315
+      log_VRP_agriculture |   .0000398   .0002432     0.16   0.870    -.0004368    .0005164
+          log_VRP_finance |   .0001679   .0000661     2.54   0.011     .0000384    .0002975
+            log_VRP_trade |   .0013179   .0004958     2.66   0.008     .0003463    .0022896
+                    _cons |   .0936165   .0757459     1.24   0.216    -.0548427    .2420757
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00173107
+                  sigma_e |  .00074464
+                      rho |  .84385233   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store re_y2
+
+. 
+. hausman fe_y2 re_y2
+
+Note: the rank of the differenced variance matrix (22) does not equal the number of coefficients being tested (24); be sure this is what you expect, or there may be problems computing the test.  Examine the output of your estimators for anything
+        unexpected and possibly consider scaling your variables so that the coefficients are on a similar scale.
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |     fe_y2        re_y2        Difference          S.E.
+-------------+----------------------------------------------------------------
+unemployment |    .0000629      .000133       -.0000701        .0000669
+unemployme~q |    3.21e-06     1.31e-06        1.90e-06        2.18e-06
+log_invest~t |   -.0000489    -.0001654        .0001165        .0001314
+log_debt_f~m |    -.000277    -.0002597       -.0000173        .0001163
+         CPI |   -.0025106     -.002036       -.0004747               .
+      CPI_sq |    .0000117     9.60e-06        2.13e-06               .
+housing_pr~s |    7.64e-06     8.70e-06       -1.06e-06        1.20e-06
+log_housin~k |    .0042626    -.0018199        .0060825        .0020175
+interest_r~e |    .0005952     .0005162         .000079        .0003501
+interest_r~q |   -.0000444    -.0000386       -5.80e-06        .0000273
+ log_R_and_D |   -.0002176     .0000113        -.000229        .0002233
+log_median~e |   -.0029835    -.0020836       -.0008999        .0009479
+wages_to_s~l |    .0002279     .0002609       -.0000331        .0002462
+business_i~s |    -.001088     .0020658       -.0031538        .0015635
+property_i~s |    .0012341    -.0007629         .001997        .0020555
+log_skille~s |   -.0000906    -.0002771        .0001865        .0002412
+industrial~Z |   -.0003083    -.0002589       -.0000494        .0000579
+innovative~Z |   -.0011387    -.0008034       -.0003353        .0004038
+log_VRP_do~a |    .0000496     5.23e-06        .0000444        .0002123
+log_VRP_ob~e |    .0008337     .0004007         .000433         .000326
+log_VRP_en~y |    .0009517     .0007165        .0002353        .0001828
+log_VRP_ag~e |    -.000379     .0000398       -.0004188        .0003714
+log_VRP_fi~e |    .0001696     .0001679        1.66e-06        .0000166
+log_VRP_tr~e |    .0023112     .0013179        .0009933        .0003385
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                 chi2(22) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =       37.89
+                Prob>chi2 =      0.0189
+                (V_b-V_B is not positive definite)
+
+. xttest0
+
+Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Y2[region_id,t] = Xb + u[region_id] + e[region_id,t]
+
+        Estimated results:
+                         |       Var     sd = sqrt(Var)
+                ---------+-----------------------------
+                      Y2 |   3.38e-06       .0018397
+                       e |   5.54e-07       .0007446
+                       u |   3.00e-06       .0017311
+
+        Test:   Var(u) = 0
+                             chibar2(01) =   449.77
+                          Prob > chibar2 =   0.0000
+
+. 
+. esttab pool_y2 fe_y2 re_y2 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y2              Y2              Y2   
+------------------------------------------------------------
+unemployment       0.0001          0.0001          0.0001   
+                   (0.83)          (0.41)          (0.96)   
+
+unemployme~q      -0.0000          0.0000          0.0000   
+                  (-0.08)          (0.50)          (0.22)   
+
+log_invest~t      -0.0002         -0.0000         -0.0002   
+                  (-0.85)         (-0.16)         (-0.60)   
+
+log_debt_f~m      -0.0001         -0.0003         -0.0003   
+                  (-0.70)         (-1.26)         (-1.40)   
+
+CPI               -0.0001         -0.0025         -0.0020   
+                  (-0.04)         (-1.81)         (-1.47)   
+
+CPI_sq             0.0000          0.0000          0.0000   
+                   (0.06)          (1.83)          (1.50)   
+
+housing_pr~s       0.0000          0.0000          0.0000*  
+                   (1.48)          (1.96)          (2.34)   
+
+log_housin~k      -0.0004          0.0043         -0.0018*  
+                  (-0.66)          (1.94)         (-2.08)   
+
+interest_r~e       0.0002          0.0006          0.0005   
+                   (0.16)          (0.86)          (0.86)   
+
+interest_r~q      -0.0000         -0.0000         -0.0000   
+                  (-0.20)         (-0.81)         (-0.81)   
+
+log_R_and_D        0.0002*        -0.0002          0.0000   
+                   (2.18)         (-0.75)          (0.06)   
+
+log_median~e      -0.0019**       -0.0030*        -0.0021*  
+                  (-2.64)         (-2.26)         (-2.27)   
+
+wages_to_s~l       0.0011***       0.0002          0.0003   
+                   (3.52)          (0.60)          (0.90)   
+
+business_i~s       0.0060***      -0.0011          0.0021   
+                   (4.55)         (-0.44)          (1.09)   
+
+property_i~s      -0.0167**        0.0012         -0.0008   
+                  (-3.24)          (0.24)         (-0.16)   
+
+log_skille~s      -0.0004         -0.0001         -0.0003   
+                  (-1.24)         (-0.21)         (-0.75)   
+
+gambling           0.0011**             .          0.0010   
+                   (2.83)               .          (1.10)   
+
+industrial~Z      -0.0005*        -0.0003         -0.0003   
+                  (-2.18)         (-1.51)         (-1.32)   
+
+innovative~Z       0.0009*        -0.0011         -0.0008   
+                   (2.10)         (-1.61)         (-1.39)   
+
+tourist_SEZ       -0.0007               .         -0.0004   
+                  (-1.73)               .         (-0.52)   
+
+log_VRP_do~a      -0.0000          0.0000          0.0000   
+                  (-0.37)          (0.21)          (0.05)   
+
+log_VRP_ob~e       0.0004*         0.0008*         0.0004   
+                   (2.33)          (2.01)          (1.57)   
+
+log_VRP_en~y       0.0005*         0.0010**        0.0007** 
+                   (2.46)          (2.97)          (2.73)   
+
+log_VRP_ag~e       0.0003*        -0.0004          0.0000   
+                   (2.20)         (-0.85)          (0.16)   
+
+log_VRP_fi~e       0.0001          0.0002*         0.0002*  
+                   (1.33)          (2.49)          (2.54)   
+
+log_VRP_tr~e      -0.0002          0.0023***       0.0013** 
+                  (-0.44)          (3.85)          (2.66)   
+
+_cons              0.0066          0.0859          0.0936   
+                   (0.04)          (1.13)          (1.24)   
+------------------------------------------------------------
+N                397.0000        397.0000        397.0000   
+r2                 0.2112          0.2655                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. **************************************************************
+. * TIME MODELS + Hausman + Comparative Table Y1
+. **************************************************************
+. reg Y1 $modelY1 i.year
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+      Source |       SS       df       MS              Number of obs =     400
+-------------+------------------------------           F( 26,   373) =   45.67
+       Model |  171.976401    26  6.61447696           Prob > F      =  0.0000
+    Residual |  54.0199389   373  .144825573           R-squared     =  0.7610
+-------------+------------------------------           Adj R-squared =  0.7443
+       Total |   225.99634   399  .566406867           Root MSE      =  .38056
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0279325   .0350204    -0.80   0.426    -.0967946    .0409296
+          unemployment_sq |   .0000395   .0019523     0.02   0.984    -.0037995    .0038784
+          log_debt_people |   .3422978   .0724772     4.72   0.000     .1997827    .4848129
+        log_median_income |  -.1331141   .1658791    -0.80   0.423    -.4592895    .1930613
+             divorce_rate |   .1041878   .0349245     2.98   0.003     .0355142    .1728614
+                      CPI |  -.7159824    .657753    -1.09   0.277    -2.009351    .5773865
+                   CPI_sq |   .0033751   .0030294     1.11   0.266    -.0025817     .009332
+           housing_prices |    .001613   .0010925     1.48   0.141    -.0005352    .0037611
+            interest_rate |  -96.28609   15.42939    -6.24   0.000    -126.6256    -65.9466
+         interest_rate_sq |   5.989819   .9596051     6.24   0.000     4.102905    7.876733
+          wages_to_social |  -.0319845   .0644375    -0.50   0.620    -.1586908    .0947219
+ property_income_to_wages |   1.582916   1.065824     1.49   0.138    -.5128615    3.678694
+                 gambling |  -.0953692     .09151    -1.04   0.298    -.2753093    .0845709
+        log_hospital_beds |  -.1401364    .095888    -1.46   0.145    -.3286852    .0484124
+            log_graduates |   .1105176     .04568     2.42   0.016     .0206949    .2003402
+           industrial_SEZ |   -.005177   .0529558    -0.10   0.922    -.1093063    .0989522
+           innovative_SEZ |   -.086199   .0999764    -0.86   0.389     -.282787     .110389
+              tourist_SEZ |  -.2004984   .0824247    -2.43   0.015    -.3625737   -.0384232
+          log_VRP_dobycha |   .0026323   .0122934     0.21   0.831    -.0215408    .0268055
+log_VRP_obrabatyvayuschie |   .0113912   .0341544     0.33   0.739    -.0557682    .0785505
+           log_VRP_energy |  -.1669665   .0492687    -3.39   0.001    -.2638457   -.0700873
+      log_VRP_agriculture |   .0215492   .0297815     0.72   0.470    -.0370115      .08011
+          log_VRP_finance |  -.0399184   .0227125    -1.76   0.080    -.0845791    .0047423
+            log_VRP_trade |  -.0779497   .0761548    -1.02   0.307    -.2276962    .0717968
+                          |
+                     year |
+                    2019  |  -18.61153    3.00173    -6.20   0.000    -24.51397    -12.7091
+                    2020  |   -85.0496   13.65158    -6.23   0.000    -111.8933   -58.20589
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |   425.9379   76.73323     5.55   0.000     275.0539    576.8218
+-------------------------------------------------------------------------------------------
+
+. estimates store pool_time_y1
+
+. 
+. xtreg Y1 $modelY1 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.9080                         Obs per group: min =         3
+       between = 0.0482                                        avg =       4.9
+       overall = 0.2187                                        max =         5
+
+                                                F(24,295)          =    121.37
+corr(u_i, Xb)  = -0.6700                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0469441    -0.79   0.433    -.1292699    .0555058
+          unemployment_sq |  -.0000142   .0019637    -0.01   0.994    -.0038788    .0038503
+          log_debt_people |  -1.160419   .1912397    -6.07   0.000    -1.536786   -.7840517
+        log_median_income |  -2.489491    .710544    -3.50   0.001    -3.887869   -1.091113
+             divorce_rate |   .0055934   .0430206     0.13   0.897    -.0790729    .0902596
+                      CPI |  -1.075789   .4507179    -2.39   0.018    -1.962819   -.1887586
+                   CPI_sq |   .0050715   .0020707     2.45   0.015     .0009964    .0091466
+           housing_prices |  -.0010692   .0010505    -1.02   0.310    -.0031366    .0009983
+            interest_rate |          0  (omitted)
+         interest_rate_sq |  -.0315203   .0032363    -9.74   0.000    -.0378895   -.0251511
+          wages_to_social |   .2252784   .1284592     1.75   0.081    -.0275342    .4780909
+ property_income_to_wages |  -.0066725   1.571291    -0.00   0.997    -3.099033    3.085688
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317    .091768     0.30   0.764    -.1529713    .2082348
+            log_graduates |   .2181064   .1836853     1.19   0.236    -.1433932     .579606
+           industrial_SEZ |  -.0806815   .0645712    -1.25   0.212    -.2077602    .0463971
+           innovative_SEZ |   .4813324   .2159432     2.23   0.027      .056348    .9063168
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0700634     2.38   0.018     .0288765    .3046512
+log_VRP_obrabatyvayuschie |  -.1553785   .1254056    -1.24   0.216    -.4021815    .0914245
+           log_VRP_energy |   .2385523   .1015947     2.35   0.020       .03861    .4384946
+      log_VRP_agriculture |   .1067457   .1266335     0.84   0.400    -.1424739    .3559654
+          log_VRP_finance |  -.0151937   .0218177    -0.70   0.487    -.0581317    .0277442
+            log_VRP_trade |   .2725177   .1902674     1.43   0.153    -.1019359    .6469713
+                          |
+                     year |
+                    2019  |  -.1448078   .0661196    -2.19   0.029    -.2749336   -.0146819
+                    2020  |          0  (omitted)
+                    2021  |   2.508193   .2364035    10.61   0.000     2.042942    2.973445
+                    2022  |   3.113104   .3050714    10.20   0.000     2.512711    3.713496
+                          |
+                    _cons |    86.2974    26.7786     3.22   0.001     33.59609    138.9987
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .87110476
+                  sigma_e |  .22943725
+                      rho |  .93512788   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(80, 295) =     9.41             Prob > F = 0.0000
+
+. estimates store fe_time_y1
+
+. 
+. xtreg Y1 $modelY1 i.year, re
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+Random-effects GLS regression                   Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.8910                         Obs per group: min =         3
+       between = 0.2515                                        avg =       4.9
+       overall = 0.7196                                        max =         5
+
+                                                Wald chi2(26)      =   2441.38
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0222099   .0388969    -0.57   0.568    -.0984464    .0540265
+          unemployment_sq |    .000024   .0018179     0.01   0.989    -.0035391     .003587
+          log_debt_people |  -.1261317   .1092919    -1.15   0.248    -.3403398    .0880764
+        log_median_income |   -.553509   .2815351    -1.97   0.049    -1.105308   -.0017103
+             divorce_rate |   .0811044   .0378804     2.14   0.032     .0068603    .1553486
+                      CPI |  -.6526366   .4711635    -1.39   0.166      -1.5761    .2708268
+                   CPI_sq |    .003061   .0021642     1.41   0.157    -.0011807    .0073026
+           housing_prices |     .00076   .0010294     0.74   0.460    -.0012576    .0027775
+            interest_rate |  -140.8984   15.05183    -9.36   0.000    -170.3994   -111.3974
+         interest_rate_sq |   8.767341   .9365687     9.36   0.000       6.9317    10.60298
+          wages_to_social |   .1162152   .0888014     1.31   0.191    -.0578324    .2902628
+ property_income_to_wages |   1.287281   1.292568     1.00   0.319    -1.246106    3.820668
+                 gambling |  -.1958366   .1708115    -1.15   0.252    -.5306209    .1389477
+        log_hospital_beds |   .0119131   .0881984     0.14   0.893    -.1609526    .1847788
+            log_graduates |   .1011246   .0729505     1.39   0.166    -.0418556    .2441049
+           industrial_SEZ |  -.0134869   .0598396    -0.23   0.822    -.1307702    .1037965
+           innovative_SEZ |   .1228763   .1502438     0.82   0.413    -.1715962    .4173488
+              tourist_SEZ |  -.2328898   .1475387    -1.58   0.114    -.5220602    .0562807
+          log_VRP_dobycha |   .0219561   .0211878     1.04   0.300    -.0195711    .0634833
+log_VRP_obrabatyvayuschie |   .0228466   .0543402     0.42   0.674    -.0836583    .1293515
+           log_VRP_energy |  -.0222476   .0706542    -0.31   0.753    -.1607274    .1162321
+      log_VRP_agriculture |   .0820217   .0513394     1.60   0.110    -.0186017    .1826451
+          log_VRP_finance |   -.022929   .0208753    -1.10   0.272    -.0638439    .0179858
+            log_VRP_trade |  -.0078075   .1072567    -0.07   0.942    -.2180266    .2024117
+                          |
+                     year |
+                    2019  |  -27.06688   2.904552    -9.32   0.000     -32.7597   -21.37406
+                    2020  |  -124.2681   13.28099    -9.36   0.000    -150.2984   -98.23785
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |   605.2269   71.55068     8.46   0.000     464.9902    745.4636
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .29856447
+                  sigma_e |  .22943725
+                      rho |  .62871606   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store re_time_y1
+
+. 
+. hausman fe_time_y1 re_time_y1
+
+Note: the rank of the differenced variance matrix (19) does not equal the number of coefficients being tested (22); be sure this is what you expect, or there may be problems computing the test.  Examine the output of your estimators for anything
+        unexpected and possibly consider scaling your variables so that the coefficients are on a similar scale.
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |   fe_time_y1   re_time_y1     Difference          S.E.
+-------------+----------------------------------------------------------------
+unemployment |   -.0368821    -.0222099       -.0146721        .0262828
+unemployme~q |   -.0000142      .000024       -.0000382        .0007423
+log_debt_p~e |   -1.160419    -.1261317       -1.034287        .1569328
+log_median~e |   -2.489491     -.553509       -1.935982        .6523885
+divorce_rate |    .0055934     .0811044       -.0755111        .0203924
+         CPI |   -1.075789    -.6526366        -.423152               .
+      CPI_sq |    .0050715      .003061        .0020106               .
+housing_pr~s |   -.0010692       .00076       -.0018291        .0002094
+interest_r~q |   -.0315203     8.767341       -8.798861               .
+wages_to_s~l |    .2252784     .1162152        .1090632        .0928228
+property_i~s |   -.0066725     1.287281       -1.293953        .8934335
+log_hospit~s |    .0276317     .0119131        .0157186        .0253459
+log_gradua~s |    .2181064     .1011246        .1169817        .1685779
+industrial~Z |   -.0806815    -.0134869       -.0671947        .0242626
+innovative~Z |    .4813324     .1228763        .3584561        .1551072
+log_VRP_do~a |    .1667638     .0219561        .1448077        .0667829
+log_VRP_ob~e |   -.1553785     .0228466       -.1782251        .1130208
+log_VRP_en~y |    .2385523    -.0222476        .2607999        .0730032
+log_VRP_ag~e |    .1067457     .0820217         .024724        .1157597
+log_VRP_fi~e |   -.0151937     -.022929        .0077353        .0063429
+log_VRP_tr~e |    .2725177    -.0078075        .2803251        .1571551
+   2019.year |   -.1448078    -27.06688        26.92207               .
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                 chi2(19) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =       73.27
+                Prob>chi2 =      0.0000
+                (V_b-V_B is not positive definite)
+
+. xttest0
+
+Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Y1[region_id,t] = Xb + u[region_id] + e[region_id,t]
+
+        Estimated results:
+                         |       Var     sd = sqrt(Var)
+                ---------+-----------------------------
+                      Y1 |   .5664069       .7526001
+                       e |   .0526415       .2294372
+                       u |   .0891407       .2985645
+
+        Test:   Var(u) = 0
+                             chibar2(01) =   193.81
+                          Prob > chibar2 =   0.0000
+
+. 
+. esttab pool_time_y1 fe_time_y1 re_time_y1 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y1              Y1              Y1   
+------------------------------------------------------------
+unemployment      -0.0279         -0.0369         -0.0222   
+                  (-0.80)         (-0.79)         (-0.57)   
+
+unemployme~q       0.0000         -0.0000          0.0000   
+                   (0.02)         (-0.01)          (0.01)   
+
+log_debt_p~e       0.3423***      -1.1604***      -0.1261   
+                   (4.72)         (-6.07)         (-1.15)   
+
+log_median~e      -0.1331         -2.4895***      -0.5535*  
+                  (-0.80)         (-3.50)         (-1.97)   
+
+divorce_rate       0.1042**        0.0056          0.0811*  
+                   (2.98)          (0.13)          (2.14)   
+
+CPI               -0.7160         -1.0758*        -0.6526   
+                  (-1.09)         (-2.39)         (-1.39)   
+
+CPI_sq             0.0034          0.0051*         0.0031   
+                   (1.11)          (2.45)          (1.41)   
+
+housing_pr~s       0.0016         -0.0011          0.0008   
+                   (1.48)         (-1.02)          (0.74)   
+
+interest_r~e     -96.2861***            .        -1.4e+02***
+                  (-6.24)               .         (-9.36)   
+
+interest_r~q       5.9898***      -0.0315***       8.7673***
+                   (6.24)         (-9.74)          (9.36)   
+
+wages_to_s~l      -0.0320          0.2253          0.1162   
+                  (-0.50)          (1.75)          (1.31)   
+
+property_i~s       1.5829         -0.0067          1.2873   
+                   (1.49)         (-0.00)          (1.00)   
+
+gambling          -0.0954               .         -0.1958   
+                  (-1.04)               .         (-1.15)   
+
+log_hospit~s      -0.1401          0.0276          0.0119   
+                  (-1.46)          (0.30)          (0.14)   
+
+log_gradua~s       0.1105*         0.2181          0.1011   
+                   (2.42)          (1.19)          (1.39)   
+
+industrial~Z      -0.0052         -0.0807         -0.0135   
+                  (-0.10)         (-1.25)         (-0.23)   
+
+innovative~Z      -0.0862          0.4813*         0.1229   
+                  (-0.86)          (2.23)          (0.82)   
+
+tourist_SEZ       -0.2005*              .         -0.2329   
+                  (-2.43)               .         (-1.58)   
+
+log_VRP_do~a       0.0026          0.1668*         0.0220   
+                   (0.21)          (2.38)          (1.04)   
+
+log_VRP_ob~e       0.0114         -0.1554          0.0228   
+                   (0.33)         (-1.24)          (0.42)   
+
+log_VRP_en~y      -0.1670***       0.2386*        -0.0222   
+                  (-3.39)          (2.35)         (-0.31)   
+
+log_VRP_ag~e       0.0215          0.1067          0.0820   
+                   (0.72)          (0.84)          (1.60)   
+
+log_VRP_fi~e      -0.0399         -0.0152         -0.0229   
+                  (-1.76)         (-0.70)         (-1.10)   
+
+log_VRP_tr~e      -0.0779          0.2725         -0.0078   
+                  (-1.02)          (1.43)         (-0.07)   
+
+2018bn.year             .               .               .   
+                        .               .               .   
+
+2019.year        -18.6115***      -0.1448*       -27.0669***
+                  (-6.20)         (-2.19)         (-9.32)   
+
+2020.year        -85.0496***            .        -1.2e+02***
+                  (-6.23)               .         (-9.36)   
+
+2021.year               .          2.5082***            .   
+                        .         (10.61)               .   
+
+2022.year               .          3.1131***            .   
+                        .         (10.20)               .   
+
+_cons            425.9379***      86.2974**      605.2269***
+                   (5.55)          (3.22)          (8.46)   
+------------------------------------------------------------
+N                400.0000        400.0000        400.0000   
+r2                 0.7610          0.9080                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. **************************************************************
+. * TIME MODELS + Hausman + Comparative Table Y2
+. **************************************************************
+. reg Y2 $modelY2 i.year
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+      Source |       SS       df       MS              Number of obs =     397
+-------------+------------------------------           F( 28,   368) =    3.57
+       Model |  .000286308    28  .000010225           Prob > F      =  0.0000
+    Residual |  .001053935   368  2.8640e-06           R-squared     =  0.2136
+-------------+------------------------------           Adj R-squared =  0.1538
+       Total |  .001340243   396  3.3845e-06           Root MSE      =  .00169
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0001213   .0001529     0.79   0.428    -.0001793    .0004219
+          unemployment_sq |  -3.26e-07   8.54e-06    -0.04   0.970    -.0000171    .0000165
+           log_investment |  -.0002588   .0002946    -0.88   0.380     -.000838    .0003204
+            log_debt_firm |  -.0001514   .0001958    -0.77   0.440    -.0005364    .0002335
+                      CPI |   .0001042   .0029124     0.04   0.971     -.005623    .0058313
+                   CPI_sq |  -7.53e-08   .0000134    -0.01   0.996    -.0000264    .0000263
+           housing_prices |   7.52e-06   5.42e-06     1.39   0.166    -3.14e-06    .0000182
+        log_housing_stock |  -.0004138   .0006509    -0.64   0.525    -.0016938    .0008663
+            interest_rate |   .0066719    .064099     0.10   0.917    -.1193745    .1327182
+         interest_rate_sq |  -.0004088    .003987    -0.10   0.918     -.008249    .0074314
+              log_R_and_D |   .0002325   .0001074     2.17   0.031     .0000213    .0004437
+        log_median_income |  -.0019973   .0007509    -2.66   0.008    -.0034739   -.0005207
+          wages_to_social |   .0011175    .000311     3.59   0.000      .000506     .001729
+ business_income_to_wages |   .0061208   .0013263     4.61   0.000     .0035126    .0087289
+ property_income_to_wages |  -.0163783   .0051612    -3.17   0.002    -.0265276   -.0062291
+    log_skilled_graduates |  -.0003596   .0002951    -1.22   0.224    -.0009398    .0002206
+                 gambling |   .0010947   .0003937     2.78   0.006     .0003205    .0018689
+           industrial_SEZ |  -.0005269   .0002369    -2.22   0.027    -.0009928   -.0000611
+           innovative_SEZ |   .0009062   .0004471     2.03   0.043     .0000271    .0017853
+              tourist_SEZ |  -.0006459   .0003784    -1.71   0.089    -.0013899    .0000982
+          log_VRP_dobycha |  -.0000203   .0000613    -0.33   0.741    -.0001409    .0001003
+log_VRP_obrabatyvayuschie |   .0003817   .0001639     2.33   0.020     .0000593    .0007041
+           log_VRP_energy |    .000529    .000216     2.45   0.015     .0001043    .0009537
+      log_VRP_agriculture |   .0003352   .0001486     2.26   0.025     .0000429    .0006274
+          log_VRP_finance |   .0001516   .0001077     1.41   0.160    -.0000602    .0003635
+            log_VRP_trade |  -.0001921   .0004143    -0.46   0.643    -.0010068    .0006226
+                          |
+                     year |
+                    2019  |   .0018045   .0125002     0.14   0.885    -.0227762    .0263853
+                    2020  |   .0063898   .0567088     0.11   0.910    -.1051241    .1179036
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |  -.0332413   .3307601    -0.10   0.920    -.6836584    .6171758
+-------------------------------------------------------------------------------------------
+
+. estimates store pool_time_y2
+
+. 
+. xtreg Y2 $modelY2 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2756                         Obs per group: min =         3
+       between = 0.0093                                        avg =       5.0
+       overall = 0.0093                                        max =         5
+
+                                                F(26,291)          =      4.26
+corr(u_i, Xb)  = -0.9772                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0001537     0.51   0.608    -.0002237    .0003814
+          unemployment_sq |   2.90e-06   6.41e-06     0.45   0.651    -9.72e-06    .0000155
+           log_investment |  -.0000604   .0003059    -0.20   0.844    -.0006626    .0005417
+            log_debt_firm |  -.0003222     .00022    -1.46   0.144    -.0007551    .0001108
+                      CPI |  -.0019568   .0014328    -1.37   0.173    -.0047767    .0008631
+                   CPI_sq |   9.29e-06   6.58e-06     1.41   0.159    -3.66e-06    .0000222
+           housing_prices |   8.02e-06   3.91e-06     2.05   0.041     3.29e-07    .0000157
+        log_housing_stock |   .0059613   .0024115     2.47   0.014     .0012151    .0107076
+            interest_rate |          0  (omitted)
+         interest_rate_sq |   .0000239   .0000108     2.22   0.027     2.73e-06    .0000451
+              log_R_and_D |  -.0002209   .0002886    -0.77   0.445     -.000789    .0003471
+        log_median_income |   .0016962   .0026851     0.63   0.528    -.0035885    .0069808
+          wages_to_social |  -.0001329   .0004323    -0.31   0.759    -.0009837    .0007179
+ business_income_to_wages |  -.0032716   .0027706    -1.18   0.239    -.0087246    .0021814
+ property_income_to_wages |   .0028771   .0051695     0.56   0.578    -.0072973    .0130516
+    log_skilled_graduates |  -.0001689   .0004398    -0.38   0.701    -.0010345    .0006966
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0002074    -1.12   0.265    -.0006396    .0001768
+           innovative_SEZ |  -.0011542   .0007052    -1.64   0.103    -.0025423    .0002338
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0002352     0.14   0.888    -.0004296    .0004961
+log_VRP_obrabatyvayuschie |   .0007996   .0004133     1.93   0.054    -.0000138     .001613
+           log_VRP_energy |   .0010315   .0003217     3.21   0.001     .0003983    .0016646
+      log_VRP_agriculture |  -.0002411   .0004476    -0.54   0.590     -.001122    .0006398
+          log_VRP_finance |   .0001867    .000069     2.71   0.007     .0000509    .0003225
+            log_VRP_trade |   .0022323   .0006048     3.69   0.000     .0010419    .0034227
+                          |
+                     year |
+                    2019  |    .000264   .0002091     1.26   0.208    -.0001477    .0006756
+                    2020  |          0  (omitted)
+                    2021  |  -.0016521    .000767    -2.15   0.032    -.0031616   -.0001427
+                    2022  |  -.0019633   .0009963    -1.97   0.050    -.0039242   -2.44e-06
+                          |
+                    _cons |    .002414   .0860301     0.03   0.978    -.1669062    .1717341
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00810569
+                  sigma_e |  .00074202
+                      rho |  .99168946   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(79, 291) =    21.18             Prob > F = 0.0000
+
+. estimates store fe_time_y2
+
+. 
+. xtreg Y2 $modelY2 i.year, re
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+Random-effects GLS regression                   Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2213                         Obs per group: min =         3
+       between = 0.0732                                        avg =       5.0
+       overall = 0.0868                                        max =         5
+
+                                                Wald chi2(28)      =     88.86
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0001224   .0001385     0.88   0.377     -.000149    .0003939
+          unemployment_sq |   1.49e-06   6.05e-06     0.25   0.806    -.0000104    .0000133
+           log_investment |  -.0001958   .0002763    -0.71   0.478    -.0007373    .0003457
+            log_debt_firm |   -.000255   .0001866    -1.37   0.172    -.0006208    .0001108
+                      CPI |   -.001715   .0014346    -1.20   0.232    -.0045267    .0010968
+                   CPI_sq |   8.29e-06   6.59e-06     1.26   0.208    -4.62e-06    .0000212
+           housing_prices |   8.12e-06   3.78e-06     2.15   0.032     7.11e-07    .0000155
+        log_housing_stock |  -.0017954   .0008895    -2.02   0.044    -.0035389    -.000052
+            interest_rate |   .0121964   .0482447     0.25   0.800    -.0823615    .1067544
+         interest_rate_sq |  -.0007567   .0030014    -0.25   0.801    -.0066393    .0051259
+              log_R_and_D |   7.06e-06   .0001847     0.04   0.970     -.000355    .0003691
+        log_median_income |   -.002304   .0012774    -1.80   0.071    -.0048077    .0001997
+          wages_to_social |   .0003816   .0003447     1.11   0.268     -.000294    .0010572
+ business_income_to_wages |   .0025636   .0019397     1.32   0.186    -.0012382    .0063653
+ property_income_to_wages |  -.0002139   .0047106    -0.05   0.964    -.0094464    .0090187
+    log_skilled_graduates |  -.0002522   .0003696    -0.68   0.495    -.0009765    .0004721
+                 gambling |    .000925   .0008722     1.06   0.289    -.0007845    .0026344
+           industrial_SEZ |  -.0002654   .0001974    -1.34   0.179    -.0006523    .0001216
+           innovative_SEZ |  -.0008427   .0005805    -1.45   0.147    -.0019804     .000295
+              tourist_SEZ |  -.0003473   .0007454    -0.47   0.641    -.0018083    .0011138
+          log_VRP_dobycha |   .0000146   .0001032     0.14   0.887    -.0001877    .0002169
+log_VRP_obrabatyvayuschie |    .000406   .0002585     1.57   0.116    -.0001007    .0009127
+           log_VRP_energy |   .0007062    .000263     2.68   0.007     .0001906    .0012217
+      log_VRP_agriculture |   .0000449   .0002436     0.18   0.854    -.0004326    .0005224
+          log_VRP_finance |   .0001771   .0000666     2.66   0.008     .0000464    .0003077
+            log_VRP_trade |   .0012697   .0005042     2.52   0.012     .0002815    .0022579
+                          |
+                     year |
+                    2019  |   .0026252   .0093336     0.28   0.779    -.0156683    .0209186
+                    2020  |   .0108017   .0425899     0.25   0.800    -.0726729    .0942763
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |   .0296405   .2321249     0.13   0.898    -.4253159    .4845969
+--------------------------+----------------------------------------------------------------
+                  sigma_u |   .0017313
+                  sigma_e |  .00074202
+                      rho |  .84481417   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store re_time_y2
+
+. 
+. hausman fe_time_y2 re_time_y2
+
+Note: the rank of the differenced variance matrix (21) does not equal the number of coefficients being tested (24); be sure this is what you expect, or there may be problems computing the test.  Examine the output of your estimators for anything
+        unexpected and possibly consider scaling your variables so that the coefficients are on a similar scale.
+
+                 ---- Coefficients ----
+             |      (b)          (B)            (b-B)     sqrt(diag(V_b-V_B))
+             |   fe_time_y2   re_time_y2     Difference          S.E.
+-------------+----------------------------------------------------------------
+unemployment |    .0000788     .0001224       -.0000436        .0000667
+unemployme~q |    2.90e-06     1.49e-06        1.42e-06        2.13e-06
+log_invest~t |   -.0000604    -.0001958        .0001354        .0001314
+log_debt_f~m |   -.0003222     -.000255       -.0000672        .0001165
+         CPI |   -.0019568     -.001715       -.0002418               .
+      CPI_sq |    9.29e-06     8.29e-06        1.00e-06               .
+housing_pr~s |    8.02e-06     8.12e-06       -1.03e-07        9.84e-07
+log_housin~k |    .0059613    -.0017954        .0077568        .0022415
+interest_r~q |    .0000239    -.0007567        .0007806               .
+ log_R_and_D |   -.0002209     7.06e-06        -.000228        .0002218
+log_median~e |    .0016962     -.002304        .0040002        .0023617
+wages_to_s~l |   -.0001329     .0003816       -.0005145        .0002608
+business_i~s |   -.0032716     .0025636       -.0058351        .0019784
+property_i~s |    .0028771    -.0002139         .003091        .0021295
+log_skille~s |   -.0001689    -.0002522        .0000833        .0002384
+industrial~Z |   -.0002314    -.0002654         .000034        .0000635
+innovative~Z |   -.0011542    -.0008427       -.0003115        .0004005
+log_VRP_do~a |    .0000332     .0000146        .0000186        .0002113
+log_VRP_ob~e |    .0007996      .000406        .0003936        .0003224
+log_VRP_en~y |    .0010315     .0007062        .0003253        .0001852
+log_VRP_ag~e |   -.0002411     .0000449        -.000286        .0003755
+log_VRP_fi~e |    .0001867     .0001771        9.61e-06        .0000178
+log_VRP_tr~e |    .0022323     .0012697        .0009626        .0003341
+   2019.year |     .000264     .0026252       -.0023612               .
+------------------------------------------------------------------------------
+                           b = consistent under Ho and Ha; obtained from xtreg
+            B = inconsistent under Ha, efficient under Ho; obtained from xtreg
+
+    Test:  Ho:  difference in coefficients not systematic
+
+                 chi2(21) = (b-B)'[(V_b-V_B)^(-1)](b-B)
+                          =       41.76
+                Prob>chi2 =      0.0045
+                (V_b-V_B is not positive definite)
+
+. xttest0
+
+Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Y2[region_id,t] = Xb + u[region_id] + e[region_id,t]
+
+        Estimated results:
+                         |       Var     sd = sqrt(Var)
+                ---------+-----------------------------
+                      Y2 |   3.38e-06       .0018397
+                       e |   5.51e-07        .000742
+                       u |   3.00e-06       .0017313
+
+        Test:   Var(u) = 0
+                             chibar2(01) =   452.65
+                          Prob > chibar2 =   0.0000
+
+. 
+. esttab pool_time_y2 fe_time_y2 re_time_y2 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y2              Y2              Y2   
+------------------------------------------------------------
+unemployment       0.0001          0.0001          0.0001   
+                   (0.79)          (0.51)          (0.88)   
+
+unemployme~q      -0.0000          0.0000          0.0000   
+                  (-0.04)          (0.45)          (0.25)   
+
+log_invest~t      -0.0003         -0.0001         -0.0002   
+                  (-0.88)         (-0.20)         (-0.71)   
+
+log_debt_f~m      -0.0002         -0.0003         -0.0003   
+                  (-0.77)         (-1.46)         (-1.37)   
+
+CPI                0.0001         -0.0020         -0.0017   
+                   (0.04)         (-1.37)         (-1.20)   
+
+CPI_sq            -0.0000          0.0000          0.0000   
+                  (-0.01)          (1.41)          (1.26)   
+
+housing_pr~s       0.0000          0.0000*         0.0000*  
+                   (1.39)          (2.05)          (2.15)   
+
+log_housin~k      -0.0004          0.0060*        -0.0018*  
+                  (-0.64)          (2.47)         (-2.02)   
+
+interest_r~e       0.0067               .          0.0122   
+                   (0.10)               .          (0.25)   
+
+interest_r~q      -0.0004          0.0000*        -0.0008   
+                  (-0.10)          (2.22)         (-0.25)   
+
+log_R_and_D        0.0002*        -0.0002          0.0000   
+                   (2.17)         (-0.77)          (0.04)   
+
+log_median~e      -0.0020**        0.0017         -0.0023   
+                  (-2.66)          (0.63)         (-1.80)   
+
+wages_to_s~l       0.0011***      -0.0001          0.0004   
+                   (3.59)         (-0.31)          (1.11)   
+
+business_i~s       0.0061***      -0.0033          0.0026   
+                   (4.61)         (-1.18)          (1.32)   
+
+property_i~s      -0.0164**        0.0029         -0.0002   
+                  (-3.17)          (0.56)         (-0.05)   
+
+log_skille~s      -0.0004         -0.0002         -0.0003   
+                  (-1.22)         (-0.38)         (-0.68)   
+
+gambling           0.0011**             .          0.0009   
+                   (2.78)               .          (1.06)   
+
+industrial~Z      -0.0005*        -0.0002         -0.0003   
+                  (-2.22)         (-1.12)         (-1.34)   
+
+innovative~Z       0.0009*        -0.0012         -0.0008   
+                   (2.03)         (-1.64)         (-1.45)   
+
+tourist_SEZ       -0.0006               .         -0.0003   
+                  (-1.71)               .         (-0.47)   
+
+log_VRP_do~a      -0.0000          0.0000          0.0000   
+                  (-0.33)          (0.14)          (0.14)   
+
+log_VRP_ob~e       0.0004*         0.0008          0.0004   
+                   (2.33)          (1.93)          (1.57)   
+
+log_VRP_en~y       0.0005*         0.0010**        0.0007** 
+                   (2.45)          (3.21)          (2.68)   
+
+log_VRP_ag~e       0.0003*        -0.0002          0.0000   
+                   (2.26)         (-0.54)          (0.18)   
+
+log_VRP_fi~e       0.0002          0.0002**        0.0002** 
+                   (1.41)          (2.71)          (2.66)   
+
+log_VRP_tr~e      -0.0002          0.0022***       0.0013*  
+                  (-0.46)          (3.69)          (2.52)   
+
+2018bn.year             .               .               .   
+                        .               .               .   
+
+2019.year          0.0018          0.0003          0.0026   
+                   (0.14)          (1.26)          (0.28)   
+
+2020.year          0.0064               .          0.0108   
+                   (0.11)               .          (0.25)   
+
+2021.year               .         -0.0017*              .   
+                        .         (-2.15)               .   
+
+2022.year               .         -0.0020*              .   
+                        .         (-1.97)               .   
+
+_cons             -0.0332          0.0024          0.0296   
+                  (-0.10)          (0.03)          (0.13)   
+------------------------------------------------------------
+N                397.0000        397.0000        397.0000   
+r2                 0.2136          0.2756                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. **************************************************************
+. * 7. SERIAL AUTOCORRELATION (Wooldridge test)
+. **************************************************************
+. xtserial Y1 $modelY1
+
+Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+    F(  1,      80) =    194.834
+           Prob > F =      0.0000
+
+. xtserial Y2 $modelY2
+
+Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+    F(  1,      79) =      5.356
+           Prob > F =      0.0232
+
+. 
+. **************************************************************
+. * 8. PESARAN CD TEST — CORRECTED!!!
+. **************************************************************
+. xtreg Y1 $modelY1 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.9080                         Obs per group: min =         3
+       between = 0.0482                                        avg =       4.9
+       overall = 0.2187                                        max =         5
+
+                                                F(24,295)          =    121.37
+corr(u_i, Xb)  = -0.6700                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0469441    -0.79   0.433    -.1292699    .0555058
+          unemployment_sq |  -.0000142   .0019637    -0.01   0.994    -.0038788    .0038503
+          log_debt_people |  -1.160419   .1912397    -6.07   0.000    -1.536786   -.7840517
+        log_median_income |  -2.489491    .710544    -3.50   0.001    -3.887869   -1.091113
+             divorce_rate |   .0055934   .0430206     0.13   0.897    -.0790729    .0902596
+                      CPI |  -1.075789   .4507179    -2.39   0.018    -1.962819   -.1887586
+                   CPI_sq |   .0050715   .0020707     2.45   0.015     .0009964    .0091466
+           housing_prices |  -.0010692   .0010505    -1.02   0.310    -.0031366    .0009983
+            interest_rate |          0  (omitted)
+         interest_rate_sq |  -.0315203   .0032363    -9.74   0.000    -.0378895   -.0251511
+          wages_to_social |   .2252784   .1284592     1.75   0.081    -.0275342    .4780909
+ property_income_to_wages |  -.0066725   1.571291    -0.00   0.997    -3.099033    3.085688
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317    .091768     0.30   0.764    -.1529713    .2082348
+            log_graduates |   .2181064   .1836853     1.19   0.236    -.1433932     .579606
+           industrial_SEZ |  -.0806815   .0645712    -1.25   0.212    -.2077602    .0463971
+           innovative_SEZ |   .4813324   .2159432     2.23   0.027      .056348    .9063168
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0700634     2.38   0.018     .0288765    .3046512
+log_VRP_obrabatyvayuschie |  -.1553785   .1254056    -1.24   0.216    -.4021815    .0914245
+           log_VRP_energy |   .2385523   .1015947     2.35   0.020       .03861    .4384946
+      log_VRP_agriculture |   .1067457   .1266335     0.84   0.400    -.1424739    .3559654
+          log_VRP_finance |  -.0151937   .0218177    -0.70   0.487    -.0581317    .0277442
+            log_VRP_trade |   .2725177   .1902674     1.43   0.153    -.1019359    .6469713
+                          |
+                     year |
+                    2019  |  -.1448078   .0661196    -2.19   0.029    -.2749336   -.0146819
+                    2020  |          0  (omitted)
+                    2021  |   2.508193   .2364035    10.61   0.000     2.042942    2.973445
+                    2022  |   3.113104   .3050714    10.20   0.000     2.512711    3.713496
+                          |
+                    _cons |    86.2974    26.7786     3.22   0.001     33.59609    138.9987
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .87110476
+                  sigma_e |  .22943725
+                      rho |  .93512788   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(80, 295) =     9.41             Prob > F = 0.0000
+
+. xtcsd, pesaran abs
+ 
+Pesaran's test of cross sectional independence =    -0.868, Pr = 1.6148
+ 
+Average absolute value of the off-diagonal elements =     0.623
+
+. 
+. xtreg Y2 $modelY2 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2756                         Obs per group: min =         3
+       between = 0.0093                                        avg =       5.0
+       overall = 0.0093                                        max =         5
+
+                                                F(26,291)          =      4.26
+corr(u_i, Xb)  = -0.9772                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0001537     0.51   0.608    -.0002237    .0003814
+          unemployment_sq |   2.90e-06   6.41e-06     0.45   0.651    -9.72e-06    .0000155
+           log_investment |  -.0000604   .0003059    -0.20   0.844    -.0006626    .0005417
+            log_debt_firm |  -.0003222     .00022    -1.46   0.144    -.0007551    .0001108
+                      CPI |  -.0019568   .0014328    -1.37   0.173    -.0047767    .0008631
+                   CPI_sq |   9.29e-06   6.58e-06     1.41   0.159    -3.66e-06    .0000222
+           housing_prices |   8.02e-06   3.91e-06     2.05   0.041     3.29e-07    .0000157
+        log_housing_stock |   .0059613   .0024115     2.47   0.014     .0012151    .0107076
+            interest_rate |          0  (omitted)
+         interest_rate_sq |   .0000239   .0000108     2.22   0.027     2.73e-06    .0000451
+              log_R_and_D |  -.0002209   .0002886    -0.77   0.445     -.000789    .0003471
+        log_median_income |   .0016962   .0026851     0.63   0.528    -.0035885    .0069808
+          wages_to_social |  -.0001329   .0004323    -0.31   0.759    -.0009837    .0007179
+ business_income_to_wages |  -.0032716   .0027706    -1.18   0.239    -.0087246    .0021814
+ property_income_to_wages |   .0028771   .0051695     0.56   0.578    -.0072973    .0130516
+    log_skilled_graduates |  -.0001689   .0004398    -0.38   0.701    -.0010345    .0006966
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0002074    -1.12   0.265    -.0006396    .0001768
+           innovative_SEZ |  -.0011542   .0007052    -1.64   0.103    -.0025423    .0002338
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0002352     0.14   0.888    -.0004296    .0004961
+log_VRP_obrabatyvayuschie |   .0007996   .0004133     1.93   0.054    -.0000138     .001613
+           log_VRP_energy |   .0010315   .0003217     3.21   0.001     .0003983    .0016646
+      log_VRP_agriculture |  -.0002411   .0004476    -0.54   0.590     -.001122    .0006398
+          log_VRP_finance |   .0001867    .000069     2.71   0.007     .0000509    .0003225
+            log_VRP_trade |   .0022323   .0006048     3.69   0.000     .0010419    .0034227
+                          |
+                     year |
+                    2019  |    .000264   .0002091     1.26   0.208    -.0001477    .0006756
+                    2020  |          0  (omitted)
+                    2021  |  -.0016521    .000767    -2.15   0.032    -.0031616   -.0001427
+                    2022  |  -.0019633   .0009963    -1.97   0.050    -.0039242   -2.44e-06
+                          |
+                    _cons |    .002414   .0860301     0.03   0.978    -.1669062    .1717341
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00810569
+                  sigma_e |  .00074202
+                      rho |  .99168946   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(79, 291) =    21.18             Prob > F = 0.0000
+
+. xtcsd, pesaran abs
+ 
+Pesaran's test of cross sectional independence =    -1.522, Pr = 1.8720
+ 
+Average absolute value of the off-diagonal elements =     0.441
+
+. 
+. **************************************************************
+. * 9. HETEROSKEDASTICITY TEST (Modified Wald test)
+. **************************************************************
+. xtreg Y1 $modelY1 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.9080                         Obs per group: min =         3
+       between = 0.0482                                        avg =       4.9
+       overall = 0.2187                                        max =         5
+
+                                                F(24,295)          =    121.37
+corr(u_i, Xb)  = -0.6700                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0469441    -0.79   0.433    -.1292699    .0555058
+          unemployment_sq |  -.0000142   .0019637    -0.01   0.994    -.0038788    .0038503
+          log_debt_people |  -1.160419   .1912397    -6.07   0.000    -1.536786   -.7840517
+        log_median_income |  -2.489491    .710544    -3.50   0.001    -3.887869   -1.091113
+             divorce_rate |   .0055934   .0430206     0.13   0.897    -.0790729    .0902596
+                      CPI |  -1.075789   .4507179    -2.39   0.018    -1.962819   -.1887586
+                   CPI_sq |   .0050715   .0020707     2.45   0.015     .0009964    .0091466
+           housing_prices |  -.0010692   .0010505    -1.02   0.310    -.0031366    .0009983
+            interest_rate |          0  (omitted)
+         interest_rate_sq |  -.0315203   .0032363    -9.74   0.000    -.0378895   -.0251511
+          wages_to_social |   .2252784   .1284592     1.75   0.081    -.0275342    .4780909
+ property_income_to_wages |  -.0066725   1.571291    -0.00   0.997    -3.099033    3.085688
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317    .091768     0.30   0.764    -.1529713    .2082348
+            log_graduates |   .2181064   .1836853     1.19   0.236    -.1433932     .579606
+           industrial_SEZ |  -.0806815   .0645712    -1.25   0.212    -.2077602    .0463971
+           innovative_SEZ |   .4813324   .2159432     2.23   0.027      .056348    .9063168
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0700634     2.38   0.018     .0288765    .3046512
+log_VRP_obrabatyvayuschie |  -.1553785   .1254056    -1.24   0.216    -.4021815    .0914245
+           log_VRP_energy |   .2385523   .1015947     2.35   0.020       .03861    .4384946
+      log_VRP_agriculture |   .1067457   .1266335     0.84   0.400    -.1424739    .3559654
+          log_VRP_finance |  -.0151937   .0218177    -0.70   0.487    -.0581317    .0277442
+            log_VRP_trade |   .2725177   .1902674     1.43   0.153    -.1019359    .6469713
+                          |
+                     year |
+                    2019  |  -.1448078   .0661196    -2.19   0.029    -.2749336   -.0146819
+                    2020  |          0  (omitted)
+                    2021  |   2.508193   .2364035    10.61   0.000     2.042942    2.973445
+                    2022  |   3.113104   .3050714    10.20   0.000     2.512711    3.713496
+                          |
+                    _cons |    86.2974    26.7786     3.22   0.001     33.59609    138.9987
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .87110476
+                  sigma_e |  .22943725
+                      rho |  .93512788   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(80, 295) =     9.41             Prob > F = 0.0000
+
+. xttest3
+
+Modified Wald test for groupwise heteroskedasticity
+in fixed effect regression model
+
+H0: sigma(i)^2 = sigma^2 for all i
+
+chi2 (81)  =    1.4e+05
+Prob>chi2 =      0.0000
+
+
+. 
+. xtreg Y2 $modelY2 i.year, fe
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2756                         Obs per group: min =         3
+       between = 0.0093                                        avg =       5.0
+       overall = 0.0093                                        max =         5
+
+                                                F(26,291)          =      4.26
+corr(u_i, Xb)  = -0.9772                        Prob > F           =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0001537     0.51   0.608    -.0002237    .0003814
+          unemployment_sq |   2.90e-06   6.41e-06     0.45   0.651    -9.72e-06    .0000155
+           log_investment |  -.0000604   .0003059    -0.20   0.844    -.0006626    .0005417
+            log_debt_firm |  -.0003222     .00022    -1.46   0.144    -.0007551    .0001108
+                      CPI |  -.0019568   .0014328    -1.37   0.173    -.0047767    .0008631
+                   CPI_sq |   9.29e-06   6.58e-06     1.41   0.159    -3.66e-06    .0000222
+           housing_prices |   8.02e-06   3.91e-06     2.05   0.041     3.29e-07    .0000157
+        log_housing_stock |   .0059613   .0024115     2.47   0.014     .0012151    .0107076
+            interest_rate |          0  (omitted)
+         interest_rate_sq |   .0000239   .0000108     2.22   0.027     2.73e-06    .0000451
+              log_R_and_D |  -.0002209   .0002886    -0.77   0.445     -.000789    .0003471
+        log_median_income |   .0016962   .0026851     0.63   0.528    -.0035885    .0069808
+          wages_to_social |  -.0001329   .0004323    -0.31   0.759    -.0009837    .0007179
+ business_income_to_wages |  -.0032716   .0027706    -1.18   0.239    -.0087246    .0021814
+ property_income_to_wages |   .0028771   .0051695     0.56   0.578    -.0072973    .0130516
+    log_skilled_graduates |  -.0001689   .0004398    -0.38   0.701    -.0010345    .0006966
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0002074    -1.12   0.265    -.0006396    .0001768
+           innovative_SEZ |  -.0011542   .0007052    -1.64   0.103    -.0025423    .0002338
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0002352     0.14   0.888    -.0004296    .0004961
+log_VRP_obrabatyvayuschie |   .0007996   .0004133     1.93   0.054    -.0000138     .001613
+           log_VRP_energy |   .0010315   .0003217     3.21   0.001     .0003983    .0016646
+      log_VRP_agriculture |  -.0002411   .0004476    -0.54   0.590     -.001122    .0006398
+          log_VRP_finance |   .0001867    .000069     2.71   0.007     .0000509    .0003225
+            log_VRP_trade |   .0022323   .0006048     3.69   0.000     .0010419    .0034227
+                          |
+                     year |
+                    2019  |    .000264   .0002091     1.26   0.208    -.0001477    .0006756
+                    2020  |          0  (omitted)
+                    2021  |  -.0016521    .000767    -2.15   0.032    -.0031616   -.0001427
+                    2022  |  -.0019633   .0009963    -1.97   0.050    -.0039242   -2.44e-06
+                          |
+                    _cons |    .002414   .0860301     0.03   0.978    -.1669062    .1717341
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00810569
+                  sigma_e |  .00074202
+                      rho |  .99168946   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+F test that all u_i=0:     F(79, 291) =    21.18             Prob > F = 0.0000
+
+. xttest3
+
+Modified Wald test for groupwise heteroskedasticity
+in fixed effect regression model
+
+H0: sigma(i)^2 = sigma^2 for all i
+
+chi2 (80)  =    9150.88
+Prob>chi2 =      0.0000
+
+
+. 
+. **************************************************************
+. * 10. REPLACE xtregar WITH xtgls (Y1 and Y2)
+. **************************************************************
+. xtgls Y1 $modelY1 i.year , corr(ar1) panels(heteroskedastic)
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   common AR(1) coefficient for all panels  (1.0631)
+
+Estimated covariances      =        81          Number of obs      =       400
+Estimated autocorrelations =         1          Number of groups   =        81
+Estimated coefficients     =        26          Obs per group: min =         3
+                                                               avg =  4.938272
+                                                               max =         5
+                                                Wald chi2(26)      =   4643.44
+                                                Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y1 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0053182    .020361    -0.26   0.794     -.045225    .0345886
+          unemployment_sq |  -.0004354   .0009835    -0.44   0.658     -.002363    .0014922
+          log_debt_people |  -.6151895   .1293909    -4.75   0.000     -.868791    -.361588
+        log_median_income |  -.2254429   .3743364    -0.60   0.547    -.9591288    .5082431
+             divorce_rate |   .0371544   .0226665     1.64   0.101    -.0072711    .0815799
+                      CPI |  -.3842052   .1871628    -2.05   0.040    -.7510375   -.0173728
+                   CPI_sq |   .0018076    .000869     2.08   0.038     .0001044    .0035107
+           housing_prices |  -.0003376   .0005222    -0.65   0.518     -.001361    .0006859
+            interest_rate |   4.006645   2.707313     1.48   0.139    -1.299591    9.312881
+         interest_rate_sq |   -.264404   .1683897    -1.57   0.116    -.5944418    .0656337
+          wages_to_social |  -.0757757   .0617202    -1.23   0.220    -.1967451    .0451937
+ property_income_to_wages |  -1.150295   .8125731    -1.42   0.157    -2.742909    .4423185
+                 gambling |  -1.307709   .4209197    -3.11   0.002    -2.132696   -.4827215
+        log_hospital_beds |   .0007962   .0384697     0.02   0.983     -.074603    .0761955
+            log_graduates |  -.0576337   .0794165    -0.73   0.468    -.2132871    .0980198
+           industrial_SEZ |  -.0163821   .0276284    -0.59   0.553    -.0705328    .0377686
+           innovative_SEZ |   .3267576   .1041986     3.14   0.002     .1225322     .530983
+              tourist_SEZ |   1.440945   .3804504     3.79   0.000     .6952763    2.186614
+          log_VRP_dobycha |   .0618055   .0251085     2.46   0.014     .0125939    .1110172
+log_VRP_obrabatyvayuschie |    .031881   .0575313     0.55   0.579    -.0808782    .1446403
+           log_VRP_energy |    .137332   .0609228     2.25   0.024     .0179255    .2567384
+      log_VRP_agriculture |   .0063637   .0552353     0.12   0.908    -.1018955    .1146229
+          log_VRP_finance |   .0005521    .009225     0.06   0.952    -.0175286    .0186328
+            log_VRP_trade |   .2039974   .0847733     2.41   0.016     .0378449      .37015
+                          |
+                     year |
+                    2019  |   .2725645   .5104027     0.53   0.593    -.7278063    1.272935
+                    2020  |   2.683758    2.39289     1.12   0.262    -2.006219    7.373736
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |          0  (omitted)
+-------------------------------------------------------------------------------------------
+
+. estimates store gls_y1
+
+. 
+. xtgls Y2 $modelY2 i.year, corr(ar1) panels(heteroskedastic)
+note: 2021.year omitted because of collinearity
+note: 2022.year omitted because of collinearity
+
+Cross-sectional time-series FGLS regression
+
+Coefficients:  generalized least squares
+Panels:        heteroskedastic
+Correlation:   common AR(1) coefficient for all panels  (0.6132)
+
+Estimated covariances      =        80          Number of obs      =       397
+Estimated autocorrelations =         1          Number of groups   =        80
+Estimated coefficients     =        29          Obs per group: min =         3
+                                                               avg =    4.9625
+                                                               max =         5
+                                                Wald chi2(28)      =    114.76
+                                                Prob > chi2        =    0.0000
+
+-------------------------------------------------------------------------------------------
+                       Y2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000609   .0000844     0.72   0.470    -.0001045    .0002264
+          unemployment_sq |   5.83e-07   4.35e-06     0.13   0.893    -7.93e-06    9.10e-06
+           log_investment |  -.0001023   .0001949    -0.52   0.600    -.0004844    .0002798
+            log_debt_firm |   .0000259   .0001371     0.19   0.850    -.0002428    .0002946
+                      CPI |  -.0022616   .0009654    -2.34   0.019    -.0041537   -.0003694
+                   CPI_sq |   .0000106   4.46e-06     2.38   0.017     1.88e-06    .0000194
+           housing_prices |   5.26e-06   3.11e-06     1.70   0.090    -8.23e-07    .0000114
+        log_housing_stock |  -.0000878   .0004847    -0.18   0.856    -.0010378    .0008622
+            interest_rate |    .040572    .029174     1.39   0.164    -.0166079     .097752
+         interest_rate_sq |  -.0025047   .0018144    -1.38   0.167    -.0060608    .0010514
+              log_R_and_D |   -.000011   .0000858    -0.13   0.898    -.0001792    .0001572
+        log_median_income |  -.0006554   .0006021    -1.09   0.276    -.0018355    .0005248
+          wages_to_social |   .0005099   .0002199     2.32   0.020      .000079    .0009409
+ business_income_to_wages |   .0031993   .0014522     2.20   0.028      .000353    .0060456
+ property_income_to_wages |  -.0034663    .002996    -1.16   0.247    -.0093384    .0024059
+    log_skilled_graduates |  -.0003155   .0001865    -1.69   0.091    -.0006809      .00005
+                 gambling |   .0009264   .0003354     2.76   0.006      .000269    .0015838
+           industrial_SEZ |  -.0002106   .0001197    -1.76   0.079    -.0004452    .0000241
+           innovative_SEZ |   .0001008   .0003257     0.31   0.757    -.0005375    .0007392
+              tourist_SEZ |  -.0002265   .0002692    -0.84   0.400    -.0007542    .0003012
+          log_VRP_dobycha |  -5.17e-08   .0000434    -0.00   0.999    -.0000851     .000085
+log_VRP_obrabatyvayuschie |   .0001059   .0001292     0.82   0.413    -.0001473    .0003591
+           log_VRP_energy |   .0003155   .0001654     1.91   0.056    -8.57e-06    .0006397
+      log_VRP_agriculture |   .0000148   .0001143     0.13   0.897    -.0002093    .0002388
+          log_VRP_finance |   .0001574   .0000718     2.19   0.028     .0000168    .0002981
+            log_VRP_trade |   .0000145   .0003092     0.05   0.962    -.0005914    .0006205
+                          |
+                     year |
+                    2019  |   .0082663   .0056653     1.46   0.145    -.0028376    .0193701
+                    2020  |   .0366164   .0258013     1.42   0.156    -.0139532    .0871859
+                    2021  |          0  (omitted)
+                    2022  |          0  (omitted)
+                          |
+                    _cons |  -.0449197   .1356515    -0.33   0.741    -.3107918    .2209524
+-------------------------------------------------------------------------------------------
+
+. estimates store gls_y2
+
+. 
+. **************************************************************
+. * 11. ROBUST / CLUSTER FINAL CORRECTIONS (Y1 and Y2)
+. **************************************************************
+. xtreg Y1 $modelY1 i.year, fe vce(robust)
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.9080                         Obs per group: min =         3
+       between = 0.0482                                        avg =       4.9
+       overall = 0.2187                                        max =         5
+
+                                                F(23,80)           =         .
+corr(u_i, Xb)  = -0.6700                        Prob > F           =         .
+
+                                          (Std. Err. adjusted for 81 clusters in region_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0556879    -0.66   0.510    -.1477045    .0739404
+          unemployment_sq |  -.0000142   .0029219    -0.00   0.996     -.005829    .0058005
+          log_debt_people |  -1.160419   .1677639    -6.92   0.000     -1.49428   -.8265579
+        log_median_income |  -2.489491   .8254154    -3.02   0.003     -4.13212   -.8468621
+             divorce_rate |   .0055934   .0540795     0.10   0.918    -.1020284    .1132151
+                      CPI |  -1.075789   .5479063    -1.96   0.053    -2.166157    .0145797
+                   CPI_sq |   .0050715   .0025728     1.97   0.052    -.0000486    .0101917
+           housing_prices |  -.0010692   .0007194    -1.49   0.141    -.0025008    .0003625
+            interest_rate |          0  (omitted)
+         interest_rate_sq |  -.0315203   .0029119   -10.82   0.000    -.0373151   -.0257255
+          wages_to_social |   .2252784   .1381372     1.63   0.107    -.0496234    .5001801
+ property_income_to_wages |  -.0066725   2.037524    -0.00   0.997    -4.061475     4.04813
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317     .10917     0.25   0.801    -.1896234    .2448869
+            log_graduates |   .2181064   .2460325     0.89   0.378     -.271514    .7077268
+           industrial_SEZ |  -.0806815   .1024161    -0.79   0.433     -.284496    .1231329
+           innovative_SEZ |   .4813324   .0680345     7.07   0.000     .3459393    .6167255
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0949254     1.76   0.083    -.0221438    .3556714
+log_VRP_obrabatyvayuschie |  -.1553785   .1348571    -1.15   0.253    -.4237527    .1129957
+           log_VRP_energy |   .2385523   .1210344     1.97   0.052    -.0023139    .4794185
+      log_VRP_agriculture |   .1067457   .1299481     0.82   0.414    -.1518591    .3653506
+          log_VRP_finance |  -.0151937   .0267338    -0.57   0.571    -.0683958    .0380083
+            log_VRP_trade |   .2725177   .2227681     1.22   0.225     -.170805    .7158403
+                          |
+                     year |
+                    2019  |  -.1448078   .0543925    -2.66   0.009    -.2530523   -.0365632
+                    2020  |          0  (omitted)
+                    2021  |   2.508193   .2288224    10.96   0.000     2.052822    2.963564
+                    2022  |   3.113104   .3098581    10.05   0.000     2.496466    3.729741
+                          |
+                    _cons |    86.2974   32.47574     2.66   0.010     21.66862    150.9262
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .87110476
+                  sigma_e |  .22943725
+                      rho |  .93512788   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store fe_rob_y1
+
+. 
+. xtreg Y1 $modelY1 i.year, fe vce(cluster region_id)
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       400
+Group variable: region_id                       Number of groups   =        81
+
+R-sq:  within  = 0.9080                         Obs per group: min =         3
+       between = 0.0482                                        avg =       4.9
+       overall = 0.2187                                        max =         5
+
+                                                F(23,80)           =         .
+corr(u_i, Xb)  = -0.6700                        Prob > F           =         .
+
+                                          (Std. Err. adjusted for 81 clusters in region_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0556879    -0.66   0.510    -.1477045    .0739404
+          unemployment_sq |  -.0000142   .0029219    -0.00   0.996     -.005829    .0058005
+          log_debt_people |  -1.160419   .1677639    -6.92   0.000     -1.49428   -.8265579
+        log_median_income |  -2.489491   .8254154    -3.02   0.003     -4.13212   -.8468621
+             divorce_rate |   .0055934   .0540795     0.10   0.918    -.1020284    .1132151
+                      CPI |  -1.075789   .5479063    -1.96   0.053    -2.166157    .0145797
+                   CPI_sq |   .0050715   .0025728     1.97   0.052    -.0000486    .0101917
+           housing_prices |  -.0010692   .0007194    -1.49   0.141    -.0025008    .0003625
+            interest_rate |          0  (omitted)
+         interest_rate_sq |  -.0315203   .0029119   -10.82   0.000    -.0373151   -.0257255
+          wages_to_social |   .2252784   .1381372     1.63   0.107    -.0496234    .5001801
+ property_income_to_wages |  -.0066725   2.037524    -0.00   0.997    -4.061475     4.04813
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317     .10917     0.25   0.801    -.1896234    .2448869
+            log_graduates |   .2181064   .2460325     0.89   0.378     -.271514    .7077268
+           industrial_SEZ |  -.0806815   .1024161    -0.79   0.433     -.284496    .1231329
+           innovative_SEZ |   .4813324   .0680345     7.07   0.000     .3459393    .6167255
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0949254     1.76   0.083    -.0221438    .3556714
+log_VRP_obrabatyvayuschie |  -.1553785   .1348571    -1.15   0.253    -.4237527    .1129957
+           log_VRP_energy |   .2385523   .1210344     1.97   0.052    -.0023139    .4794185
+      log_VRP_agriculture |   .1067457   .1299481     0.82   0.414    -.1518591    .3653506
+          log_VRP_finance |  -.0151937   .0267338    -0.57   0.571    -.0683958    .0380083
+            log_VRP_trade |   .2725177   .2227681     1.22   0.225     -.170805    .7158403
+                          |
+                     year |
+                    2019  |  -.1448078   .0543925    -2.66   0.009    -.2530523   -.0365632
+                    2020  |          0  (omitted)
+                    2021  |   2.508193   .2288224    10.96   0.000     2.052822    2.963564
+                    2022  |   3.113104   .3098581    10.05   0.000     2.496466    3.729741
+                          |
+                    _cons |    86.2974   32.47574     2.66   0.010     21.66862    150.9262
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .87110476
+                  sigma_e |  .22943725
+                      rho |  .93512788   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store fe_cl_y1
+
+. 
+. xtreg Y2 $modelY2 i.year, fe vce(robust)
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2756                         Obs per group: min =         3
+       between = 0.0093                                        avg =       5.0
+       overall = 0.0093                                        max =         5
+
+                                                F(25,79)           =         .
+corr(u_i, Xb)  = -0.9772                        Prob > F           =         .
+
+                                          (Std. Err. adjusted for 80 clusters in region_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0001235     0.64   0.525     -.000167    .0003247
+          unemployment_sq |   2.90e-06   4.91e-06     0.59   0.556    -6.86e-06    .0000127
+           log_investment |  -.0000604   .0002858    -0.21   0.833    -.0006294    .0005085
+            log_debt_firm |  -.0003222   .0003427    -0.94   0.350    -.0010042    .0003599
+                      CPI |  -.0019568   .0015849    -1.23   0.221    -.0051114    .0011978
+                   CPI_sq |   9.29e-06   7.34e-06     1.27   0.209    -5.32e-06    .0000239
+           housing_prices |   8.02e-06   4.22e-06     1.90   0.061    -3.84e-07    .0000164
+        log_housing_stock |   .0059613   .0039105     1.52   0.131    -.0018224    .0137451
+            interest_rate |          0  (omitted)
+         interest_rate_sq |   .0000239   .0000163     1.47   0.146    -8.49e-06    .0000563
+              log_R_and_D |  -.0002209   .0003536    -0.62   0.534    -.0009247    .0004828
+        log_median_income |   .0016962    .004492     0.38   0.707    -.0072449    .0106372
+          wages_to_social |  -.0001329   .0006318    -0.21   0.834    -.0013905    .0011246
+ business_income_to_wages |  -.0032716   .0046847    -0.70   0.487    -.0125962    .0060531
+ property_income_to_wages |   .0028771   .0066848     0.43   0.668    -.0104286    .0161828
+    log_skilled_graduates |  -.0001689   .0004548    -0.37   0.711    -.0010742    .0007364
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0001614    -1.43   0.156    -.0005527    .0000899
+           innovative_SEZ |  -.0011542   .0001965    -5.87   0.000    -.0015453   -.0007631
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0002182     0.15   0.879    -.0004012    .0004676
+log_VRP_obrabatyvayuschie |   .0007996   .0005215     1.53   0.129    -.0002384    .0018376
+           log_VRP_energy |   .0010315   .0004843     2.13   0.036     .0000674    .0019955
+      log_VRP_agriculture |  -.0002411   .0005524    -0.44   0.664    -.0013406    .0008583
+          log_VRP_finance |   .0001867   .0000647     2.89   0.005     .0000579    .0003155
+            log_VRP_trade |   .0022323   .0008114     2.75   0.007     .0006173    .0038474
+                          |
+                     year |
+                    2019  |    .000264   .0002314     1.14   0.257    -.0001967    .0007247
+                    2020  |          0  (omitted)
+                    2021  |  -.0016521   .0011942    -1.38   0.170    -.0040292    .0007249
+                    2022  |  -.0019633   .0016399    -1.20   0.235    -.0052276    .0013009
+                          |
+                    _cons |    .002414   .1072141     0.02   0.982    -.2109903    .2158182
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00810569
+                  sigma_e |  .00074202
+                      rho |  .99168946   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store fe_rob_y2
+
+. 
+. xtreg Y2 $modelY2 i.year, fe vce(cluster region_id)
+note: interest_rate omitted because of collinearity
+note: gambling omitted because of collinearity
+note: tourist_SEZ omitted because of collinearity
+note: 2020.year omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2756                         Obs per group: min =         3
+       between = 0.0093                                        avg =       5.0
+       overall = 0.0093                                        max =         5
+
+                                                F(25,79)           =         .
+corr(u_i, Xb)  = -0.9772                        Prob > F           =         .
+
+                                          (Std. Err. adjusted for 80 clusters in region_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0001235     0.64   0.525     -.000167    .0003247
+          unemployment_sq |   2.90e-06   4.91e-06     0.59   0.556    -6.86e-06    .0000127
+           log_investment |  -.0000604   .0002858    -0.21   0.833    -.0006294    .0005085
+            log_debt_firm |  -.0003222   .0003427    -0.94   0.350    -.0010042    .0003599
+                      CPI |  -.0019568   .0015849    -1.23   0.221    -.0051114    .0011978
+                   CPI_sq |   9.29e-06   7.34e-06     1.27   0.209    -5.32e-06    .0000239
+           housing_prices |   8.02e-06   4.22e-06     1.90   0.061    -3.84e-07    .0000164
+        log_housing_stock |   .0059613   .0039105     1.52   0.131    -.0018224    .0137451
+            interest_rate |          0  (omitted)
+         interest_rate_sq |   .0000239   .0000163     1.47   0.146    -8.49e-06    .0000563
+              log_R_and_D |  -.0002209   .0003536    -0.62   0.534    -.0009247    .0004828
+        log_median_income |   .0016962    .004492     0.38   0.707    -.0072449    .0106372
+          wages_to_social |  -.0001329   .0006318    -0.21   0.834    -.0013905    .0011246
+ business_income_to_wages |  -.0032716   .0046847    -0.70   0.487    -.0125962    .0060531
+ property_income_to_wages |   .0028771   .0066848     0.43   0.668    -.0104286    .0161828
+    log_skilled_graduates |  -.0001689   .0004548    -0.37   0.711    -.0010742    .0007364
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0001614    -1.43   0.156    -.0005527    .0000899
+           innovative_SEZ |  -.0011542   .0001965    -5.87   0.000    -.0015453   -.0007631
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0002182     0.15   0.879    -.0004012    .0004676
+log_VRP_obrabatyvayuschie |   .0007996   .0005215     1.53   0.129    -.0002384    .0018376
+           log_VRP_energy |   .0010315   .0004843     2.13   0.036     .0000674    .0019955
+      log_VRP_agriculture |  -.0002411   .0005524    -0.44   0.664    -.0013406    .0008583
+          log_VRP_finance |   .0001867   .0000647     2.89   0.005     .0000579    .0003155
+            log_VRP_trade |   .0022323   .0008114     2.75   0.007     .0006173    .0038474
+                          |
+                     year |
+                    2019  |    .000264   .0002314     1.14   0.257    -.0001967    .0007247
+                    2020  |          0  (omitted)
+                    2021  |  -.0016521   .0011942    -1.38   0.170    -.0040292    .0007249
+                    2022  |  -.0019633   .0016399    -1.20   0.235    -.0052276    .0013009
+                          |
+                    _cons |    .002414   .1072141     0.02   0.982    -.2109903    .2158182
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00810569
+                  sigma_e |  .00074202
+                      rho |  .99168946   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store fe_cl_y2
+
+. 
+. **************************************************************
+. * 12. FINAL EXPORT (GLS + Robust + Cluster)
+. **************************************************************
+. esttab fe_rob_y1 fe_cl_y1 gls_y1 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y1              Y1              Y1   
+------------------------------------------------------------
+unemployment      -0.0369         -0.0369         -0.0053   
+                  (-0.66)         (-0.66)         (-0.26)   
+
+unemployme~q      -0.0000         -0.0000         -0.0004   
+                  (-0.00)         (-0.00)         (-0.44)   
+
+log_debt_p~e      -1.1604***      -1.1604***      -0.6152***
+                  (-6.92)         (-6.92)         (-4.75)   
+
+log_median~e      -2.4895**       -2.4895**       -0.2254   
+                  (-3.02)         (-3.02)         (-0.60)   
+
+divorce_rate       0.0056          0.0056          0.0372   
+                   (0.10)          (0.10)          (1.64)   
+
+CPI               -1.0758         -1.0758         -0.3842*  
+                  (-1.96)         (-1.96)         (-2.05)   
+
+CPI_sq             0.0051          0.0051          0.0018*  
+                   (1.97)          (1.97)          (2.08)   
+
+housing_pr~s      -0.0011         -0.0011         -0.0003   
+                  (-1.49)         (-1.49)         (-0.65)   
+
+interest_r~e            .               .          4.0066   
+                        .               .          (1.48)   
+
+interest_r~q      -0.0315***      -0.0315***      -0.2644   
+                 (-10.82)        (-10.82)         (-1.57)   
+
+wages_to_s~l       0.2253          0.2253         -0.0758   
+                   (1.63)          (1.63)         (-1.23)   
+
+property_i~s      -0.0067         -0.0067         -1.1503   
+                  (-0.00)         (-0.00)         (-1.42)   
+
+gambling                .               .         -1.3077** 
+                        .               .         (-3.11)   
+
+log_hospit~s       0.0276          0.0276          0.0008   
+                   (0.25)          (0.25)          (0.02)   
+
+log_gradua~s       0.2181          0.2181         -0.0576   
+                   (0.89)          (0.89)         (-0.73)   
+
+industrial~Z      -0.0807         -0.0807         -0.0164   
+                  (-0.79)         (-0.79)         (-0.59)   
+
+innovative~Z       0.4813***       0.4813***       0.3268** 
+                   (7.07)          (7.07)          (3.14)   
+
+tourist_SEZ             .               .          1.4409***
+                        .               .          (3.79)   
+
+log_VRP_do~a       0.1668          0.1668          0.0618*  
+                   (1.76)          (1.76)          (2.46)   
+
+log_VRP_ob~e      -0.1554         -0.1554          0.0319   
+                  (-1.15)         (-1.15)          (0.55)   
+
+log_VRP_en~y       0.2386          0.2386          0.1373*  
+                   (1.97)          (1.97)          (2.25)   
+
+log_VRP_ag~e       0.1067          0.1067          0.0064   
+                   (0.82)          (0.82)          (0.12)   
+
+log_VRP_fi~e      -0.0152         -0.0152          0.0006   
+                  (-0.57)         (-0.57)          (0.06)   
+
+log_VRP_tr~e       0.2725          0.2725          0.2040*  
+                   (1.22)          (1.22)          (2.41)   
+
+2018bn.year             .               .               .   
+                        .               .               .   
+
+2019.year         -0.1448**       -0.1448**        0.2726   
+                  (-2.66)         (-2.66)          (0.53)   
+
+2020.year               .               .          2.6838   
+                        .               .          (1.12)   
+
+2021.year          2.5082***       2.5082***            .   
+                  (10.96)         (10.96)               .   
+
+2022.year          3.1131***       3.1131***            .   
+                  (10.05)         (10.05)               .   
+
+_cons             86.2974**       86.2974**        0.0000   
+                   (2.66)          (2.66)               .   
+------------------------------------------------------------
+N                400.0000        400.0000        400.0000   
+r2                 0.9080          0.9080                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. esttab fe_rob_y2 fe_cl_y2 gls_y2 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------
+                      (1)             (2)             (3)   
+                       Y2              Y2              Y2   
+------------------------------------------------------------
+unemployment       0.0001          0.0001          0.0001   
+                   (0.64)          (0.64)          (0.72)   
+
+unemployme~q       0.0000          0.0000          0.0000   
+                   (0.59)          (0.59)          (0.13)   
+
+log_invest~t      -0.0001         -0.0001         -0.0001   
+                  (-0.21)         (-0.21)         (-0.52)   
+
+log_debt_f~m      -0.0003         -0.0003          0.0000   
+                  (-0.94)         (-0.94)          (0.19)   
+
+CPI               -0.0020         -0.0020         -0.0023*  
+                  (-1.23)         (-1.23)         (-2.34)   
+
+CPI_sq             0.0000          0.0000          0.0000*  
+                   (1.27)          (1.27)          (2.38)   
+
+housing_pr~s       0.0000          0.0000          0.0000   
+                   (1.90)          (1.90)          (1.70)   
+
+log_housin~k       0.0060          0.0060         -0.0001   
+                   (1.52)          (1.52)         (-0.18)   
+
+interest_r~e            .               .          0.0406   
+                        .               .          (1.39)   
+
+interest_r~q       0.0000          0.0000         -0.0025   
+                   (1.47)          (1.47)         (-1.38)   
+
+log_R_and_D       -0.0002         -0.0002         -0.0000   
+                  (-0.62)         (-0.62)         (-0.13)   
+
+log_median~e       0.0017          0.0017         -0.0007   
+                   (0.38)          (0.38)         (-1.09)   
+
+wages_to_s~l      -0.0001         -0.0001          0.0005*  
+                  (-0.21)         (-0.21)          (2.32)   
+
+business_i~s      -0.0033         -0.0033          0.0032*  
+                  (-0.70)         (-0.70)          (2.20)   
+
+property_i~s       0.0029          0.0029         -0.0035   
+                   (0.43)          (0.43)         (-1.16)   
+
+log_skille~s      -0.0002         -0.0002         -0.0003   
+                  (-0.37)         (-0.37)         (-1.69)   
+
+gambling                .               .          0.0009** 
+                        .               .          (2.76)   
+
+industrial~Z      -0.0002         -0.0002         -0.0002   
+                  (-1.43)         (-1.43)         (-1.76)   
+
+innovative~Z      -0.0012***      -0.0012***       0.0001   
+                  (-5.87)         (-5.87)          (0.31)   
+
+tourist_SEZ             .               .         -0.0002   
+                        .               .         (-0.84)   
+
+log_VRP_do~a       0.0000          0.0000         -0.0000   
+                   (0.15)          (0.15)         (-0.00)   
+
+log_VRP_ob~e       0.0008          0.0008          0.0001   
+                   (1.53)          (1.53)          (0.82)   
+
+log_VRP_en~y       0.0010*         0.0010*         0.0003   
+                   (2.13)          (2.13)          (1.91)   
+
+log_VRP_ag~e      -0.0002         -0.0002          0.0000   
+                  (-0.44)         (-0.44)          (0.13)   
+
+log_VRP_fi~e       0.0002**        0.0002**        0.0002*  
+                   (2.89)          (2.89)          (2.19)   
+
+log_VRP_tr~e       0.0022**        0.0022**        0.0000   
+                   (2.75)          (2.75)          (0.05)   
+
+2018bn.year             .               .               .   
+                        .               .               .   
+
+2019.year          0.0003          0.0003          0.0083   
+                   (1.14)          (1.14)          (1.46)   
+
+2020.year               .               .          0.0366   
+                        .               .          (1.42)   
+
+2021.year         -0.0017         -0.0017               .   
+                  (-1.38)         (-1.38)               .   
+
+2022.year         -0.0020         -0.0020               .   
+                  (-1.20)         (-1.20)               .   
+
+_cons              0.0024          0.0024         -0.0449   
+                   (0.02)          (0.02)         (-0.33)   
+------------------------------------------------------------
+N                397.0000        397.0000        397.0000   
+r2                 0.2756          0.2756                   
+------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. **************************************************************
+. * 13. СОЗДАЁМ ВРЕМЕННЫЕ ДАММИ
+. **************************************************************
+. tabulate year, generate(year_)
+
+       year |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       2018 |         85       16.67       16.67
+       2019 |         85       16.67       33.33
+       2020 |         85       16.67       50.00
+       2021 |         85       16.67       66.67
+       2022 |         85       16.67       83.33
+       2023 |         85       16.67      100.00
+------------+-----------------------------------
+      Total |        510      100.00
+
+. 
+. **************************************************************
+. * 14. XTSSC: FE модель с Driscoll-Kraay стандартными ошибками (с дамми)
+. **************************************************************
+. xtscc Y1 $modelY1 year_2 year_3 year_4 year_5 year_6, fe
+
+Regression with Driscoll-Kraay standard errors   Number of obs     =       400
+Method: Fixed-effects regression                 Number of groups  =        81
+Group variable (i): region_id                    F( 29,    80)     =    385.15
+maximum lag: 2                                   Prob > F          =    0.0000
+                                                 within R-squared  =    0.9080
+
+-------------------------------------------------------------------------------------------
+                          |             Drisc/Kraay
+                       Y1 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |  -.0368821   .0421496    -0.88   0.384    -.1207624    .0469983
+          unemployment_sq |  -.0000142   .0021512    -0.01   0.995    -.0042952    .0042667
+          log_debt_people |  -1.160419   .1225958    -9.47   0.000    -1.404392   -.9164454
+        log_median_income |  -2.489491   .3233287    -7.70   0.000    -3.132936   -1.846046
+             divorce_rate |   .0055934   .0279683     0.20   0.842    -.0500653     .061252
+                      CPI |  -1.075789   .1031293   -10.43   0.000    -1.281022   -.8705547
+                   CPI_sq |   .0050715   .0004564    11.11   0.000     .0041632    .0059799
+           housing_prices |  -.0010692    .000725    -1.47   0.144    -.0025119    .0003735
+            interest_rate |   31.44042   1.967951    15.98   0.000     27.52407    35.35677
+         interest_rate_sq |  -2.651555   .1652139   -16.05   0.000    -2.980341   -2.322769
+          wages_to_social |   .2252784   .0553081     4.07   0.000     .1152118    .3353449
+ property_income_to_wages |  -.0066725   .9447731    -0.01   0.994    -1.886831    1.873486
+                 gambling |          0  (omitted)
+        log_hospital_beds |   .0276317    .024319     1.14   0.259    -.0207647    .0760281
+            log_graduates |   .2181064   .0602981     3.62   0.001     .0981093    .3381035
+           industrial_SEZ |  -.0806815   .0361415    -2.23   0.028    -.1526055   -.0087576
+           innovative_SEZ |   .4813324     .04727    10.18   0.000     .3872621    .5754027
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .1667638   .0446082     3.74   0.000     .0779907     .255537
+log_VRP_obrabatyvayuschie |  -.1553785   .0490763    -3.17   0.002    -.2530435   -.0577135
+           log_VRP_energy |   .2385523   .0375055     6.36   0.000     .1639141    .3131905
+      log_VRP_agriculture |   .1067457   .1050553     1.02   0.313     -.102321    .3158125
+          log_VRP_finance |  -.0151937   .0131634    -1.15   0.252    -.0413898    .0110023
+            log_VRP_trade |   .2725177   .0793603     3.43   0.001     .1145857    .4304497
+                   year_2 |  -8.004913   .5129483   -15.61   0.000    -9.025713   -6.984113
+                   year_3 |          0  (omitted)
+                   year_4 |   10.85956   .6112236    17.77   0.000     9.643181    12.07593
+                   year_5 |   .9843251   .0865808    11.37   0.000     .8120238    1.156626
+                   year_6 |          0  (omitted)
+                    _cons |          0  (omitted)
+-------------------------------------------------------------------------------------------
+
+
+. estimates store fe_scc_y1
+
+. 
+. xtscc Y2 $modelY2 year_2 year_3 year_4 year_5 year_6, fe
+
+Regression with Driscoll-Kraay standard errors   Number of obs     =       397
+Method: Fixed-effects regression                 Number of groups  =        80
+Group variable (i): region_id                    F( 31,    79)     =     90.64
+maximum lag: 2                                   Prob > F          =    0.0000
+                                                 within R-squared  =    0.2756
+
+-------------------------------------------------------------------------------------------
+                          |             Drisc/Kraay
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0000788   .0002503     0.31   0.754    -.0004194    .0005771
+          unemployment_sq |   2.90e-06   9.89e-06     0.29   0.770    -.0000168    .0000226
+           log_investment |  -.0000604   .0001331    -0.45   0.651    -.0003254    .0002045
+            log_debt_firm |  -.0003222   .0000924    -3.49   0.001     -.000506   -.0001383
+                      CPI |  -.0019568   .0007766    -2.52   0.014    -.0035026   -.0004109
+                   CPI_sq |   9.29e-06   3.59e-06     2.59   0.011     2.15e-06    .0000164
+           housing_prices |   8.02e-06   1.95e-06     4.12   0.000     4.15e-06    .0000119
+        log_housing_stock |   .0059613   .0007667     7.78   0.000     .0044353    .0074874
+            interest_rate |   .0008795   .0167241     0.05   0.958    -.0324089    .0341679
+         interest_rate_sq |  -.0000494   .0014041    -0.04   0.972    -.0028441    .0027454
+              log_R_and_D |  -.0002209   .0001636    -1.35   0.181    -.0005467    .0001048
+        log_median_income |   .0016962   .0023646     0.72   0.475    -.0030104    .0064027
+          wages_to_social |  -.0001329   .0001399    -0.95   0.345    -.0004113    .0001455
+ business_income_to_wages |  -.0032716    .002493    -1.31   0.193    -.0082338    .0016907
+ property_income_to_wages |   .0028771   .0026008     1.11   0.272    -.0022996    .0080538
+    log_skilled_graduates |  -.0001689   .0002833    -0.60   0.553    -.0007328    .0003949
+                 gambling |          0  (omitted)
+           industrial_SEZ |  -.0002314   .0001554    -1.49   0.141    -.0005408     .000078
+           innovative_SEZ |  -.0011542   .0004305    -2.68   0.009     -.002011   -.0002974
+              tourist_SEZ |          0  (omitted)
+          log_VRP_dobycha |   .0000332   .0001201     0.28   0.783    -.0002058    .0002722
+log_VRP_obrabatyvayuschie |   .0007996    .000388     2.06   0.043     .0000274    .0015718
+           log_VRP_energy |   .0010315    .000139     7.42   0.000     .0007547    .0013082
+      log_VRP_agriculture |  -.0002411    .000283    -0.85   0.397    -.0008045    .0003222
+          log_VRP_finance |   .0001867   .0000578     3.23   0.002     .0000716    .0003018
+            log_VRP_trade |   .0022323   .0005067     4.41   0.000     .0012238    .0032408
+                   year_2 |   .0000441   .0043332     0.01   0.992    -.0085809    .0086691
+                   year_3 |          0  (omitted)
+                   year_4 |  -.0014185   .0050241    -0.28   0.778    -.0114187    .0085817
+                   year_5 |  -.0020229   .0007005    -2.89   0.005    -.0034172   -.0006286
+                   year_6 |          0  (omitted)
+                    _cons |          0  (omitted)
+-------------------------------------------------------------------------------------------
+
+
+. estimates store fe_scc_y2
+
+. 
+. **************************************************************
+. * 15. Y2 Pool Mode4 Robust errors
+. **************************************************************
+. xtreg Y2 $modelY2 ,  vce(cluster region_id)
+
+Random-effects GLS regression                   Number of obs      =       397
+Group variable: region_id                       Number of groups   =        80
+
+R-sq:  within  = 0.2183                         Obs per group: min =         3
+       between = 0.0656                                        avg =       5.0
+       overall = 0.0801                                        max =         5
+
+                                                Wald chi2(26)      =    307.73
+corr(u_i, X)   = 0 (assumed)                    Prob > chi2        =    0.0000
+
+                                          (Std. Err. adjusted for 80 clusters in region_id)
+-------------------------------------------------------------------------------------------
+                          |               Robust
+                       Y2 |      Coef.   Std. Err.      z    P>|z|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |    .000133   .0001131     1.18   0.240    -.0000888    .0003547
+          unemployment_sq |   1.31e-06   5.25e-06     0.25   0.803    -8.98e-06    .0000116
+           log_investment |  -.0001654   .0002828    -0.58   0.559    -.0007196    .0003888
+            log_debt_firm |  -.0002597   .0002957    -0.88   0.380    -.0008392    .0003199
+                      CPI |   -.002036   .0015927    -1.28   0.201    -.0051576    .0010857
+                   CPI_sq |   9.60e-06   7.42e-06     1.29   0.196    -4.95e-06    .0000242
+           housing_prices |   8.70e-06   4.73e-06     1.84   0.066    -5.75e-07     .000018
+        log_housing_stock |  -.0018199   .0010268    -1.77   0.076    -.0038323    .0001925
+            interest_rate |   .0005162   .0006903     0.75   0.455    -.0008368    .0018692
+         interest_rate_sq |  -.0000386   .0000543    -0.71   0.478    -.0001451    .0000679
+              log_R_and_D |   .0000113   .0002196     0.05   0.959    -.0004191    .0004418
+        log_median_income |  -.0020836   .0009126    -2.28   0.022    -.0038723    -.000295
+          wages_to_social |   .0002609   .0003564     0.73   0.464    -.0004376    .0009595
+ business_income_to_wages |   .0020658   .0019196     1.08   0.282    -.0016965    .0058281
+ property_income_to_wages |  -.0007629   .0054366    -0.14   0.888    -.0114185    .0098927
+    log_skilled_graduates |  -.0002771   .0003844    -0.72   0.471    -.0010305    .0004763
+                 gambling |   .0009596   .0009063     1.06   0.290    -.0008167    .0027358
+           industrial_SEZ |  -.0002589   .0001485    -1.74   0.081    -.0005499    .0000321
+           innovative_SEZ |  -.0008034   .0002563    -3.13   0.002    -.0013057   -.0003011
+              tourist_SEZ |  -.0003832   .0006162    -0.62   0.534     -.001591    .0008246
+          log_VRP_dobycha |   5.23e-06   .0001028     0.05   0.959    -.0001962    .0002066
+log_VRP_obrabatyvayuschie |   .0004007     .00033     1.21   0.225    -.0002461    .0010476
+           log_VRP_energy |   .0007165    .000316     2.27   0.023     .0000971    .0013358
+      log_VRP_agriculture |   .0000398   .0002287     0.17   0.862    -.0004084    .0004879
+          log_VRP_finance |   .0001679   .0000741     2.27   0.023     .0000227    .0003132
+            log_VRP_trade |   .0013179   .0005983     2.20   0.028     .0001452    .0024906
+                    _cons |   .0936165   .0881937     1.06   0.288    -.0792399     .266473
+--------------------------+----------------------------------------------------------------
+                  sigma_u |  .00173107
+                  sigma_e |  .00074464
+                      rho |  .84385233   (fraction of variance due to u_i)
+-------------------------------------------------------------------------------------------
+
+. estimates store pool_cl_y2
+
+. 
+. xtscc Y2 $modelY2
+
+Regression with Driscoll-Kraay standard errors   Number of obs     =       397
+Method: Pooled OLS                               Number of groups  =        80
+Group variable (i): region_id                    F( 26,    79)     =    353.44
+maximum lag: 2                                   Prob > F          =    0.0000
+                                                 R-squared         =    0.2112
+                                                 Root MSE          =    0.0017
+
+-------------------------------------------------------------------------------------------
+                          |             Drisc/Kraay
+                       Y2 |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+--------------------------+----------------------------------------------------------------
+             unemployment |   .0001255   .0000804     1.56   0.123    -.0000346    .0002856
+          unemployment_sq |  -7.10e-07   2.56e-06    -0.28   0.782    -5.81e-06    4.39e-06
+           log_investment |  -.0002468   .0000753    -3.28   0.002    -.0003967   -.0000969
+            log_debt_firm |  -.0001367   .0000793    -1.72   0.089    -.0002946    .0000211
+                      CPI |  -.0001208   .0006581    -0.18   0.855    -.0014307     .001189
+                   CPI_sq |   8.13e-07   3.00e-06     0.27   0.787    -5.15e-06    6.78e-06
+           housing_prices |   7.93e-06   3.23e-06     2.46   0.016     1.50e-06    .0000144
+        log_housing_stock |  -.0004303   .0003064    -1.40   0.164    -.0010401    .0001795
+            interest_rate |   .0001679   .0002971     0.57   0.574    -.0004234    .0007592
+         interest_rate_sq |  -.0000167   .0000245    -0.68   0.498    -.0000655    .0000321
+              log_R_and_D |   .0002337    .000114     2.05   0.044     6.77e-06    .0004606
+        log_median_income |  -.0018996   .0001735   -10.95   0.000     -.002245   -.0015543
+          wages_to_social |    .001052    .000245     4.29   0.000     .0005642    .0015397
+ business_income_to_wages |   .0060101   .0003641    16.51   0.000     .0052855    .0067348
+ property_income_to_wages |  -.0166854   .0015617   -10.68   0.000    -.0197938    -.013577
+    log_skilled_graduates |  -.0003648   .0001095    -3.33   0.001    -.0005827   -.0001469
+                 gambling |   .0011136    .000289     3.85   0.000     .0005384    .0016888
+           industrial_SEZ |  -.0005158    .000162    -3.18   0.002    -.0008384   -.0001933
+           innovative_SEZ |   .0009316   .0003254     2.86   0.005      .000284    .0015793
+              tourist_SEZ |  -.0006553    .000124    -5.29   0.000    -.0009022   -.0004085
+          log_VRP_dobycha |  -.0000224   .0000153    -1.46   0.148    -.0000529    8.11e-06
+log_VRP_obrabatyvayuschie |   .0003794   .0001818     2.09   0.040     .0000175    .0007413
+           log_VRP_energy |   .0005313   .0001192     4.46   0.000      .000294    .0007686
+      log_VRP_agriculture |   .0003246   .0000461     7.05   0.000      .000233    .0004163
+          log_VRP_finance |   .0001416   .0000413     3.43   0.001     .0000594    .0002239
+            log_VRP_trade |  -.0001824   .0002792    -0.65   0.515    -.0007382    .0003734
+                    _cons |   .0066372   .0378889     0.18   0.861    -.0687789    .0820533
+-------------------------------------------------------------------------------------------
+
+
+. estimates store pool_scc_y2
+
+. 
+. 
+. **************************************************************
+. * 15. Итоговые таблицы с xtscc и всеми моделми
+. **************************************************************
+. esttab fe_rob_y1 fe_cl_y1 gls_y1 fe_scc_y1 , b(%7.4f) stats(N r2) star replace
+
+----------------------------------------------------------------------------
+                      (1)             (2)             (3)             (4)   
+                       Y1              Y1              Y1              Y1   
+----------------------------------------------------------------------------
+unemployment      -0.0369         -0.0369         -0.0053         -0.0369   
+                  (-0.66)         (-0.66)         (-0.26)         (-0.88)   
+
+unemployme~q      -0.0000         -0.0000         -0.0004         -0.0000   
+                  (-0.00)         (-0.00)         (-0.44)         (-0.01)   
+
+log_debt_p~e      -1.1604***      -1.1604***      -0.6152***      -1.1604***
+                  (-6.92)         (-6.92)         (-4.75)         (-9.47)   
+
+log_median~e      -2.4895**       -2.4895**       -0.2254         -2.4895***
+                  (-3.02)         (-3.02)         (-0.60)         (-7.70)   
+
+divorce_rate       0.0056          0.0056          0.0372          0.0056   
+                   (0.10)          (0.10)          (1.64)          (0.20)   
+
+CPI               -1.0758         -1.0758         -0.3842*        -1.0758***
+                  (-1.96)         (-1.96)         (-2.05)        (-10.43)   
+
+CPI_sq             0.0051          0.0051          0.0018*         0.0051***
+                   (1.97)          (1.97)          (2.08)         (11.11)   
+
+housing_pr~s      -0.0011         -0.0011         -0.0003         -0.0011   
+                  (-1.49)         (-1.49)         (-0.65)         (-1.47)   
+
+interest_r~e            .               .          4.0066         31.4404***
+                        .               .          (1.48)         (15.98)   
+
+interest_r~q      -0.0315***      -0.0315***      -0.2644         -2.6516***
+                 (-10.82)        (-10.82)         (-1.57)        (-16.05)   
+
+wages_to_s~l       0.2253          0.2253         -0.0758          0.2253***
+                   (1.63)          (1.63)         (-1.23)          (4.07)   
+
+property_i~s      -0.0067         -0.0067         -1.1503         -0.0067   
+                  (-0.00)         (-0.00)         (-1.42)         (-0.01)   
+
+gambling                .               .         -1.3077**        0.0000   
+                        .               .         (-3.11)               .   
+
+log_hospit~s       0.0276          0.0276          0.0008          0.0276   
+                   (0.25)          (0.25)          (0.02)          (1.14)   
+
+log_gradua~s       0.2181          0.2181         -0.0576          0.2181***
+                   (0.89)          (0.89)         (-0.73)          (3.62)   
+
+industrial~Z      -0.0807         -0.0807         -0.0164         -0.0807*  
+                  (-0.79)         (-0.79)         (-0.59)         (-2.23)   
+
+innovative~Z       0.4813***       0.4813***       0.3268**        0.4813***
+                   (7.07)          (7.07)          (3.14)         (10.18)   
+
+tourist_SEZ             .               .          1.4409***       0.0000   
+                        .               .          (3.79)               .   
+
+log_VRP_do~a       0.1668          0.1668          0.0618*         0.1668***
+                   (1.76)          (1.76)          (2.46)          (3.74)   
+
+log_VRP_ob~e      -0.1554         -0.1554          0.0319         -0.1554** 
+                  (-1.15)         (-1.15)          (0.55)         (-3.17)   
+
+log_VRP_en~y       0.2386          0.2386          0.1373*         0.2386***
+                   (1.97)          (1.97)          (2.25)          (6.36)   
+
+log_VRP_ag~e       0.1067          0.1067          0.0064          0.1067   
+                   (0.82)          (0.82)          (0.12)          (1.02)   
+
+log_VRP_fi~e      -0.0152         -0.0152          0.0006         -0.0152   
+                  (-0.57)         (-0.57)          (0.06)         (-1.15)   
+
+log_VRP_tr~e       0.2725          0.2725          0.2040*         0.2725***
+                   (1.22)          (1.22)          (2.41)          (3.43)   
+
+2018bn.year             .               .               .                   
+                        .               .               .                   
+
+2019.year         -0.1448**       -0.1448**        0.2726                   
+                  (-2.66)         (-2.66)          (0.53)                   
+
+2020.year               .               .          2.6838                   
+                        .               .          (1.12)                   
+
+2021.year          2.5082***       2.5082***            .                   
+                  (10.96)         (10.96)               .                   
+
+2022.year          3.1131***       3.1131***            .                   
+                  (10.05)         (10.05)               .                   
+
+year_2                                                            -8.0049***
+                                                                 (-15.61)   
+
+year_3                                                             0.0000   
+                                                                        .   
+
+year_4                                                            10.8596***
+                                                                  (17.77)   
+
+year_5                                                             0.9843***
+                                                                  (11.37)   
+
+year_6                                                             0.0000   
+                                                                        .   
+
+_cons             86.2974**       86.2974**        0.0000          0.0000   
+                   (2.66)          (2.66)               .               .   
+----------------------------------------------------------------------------
+N                400.0000        400.0000        400.0000        400.0000   
+r2                 0.9080          0.9080                                   
+----------------------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. esttab fe_rob_y2 fe_cl_y2 gls_y2 fe_scc_y2 pool_cl_y2 pool_scc_y2 , b(%7.4f) stats(N r2) star replace
+
+------------------------------------------------------------------------------------------------------------
+                      (1)             (2)             (3)             (4)             (5)             (6)   
+                       Y2              Y2              Y2              Y2              Y2              Y2   
+------------------------------------------------------------------------------------------------------------
+unemployment       0.0001          0.0001          0.0001          0.0001          0.0001          0.0001   
+                   (0.64)          (0.64)          (0.72)          (0.31)          (1.18)          (1.56)   
+
+unemployme~q       0.0000          0.0000          0.0000          0.0000          0.0000         -0.0000   
+                   (0.59)          (0.59)          (0.13)          (0.29)          (0.25)         (-0.28)   
+
+log_invest~t      -0.0001         -0.0001         -0.0001         -0.0001         -0.0002         -0.0002** 
+                  (-0.21)         (-0.21)         (-0.52)         (-0.45)         (-0.58)         (-3.28)   
+
+log_debt_f~m      -0.0003         -0.0003          0.0000         -0.0003***      -0.0003         -0.0001   
+                  (-0.94)         (-0.94)          (0.19)         (-3.49)         (-0.88)         (-1.72)   
+
+CPI               -0.0020         -0.0020         -0.0023*        -0.0020*        -0.0020         -0.0001   
+                  (-1.23)         (-1.23)         (-2.34)         (-2.52)         (-1.28)         (-0.18)   
+
+CPI_sq             0.0000          0.0000          0.0000*         0.0000*         0.0000          0.0000   
+                   (1.27)          (1.27)          (2.38)          (2.59)          (1.29)          (0.27)   
+
+housing_pr~s       0.0000          0.0000          0.0000          0.0000***       0.0000          0.0000*  
+                   (1.90)          (1.90)          (1.70)          (4.12)          (1.84)          (2.46)   
+
+log_housin~k       0.0060          0.0060         -0.0001          0.0060***      -0.0018         -0.0004   
+                   (1.52)          (1.52)         (-0.18)          (7.78)         (-1.77)         (-1.40)   
+
+interest_r~e            .               .          0.0406          0.0009          0.0005          0.0002   
+                        .               .          (1.39)          (0.05)          (0.75)          (0.57)   
+
+interest_r~q       0.0000          0.0000         -0.0025         -0.0000         -0.0000         -0.0000   
+                   (1.47)          (1.47)         (-1.38)         (-0.04)         (-0.71)         (-0.68)   
+
+log_R_and_D       -0.0002         -0.0002         -0.0000         -0.0002          0.0000          0.0002*  
+                  (-0.62)         (-0.62)         (-0.13)         (-1.35)          (0.05)          (2.05)   
+
+log_median~e       0.0017          0.0017         -0.0007          0.0017         -0.0021*        -0.0019***
+                   (0.38)          (0.38)         (-1.09)          (0.72)         (-2.28)        (-10.95)   
+
+wages_to_s~l      -0.0001         -0.0001          0.0005*        -0.0001          0.0003          0.0011***
+                  (-0.21)         (-0.21)          (2.32)         (-0.95)          (0.73)          (4.29)   
+
+business_i~s      -0.0033         -0.0033          0.0032*        -0.0033          0.0021          0.0060***
+                  (-0.70)         (-0.70)          (2.20)         (-1.31)          (1.08)         (16.51)   
+
+property_i~s       0.0029          0.0029         -0.0035          0.0029         -0.0008         -0.0167***
+                   (0.43)          (0.43)         (-1.16)          (1.11)         (-0.14)        (-10.68)   
+
+log_skille~s      -0.0002         -0.0002         -0.0003         -0.0002         -0.0003         -0.0004** 
+                  (-0.37)         (-0.37)         (-1.69)         (-0.60)         (-0.72)         (-3.33)   
+
+gambling                .               .          0.0009**        0.0000          0.0010          0.0011***
+                        .               .          (2.76)               .          (1.06)          (3.85)   
+
+industrial~Z      -0.0002         -0.0002         -0.0002         -0.0002         -0.0003         -0.0005** 
+                  (-1.43)         (-1.43)         (-1.76)         (-1.49)         (-1.74)         (-3.18)   
+
+innovative~Z      -0.0012***      -0.0012***       0.0001         -0.0012**       -0.0008**        0.0009** 
+                  (-5.87)         (-5.87)          (0.31)         (-2.68)         (-3.13)          (2.86)   
+
+tourist_SEZ             .               .         -0.0002          0.0000         -0.0004         -0.0007***
+                        .               .         (-0.84)               .         (-0.62)         (-5.29)   
+
+log_VRP_do~a       0.0000          0.0000         -0.0000          0.0000          0.0000         -0.0000   
+                   (0.15)          (0.15)         (-0.00)          (0.28)          (0.05)         (-1.46)   
+
+log_VRP_ob~e       0.0008          0.0008          0.0001          0.0008*         0.0004          0.0004*  
+                   (1.53)          (1.53)          (0.82)          (2.06)          (1.21)          (2.09)   
+
+log_VRP_en~y       0.0010*         0.0010*         0.0003          0.0010***       0.0007*         0.0005***
+                   (2.13)          (2.13)          (1.91)          (7.42)          (2.27)          (4.46)   
+
+log_VRP_ag~e      -0.0002         -0.0002          0.0000         -0.0002          0.0000          0.0003***
+                  (-0.44)         (-0.44)          (0.13)         (-0.85)          (0.17)          (7.05)   
+
+log_VRP_fi~e       0.0002**        0.0002**        0.0002*         0.0002**        0.0002*         0.0001***
+                   (2.89)          (2.89)          (2.19)          (3.23)          (2.27)          (3.43)   
+
+log_VRP_tr~e       0.0022**        0.0022**        0.0000          0.0022***       0.0013*        -0.0002   
+                   (2.75)          (2.75)          (0.05)          (4.41)          (2.20)         (-0.65)   
+
+2018bn.year             .               .               .                                                   
+                        .               .               .                                                   
+
+2019.year          0.0003          0.0003          0.0083                                                   
+                   (1.14)          (1.14)          (1.46)                                                   
+
+2020.year               .               .          0.0366                                                   
+                        .               .          (1.42)                                                   
+
+2021.year         -0.0017         -0.0017               .                                                   
+                  (-1.38)         (-1.38)               .                                                   
+
+2022.year         -0.0020         -0.0020               .                                                   
+                  (-1.20)         (-1.20)               .                                                   
+
+year_2                                                             0.0000                                   
+                                                                   (0.01)                                   
+
+year_3                                                             0.0000                                   
+                                                                        .                                   
+
+year_4                                                            -0.0014                                   
+                                                                  (-0.28)                                   
+
+year_5                                                            -0.0020**                                 
+                                                                  (-2.89)                                   
+
+year_6                                                             0.0000                                   
+                                                                        .                                   
+
+_cons              0.0024          0.0024         -0.0449          0.0000          0.0936          0.0066   
+                   (0.02)          (0.02)         (-0.33)               .          (1.06)          (0.18)   
+------------------------------------------------------------------------------------------------------------
+N                397.0000        397.0000        397.0000        397.0000        397.0000        397.0000   
+r2                 0.2756          0.2756                                                          0.2112   
+------------------------------------------------------------------------------------------------------------
+t statistics in parentheses
+* p<0.05, ** p<0.01, *** p<0.001
+
+. 
+. 
+end of do-file
+
