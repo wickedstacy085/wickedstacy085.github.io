@@ -1,6 +1,9 @@
 project:
   type: website
   output-dir: _site
+  resources:
+    - cv.pdf
+    - cv-en.pdf
 
 execute:
   freeze: auto        # код считается локально, CI только собирает HTML из _freeze/

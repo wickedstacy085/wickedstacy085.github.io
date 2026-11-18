@@ -3,6 +3,8 @@ title: "Резюме"
 toc: false
 ---
 
+[PDF](cv.pdf){.btn .btn-outline-secondary .btn-sm} [English PDF](cv-en.pdf){.btn .btn-outline-secondary .btn-sm}
+
 **Анастасия Смирнова** · Аналитик: эконометрика временных рядов, макропрогнозирование\
 Москва · +7 (953) 898-40-86 · anastasiasmirnova085@gmail.com\
 [github.com/wickedstacy085](https://github.com/wickedstacy085) · [wickedstacy085.github.io](https://wickedstacy085.github.io)
