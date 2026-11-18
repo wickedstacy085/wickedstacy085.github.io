@@ -1,30 +1,18 @@
-# Загрузка и подготовка данных. Ожидается data/housing.csv:
-# колонка date (YYYY-MM-DD, первое число месяца) + числовые ряды.
+# Загрузка данных. data/housing.csv: колонка date (YYYY-MM-DD, начало периода) + числовые ряды.
 suppressPackageStartupMessages({ library(readr); library(dplyr) })
 
-load_housing <- function(path = here::here("projects/housing-vecm/data/housing.csv"),
-                         start = c(2005, 10)) {
-  if (!file.exists(path)) {
-    alt <- file.path(dirname(path), "proj2.xlsx")       # исходный файл диплома как есть
-    if (!file.exists(alt)) stop("Нет файла данных: ", path, " или ", alt, ". См. data/README.md")
-    path <- alt
-  }
-  raw <- if (grepl("\\.xlsx?$", path, ignore.case = TRUE)) {
-    readxl::read_excel(path)
-  } else {
-    readr::read_csv(path, show_col_types = FALSE)
-  }
-  if ("Data" %in% names(raw) && !"date" %in% names(raw)) raw <- dplyr::rename(raw, date = Data)
-  stopifnot("date" %in% names(raw))
-  raw <- dplyr::arrange(raw, date)
-  if (anyNA(raw)) {
-    warning("Есть пропуски — заполняю линейной интерполяцией (zoo::na.approx)")
-    raw[-1] <- lapply(raw[-1], zoo::na.approx, na.rm = FALSE)
-  }
-  ts(as.matrix(raw[-1]), start = start, frequency = 12)
+load_housing <- function(path = "data/housing.csv") {
+  if (!file.exists(path)) stop("Нет файла данных: ", path, ". См. data/README.md")
+  raw <- readr::read_csv(path, show_col_types = FALSE) |> dplyr::arrange(date)
+  stopifnot("date" %in% names(raw), !anyNA(raw))
+  d0   <- as.Date(raw$date[1])
+  step <- as.numeric(difftime(as.Date(raw$date[2]), d0, units = "days"))
+  freq <- if (step > 80) 4 else 12
+  per  <- if (freq == 4) (as.integer(format(d0, "%m")) - 1) %/% 3 + 1 else as.integer(format(d0, "%m"))
+  ts(as.matrix(raw[-1]), start = c(as.integer(format(d0, "%Y")), per), frequency = freq)
 }
 
-# Сезонная корректировка на уровнях: STL, сезонная компонента вычитается.
+# Сезонная корректировка на уровнях: STL, сезонная компонента вычитается (а не делится).
 seasonal_adjust <- function(x) {
   fit <- stats::stl(x, s.window = "periodic", robust = TRUE)
   x - fit$time.series[, "seasonal"]

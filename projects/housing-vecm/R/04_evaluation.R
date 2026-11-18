@@ -1,14 +1,14 @@
 suppressPackageStartupMessages({ library(forecast); library(vars); library(tibble) })
 
 # Честный out-of-sample: модель оценивается на train, прогноз сравнивается с test.
-holdout_compare <- function(y, target = "Index", h = 24) {
+holdout_compare <- function(y, target = "Index", h = 8) {
   n <- nrow(y); tt <- time(y)
   train <- window(y, end = tt[n - h]); test <- window(y, start = tt[n - h + 1])
   actual <- as.numeric(test[, target])
 
   f_rw   <- rep(tail(train[, target], 1), h)
   f_arim <- as.numeric(forecast(auto.arima(train[, target]), h = h)$mean)
-  f_vecm <- fit_vecm(train)$var_form |> predict(n.ahead = h) |>
+  f_vecm <- suppressWarnings(fit_vecm(train, r = 1))$var_form |> predict(n.ahead = h) |>
             (\(p) p$fcst[[target]][, "fcst"])()
 
   metrics <- function(f) c(MAE = mean(abs(actual - f)), RMSE = sqrt(mean((actual - f)^2)))
