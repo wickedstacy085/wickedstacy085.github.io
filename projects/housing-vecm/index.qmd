@@ -27,18 +27,31 @@ jo    <- vecm$johansen
 tr    <- rev(jo@teststat); cv <- rev(jo@cval[, "5pct"])     # [1] r = 0, [2] r <= 1
 beta  <- jo@V[, 1] / jo@V[1, 1]
 alpha <- coef(vecm$ecm$rlm)["ect1", "Index.d"]
-res   <- holdout_compare(y2, target = "Index", h = 8)
-gain  <- 100 * (1 - res$RMSE[res$model == "VECM"] / res$RMSE[res$model == "Random walk"])
+y3    <- y_all[, c("Index", "Unemployment", "MRate")]
+vecm3 <- suppressWarnings(fit_vecm(y3))
+jo3   <- vecm3$johansen
+tr3   <- rev(jo3@teststat); cv3 <- rev(jo3@cval[, "5pct"])
+res   <- holdout_compare(y_all, target = "Index", h = 8)
+roll  <- rolling_compare(y_all, target = "Index", h = 4, first_origin = 2015.75)
+r_all  <- rolling_rmse(roll, horizon = 4)
+r_pre  <- rolling_rmse(roll, horizon = 4, to = 2021)       # прогнозы до разворота
+r_post <- rolling_rmse(roll, horizon = 4, from = 2021)     # прогнозы на 2022–2023
+best  <- r_all$model[1]
+v3    <- "VECM: + ставка по ипотеке"; v2 <- "VECM: цены + безработица"
+rel   <- function(tab, m) tab$RMSE_vs_RW[tab$model == m]
 fmt   <- function(x, d = 2) formatC(x, format = "f", digits = d, decimal.mark = ",")
 ```
 
-::: {.result-box}
-**Главное.** В ВКР (месячные данные 2005–2023) тест Йохансена нашёл одно долгосрочное соотношение
-между ценами на жильё и безработицей (trace 28,58 > 19,96). На открытых квартальных данных
-Eurostat за тот же период воспроизведение даёт trace = `r fmt(tr[1])` при критическом
-`r fmt(cv[1])`: `r if (vecm$r_test >= 1) "связь подтверждается" else "на квартальных данных связь на 5% не подтверждается"`.
-На отложенной выборке VECM `r if (gain > 0) paste0("снижает RMSE прогноза на ", fmt(gain, 0), "% относительно наивного прогноза") else paste0("не обыгрывает наивный прогноз (RMSE хуже на ", fmt(-gain, 0), "%)")`.
-:::
+:::: {.result-box}
+**Главное.** В ВКР (месячные данные 2005–2023) тест Йохансена нашёл долгосрочное соотношение
+«цены на жильё — безработица» (trace 28,58 > 19,96). На открытых квартальных данных за тот же
+период эта пара связь на 5% не подтверждает (trace `r fmt(tr[1])` < `r fmt(cv[1])`).
+`r if (vecm3$r_test >= 1) paste0("После добавления ставки по ипотеке коинтеграция есть (trace ", fmt(tr3[1]), " > ", fmt(cv3[1]), ").") else paste0("Добавление ставки по ипотеке связь тоже не даёт (trace ", fmt(tr3[1]), " < ", fmt(cv3[1]), ").")`
+В скользящей проверке на `r length(unique(roll$origin))` точках прогноза (горизонт 4 квартала)
+лучшая модель — **`r best`**. До разворота 2022 года ошибка VECM со ставкой составляет
+`r fmt(100 * rel(r_pre, v3), 0)`% от ошибки наивного прогноза, на развороте —
+`r fmt(100 * rel(r_post, v3), 0)`%.
+::::
 
 ## Вопрос
 
@@ -102,7 +115,7 @@ plot(irf(m_var, impulse = "MRate", response = "Index", n.ahead = 12, boot = TRUE
 #| label: tbl-johansen
 #| tbl-cap: "Тест Йохансена (trace), цены на жильё и безработица"
 knitr::kable(data.frame(`Гипотеза` = c("r = 0", "r ≤ 1"), Trace = tr, `Крит. 5%` = cv,
-                        `Отвергается` = tr > cv, check.names = FALSE), digits = 2)
+                        `Отвергается` = tr > cv, check.names = FALSE, row.names = NULL), digits = 2)
 ```
 
 Нормированный коинтеграционный вектор: Index `r if (beta[2] >= 0) "+" else "−"` `r fmt(abs(beta[2]))`·Unemployment
@@ -113,7 +126,22 @@ knitr::kable(data.frame(`Гипотеза` = c("r = 0", "r ≤ 1"), Trace = tr, 
 Для сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 > 19,96; r ≤ 1, trace 1,07 < 9,24;
 вектор Index + 119,03·Unemployment − 911,12.
 
+### Добавляем ставку по ипотеке
+
+Пара «цены — безработица» не учитывает стоимость кредита. Именно рост ставок ЕЦБ в 2022 году
+развернул рынок жилья Германии. Ставка по ипотеке добавлена по экономической логике до проверки
+качества прогноза, и ниже показаны обе спецификации.
+
+```{r}
+#| label: tbl-johansen3
+#| tbl-cap: "Тест Йохансена (trace): цены, безработица, ставка по ипотеке"
+knitr::kable(data.frame(`Гипотеза` = c("r = 0", "r ≤ 1", "r ≤ 2"), Trace = tr3, `Крит. 5%` = cv3,
+                        `Отвергается` = tr3 > cv3, check.names = FALSE, row.names = NULL), digits = 2)
+```
+
 ## Шаг 4. Качество прогноза
+
+### Одна отложенная выборка
 
 Модели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.
 
@@ -127,17 +155,51 @@ knitr::kable(res, digits = 2)
 #| label: fig-holdout
 #| fig-cap: "Факт и прогнозы на отложенной выборке"
 p <- attr(res, "paths")
-matplot(p$time, p[, -1], type = "l", lty = 1, lwd = 2,
-        col = c("black", "grey60", "steelblue", "firebrick"), xlab = "", ylab = "Индекс, 2015 = 100")
-legend("topleft", c("Факт", "Random walk", "ARIMA", "VECM"), lwd = 2, bty = "n",
-       col = c("black", "grey60", "steelblue", "firebrick"))
+cols <- c("black", "grey60", "steelblue", "darkorange", "firebrick")
+matplot(p$time, p[, -1], type = "l", lty = 1, lwd = 2, col = cols, xlab = "", ylab = "Индекс, 2015 = 100")
+legend("topleft", c("Факт", names(p)[-(1:2)]), lwd = 2, bty = "n", col = cols, cex = .85)
 ```
 
-Отложенная выборка приходится на разворот рынка 2022–2023 годов, когда ставки ЕЦБ резко выросли и цены
-пошли вниз после десятилетнего роста. Это жёсткий стресс-тест для любой модели, обученной на фазе роста.
+### Скользящая проверка
+
+Одна выборка может случайно оказаться удобной или неудобной для модели. Поэтому модели
+переоцениваются каждый квартал с IV кв. 2015 (расширяющееся окно) и делают прогноз на 1–4 квартала вперёд.
+
+```{r}
+#| label: tbl-rolling
+#| tbl-cap: "RMSE прогноза на 4 квартала: все точки, до 2021 года и на развороте 2021–2023"
+tab <- Reduce(function(a, b) merge(a, b, by = "model"),
+              list(setNames(r_all[, c("model", "RMSE_vs_RW")], c("model", "Все")),
+                   setNames(r_pre[, c("model", "RMSE_vs_RW")], c("model", "До 2021")),
+                   setNames(r_post[, c("model", "RMSE_vs_RW")], c("model", "2021–2023"))))
+names(tab)[1] <- "Модель (RMSE / RMSE наивного)"
+knitr::kable(tab[order(tab[[2]]), ], digits = 2, row.names = FALSE)
+```
+
+```{r}
+#| label: fig-rolling
+#| fig-cap: "RMSE по горизонту прогноза, все точки"
+hz <- aggregate(error ~ model + horizon, roll, function(x) sqrt(mean(x^2, na.rm = TRUE)))
+ms <- unique(hz$model); cols <- c("grey60", "steelblue", "darkorange", "firebrick")
+plot(NA, xlim = c(1, 4), ylim = range(hz$error), xlab = "Горизонт, кварталов", ylab = "RMSE", xaxt = "n")
+axis(1, 1:4)
+for (i in seq_along(ms)) with(hz[hz$model == ms[i], ], lines(horizon, error, lwd = 2, col = cols[i], type = "b", pch = 19))
+legend("topleft", ms, col = cols, lwd = 2, bty = "n", cex = .85)
+```
+
+## Выводы
+
+1. Долгосрочная связь цен на жильё с безработицей, найденная в ВКР на месячных данных,
+   на квартальных открытых данных за тот же период устойчиво не воспроизводится. Результат
+   чувствителен к частоте и источнику данных.
+2. Разворот 2021–2023 годов, когда ставки ЕЦБ резко выросли, — самый трудный участок для прогноза:
+   ошибка наивного прогноза на нём в `r fmt(r_post$RMSE[r_post$model == "Random walk"] / r_pre$RMSE[r_pre$model == "Random walk"], 1)`
+   раза выше, чем до него.
+3. `r if (rel(r_post, v3) < 1) paste0("VECM со ставкой по ипотеке на развороте точнее наивного прогноза (", fmt(100 * rel(r_post, v3), 0), "% его ошибки): правильный драйвер важнее сложности модели.") else paste0("Даже VECM со ставкой по ипотеке на развороте не обыгрывает наивный прогноз (", fmt(100 * rel(r_post, v3), 0), "% его ошибки). При смене режима ставок точечные прогнозы стоит дополнять сценарным анализом.")`
+   `r if (rel(r_all, v3) < rel(r_all, v2)) "Добавление ставки улучшает прогноз по сравнению с парой «цены — безработица»." else "Добавление ставки прогноз по сравнению с парой «цены — безработица» не улучшает."`
 
 ## Ограничения и дальнейшие шаги
 
 - Структурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.
-- Расширение VECM до 3–4 переменных (ставка по ипотеке, доходы).
+- Располагаемые доходы и предложение жилья (разрешения на строительство) как дополнительные драйверы.
 - Байесовский VAR как альтернатива на короткой квартальной выборке.
