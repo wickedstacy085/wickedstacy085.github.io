@@ -2,7 +2,9 @@
   {
     "listing": "/projects.html",
     "items": [
-      "/projects/housing-vecm/index.html"
+      "/projects/housing-vecm/index.html",
+      "/projects/financial-econometrics/index.html",
+      "/projects/ou-process/index.html"
     ]
   }
 ]
