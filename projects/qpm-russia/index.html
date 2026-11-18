@@ -441,7 +441,7 @@ window.Quarto = {
 
 
 <div class="case-meta">
-<p>Пет-проект, 2026 · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia">Код</a> · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia/data">Данные</a> · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/README.md">README</a></p>
+<p>Проект, 2026 · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia">Код</a> · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia/data">Данные</a> · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/README.md">README</a></p>
 </div>
 <div class="result-box">
 <p><strong>Аннотация.</strong> Как повышение ключевой ставки и ослабление рубля передаются в инфляцию и выпуск в России? Я собрала малую полуструктурную модель (QPM) по образцу МВФ из четырёх уравнений, откалибровала её и решила с рациональными ожиданиями. Данные — Росстат, BIS и FRED за II кв. 2011 – II кв. 2026. Неожиданное повышение ставки на 1 п.п. снижает квартальную инфляцию максимум на 0,37 п.п. через 3 кв., выпуск — на 0,23%. Ослабление рубля на 10% повышает инфляцию на 3,2 п.п. через 2 кв. Параметры модели откалиброваны, а не оценены, поэтому это иллюстрация механизма, а не прогноз.</p>
@@ -483,69 +483,69 @@ window.Quarto = {
 <style type="text/css">
 </style>
 
-<table id="T_6c88c" class="cell caption-top table table-sm table-striped small">
+<table id="T_81712" class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th id="T_6c88c_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Параметр</th>
-<th id="T_6c88c_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Смысл</th>
-<th id="T_6c88c_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Значение</th>
+<th id="T_81712_level0_col0" class="col_heading level0 col0" data-quarto-table-cell-role="th">Параметр</th>
+<th id="T_81712_level0_col1" class="col_heading level0 col1" data-quarto-table-cell-role="th">Смысл</th>
+<th id="T_81712_level0_col2" class="col_heading level0 col2" data-quarto-table-cell-role="th">Значение</th>
 </tr>
 </thead>
 <tbody>
 <tr class="odd">
-<td id="T_6c88c_row0_col0" class="data row0 col0">b_lead</td>
-<td id="T_6c88c_row0_col1" class="data row0 col1">IS: вес ожидаемого выпуска</td>
-<td id="T_6c88c_row0_col2" class="data row0 col2">0.10</td>
+<td id="T_81712_row0_col0" class="data row0 col0">b_lead</td>
+<td id="T_81712_row0_col1" class="data row0 col1">IS: вес ожидаемого выпуска</td>
+<td id="T_81712_row0_col2" class="data row0 col2">0.10</td>
 </tr>
 <tr class="even">
-<td id="T_6c88c_row1_col0" class="data row1 col0">b_lag</td>
-<td id="T_6c88c_row1_col1" class="data row1 col1">IS: инерция выпуска</td>
-<td id="T_6c88c_row1_col2" class="data row1 col2">0.75</td>
+<td id="T_81712_row1_col0" class="data row1 col0">b_lag</td>
+<td id="T_81712_row1_col1" class="data row1 col1">IS: инерция выпуска</td>
+<td id="T_81712_row1_col2" class="data row1 col2">0.75</td>
 </tr>
 <tr class="odd">
-<td id="T_6c88c_row2_col0" class="data row2 col0">b_rmci</td>
-<td id="T_6c88c_row2_col1" class="data row2 col1">IS: влияние монетарных условий</td>
-<td id="T_6c88c_row2_col2" class="data row2 col2">0.15</td>
+<td id="T_81712_row2_col0" class="data row2 col0">b_rmci</td>
+<td id="T_81712_row2_col1" class="data row2 col1">IS: влияние монетарных условий</td>
+<td id="T_81712_row2_col2" class="data row2 col2">0.15</td>
 </tr>
 <tr class="even">
-<td id="T_6c88c_row3_col0" class="data row3 col0">b_rr</td>
-<td id="T_6c88c_row3_col1" class="data row3 col1">IS: вес реальной ставки (против курса)</td>
-<td id="T_6c88c_row3_col2" class="data row3 col2">0.60</td>
+<td id="T_81712_row3_col0" class="data row3 col0">b_rr</td>
+<td id="T_81712_row3_col1" class="data row3 col1">IS: вес реальной ставки (против курса)</td>
+<td id="T_81712_row3_col2" class="data row3 col2">0.60</td>
 </tr>
 <tr class="odd">
-<td id="T_6c88c_row4_col0" class="data row4 col0">a_lead</td>
-<td id="T_6c88c_row4_col1" class="data row4 col1">Филлипс: вес ожиданий</td>
-<td id="T_6c88c_row4_col2" class="data row4 col2">0.30</td>
+<td id="T_81712_row4_col0" class="data row4 col0">a_lead</td>
+<td id="T_81712_row4_col1" class="data row4 col1">Филлипс: вес ожиданий</td>
+<td id="T_81712_row4_col2" class="data row4 col2">0.30</td>
 </tr>
 <tr class="even">
-<td id="T_6c88c_row5_col0" class="data row5 col0">a_rmc</td>
-<td id="T_6c88c_row5_col1" class="data row5 col1">Филлипс: влияние издержек</td>
-<td id="T_6c88c_row5_col2" class="data row5 col2">0.20</td>
+<td id="T_81712_row5_col0" class="data row5 col0">a_rmc</td>
+<td id="T_81712_row5_col1" class="data row5 col1">Филлипс: влияние издержек</td>
+<td id="T_81712_row5_col2" class="data row5 col2">0.20</td>
 </tr>
 <tr class="odd">
-<td id="T_6c88c_row6_col0" class="data row6 col0">a_y</td>
-<td id="T_6c88c_row6_col1" class="data row6 col1">Филлипс: вес разрыва выпуска (против курса)</td>
-<td id="T_6c88c_row6_col2" class="data row6 col2">0.70</td>
+<td id="T_81712_row6_col0" class="data row6 col0">a_y</td>
+<td id="T_81712_row6_col1" class="data row6 col1">Филлипс: вес разрыва выпуска (против курса)</td>
+<td id="T_81712_row6_col2" class="data row6 col2">0.70</td>
 </tr>
 <tr class="even">
-<td id="T_6c88c_row7_col0" class="data row7 col0">g_lag</td>
-<td id="T_6c88c_row7_col1" class="data row7 col1">Правило: инерция ставки</td>
-<td id="T_6c88c_row7_col2" class="data row7 col2">0.70</td>
+<td id="T_81712_row7_col0" class="data row7 col0">g_lag</td>
+<td id="T_81712_row7_col1" class="data row7 col1">Правило: инерция ставки</td>
+<td id="T_81712_row7_col2" class="data row7 col2">0.70</td>
 </tr>
 <tr class="odd">
-<td id="T_6c88c_row8_col0" class="data row8 col0">g_pi</td>
-<td id="T_6c88c_row8_col1" class="data row8 col1">Правило: реакция на инфляцию</td>
-<td id="T_6c88c_row8_col2" class="data row8 col2">1.50</td>
+<td id="T_81712_row8_col0" class="data row8 col0">g_pi</td>
+<td id="T_81712_row8_col1" class="data row8 col1">Правило: реакция на инфляцию</td>
+<td id="T_81712_row8_col2" class="data row8 col2">1.50</td>
 </tr>
 <tr class="even">
-<td id="T_6c88c_row9_col0" class="data row9 col0">g_y</td>
-<td id="T_6c88c_row9_col1" class="data row9 col1">Правило: реакция на разрыв выпуска</td>
-<td id="T_6c88c_row9_col2" class="data row9 col2">0.50</td>
+<td id="T_81712_row9_col0" class="data row9 col0">g_y</td>
+<td id="T_81712_row9_col1" class="data row9 col1">Правило: реакция на разрыв выпуска</td>
+<td id="T_81712_row9_col2" class="data row9 col2">0.50</td>
 </tr>
 <tr class="odd">
-<td id="T_6c88c_row10_col0" class="data row10 col0">e_lead</td>
-<td id="T_6c88c_row10_col1" class="data row10 col1">UIP: вес ожидаемого курса</td>
-<td id="T_6c88c_row10_col2" class="data row10 col2">0.50</td>
+<td id="T_81712_row10_col0" class="data row10 col0">e_lead</td>
+<td id="T_81712_row10_col1" class="data row10 col1">UIP: вес ожидаемого курса</td>
+<td id="T_81712_row10_col2" class="data row10 col2">0.50</td>
 </tr>
 </tbody>
 </table>
@@ -1258,7 +1258,7 @@ matplotlib 3.11.2</code></pre>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>::: {.case-meta}</span>
-<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>Пет-проект, 2026 ·</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>Проект, 2026 ·</span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Код</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia)</span> ·</span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">Данные</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/qpm-russia/data)</span> ·</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">README</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/qpm-russia/README.md)</span></span>
