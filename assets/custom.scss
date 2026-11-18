@@ -1,0 +1,9 @@
+/*-- scss:defaults --*/
+$font-family-sans-serif: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+$headings-font-weight: 600;
+
+/*-- scss:rules --*/
+.case-meta { font-size: .95rem; opacity: .85; margin-bottom: 1.5rem; }
+.result-box { border-left: 4px solid $primary; padding: .75rem 1rem; margin: 1.25rem 0;
+              background: rgba($primary, .06); border-radius: 4px; }
+.quarto-listing .listing-title { font-weight: 600; }
