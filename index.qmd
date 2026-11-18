@@ -5,7 +5,7 @@ toc: false
 ---
 
 [GitHub](https://github.com/wickedstacy085){.btn .btn-outline-secondary .btn-sm}
-[Резюме, PDF](cv.pdf){.btn .btn-outline-secondary .btn-sm}
+[Резюме](cv.qmd){.btn .btn-outline-secondary .btn-sm}
 [anastasiasmirnova085@gmail.com](mailto:anastasiasmirnova085@gmail.com){.btn .btn-outline-secondary .btn-sm}
 
 Экономист, НИУ ВШЭ (2025). Строю модели временных рядов для макроданных на R и Python.

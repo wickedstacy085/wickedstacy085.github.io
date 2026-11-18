@@ -1,17 +1,6 @@
 ---
 title: "Резюме"
 toc: false
-format:
-  html: default
-  typst:
-    papersize: a4
-    margin:
-      x: 1.8cm
-      y: 1.6cm
-    fontsize: 10pt
-    mainfont: "DejaVu Sans"
-    section-numbering: null
-format-links: [typst]
 ---
 
 **Анастасия Смирнова** · Аналитик: эконометрика временных рядов, макропрогнозирование\
