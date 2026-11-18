@@ -48,9 +48,9 @@ ul.task-list li input[type="checkbox"] {
 <link href="site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-ac0bab8d307d0a820e12ec9ccf8efb6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-dd7450f46c74bb5283727850002baca3.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-ac0bab8d307d0a820e12ec9ccf8efb6f.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-62ff039fd2d6c6860f796cf2f767583e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-647c7c3fc490778e9881c637208b19f1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-62ff039fd2d6c6860f796cf2f767583e.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -332,12 +332,60 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="cv.pdf" class="btn btn-primary">Скачать PDF</a></p>
-<!-- Вставьте сюда текст резюме из 03_cv_audit_and_cv.md в формате Markdown
-     (заголовки ##, списки -). Тот же текст отрендерите в PDF:
-     quarto render cv.qmd --to pdf  → переименуйте в cv.pdf -->
+<p><strong>Анастасия Смирнова</strong> · Аналитик: эконометрика временных рядов, макропрогнозирование<br>
+Москва · +7 (953) 898-40-86 · anastasiasmirnova085@gmail.com<br>
+<a href="https://github.com/wickedstacy085">github.com/wickedstacy085</a> · <a href="https://wickedstacy085.github.io">wickedstacy085.github.io</a></p>
+<section id="о-себе" class="level2">
+<h2 class="anchored" data-anchor-id="о-себе">О себе</h2>
+<p>Экономист, НИУ ВШЭ (2025). В выпускной работе прогнозировала цены на жильё в Германии моделями ARIMA, VAR и VECM на 12 макрорядах за 2005–2023 годы. Позже воспроизвела расчёт на открытых данных Eurostat и ЕЦБ, код и результаты лежат на GitHub. С 2024 года работаю с данными рекламных кампаний и готовлю отчёты для клиентов.</p>
+</section>
+<section id="навыки" class="level2">
+<h2 class="anchored" data-anchor-id="навыки">Навыки</h2>
+<ul>
+<li><strong>Эконометрика:</strong> ARIMA, VAR, VECM, тест Йохансена, причинность по Грейнджеру, IRF, FEVD, ADF, KPSS, диагностика остатков, МНК, MLE, модель Фамы–Френча, процесс Орнштейна–Уленбека</li>
+<li><strong>R:</strong> vars, urca, forecast, tseries, lmtest, tidyverse, ggplot2</li>
+<li><strong>Python:</strong> pandas, numpy, statsmodels, scipy, scikit-learn, linearmodels, matplotlib</li>
+<li><strong>Отчёты:</strong> Quarto, Git, Excel (Power Query, XLOOKUP, сводные таблицы), PowerPoint, think-cell</li>
+<li><strong>ИИ-инструменты:</strong> ChatGPT, Claude</li>
+<li><strong>Языки:</strong> русский (родной), английский (Advanced), итальянский (A1)</li>
+</ul>
+</section>
+<section id="проекты" class="level2">
+<h2 class="anchored" data-anchor-id="проекты">Проекты</h2>
+<p><strong>Прогнозирование цен на недвижимость в Германии</strong> — ВКР, НИУ ВШЭ, 2024–2025</p>
+<ul>
+<li>12 месячных макрорядов за 2005–2023 годы (217 наблюдений): тесты стационарности, ARIMA как базовая модель, VAR с IRF и FEVD.</li>
+<li>Тест Йохансена нашёл одно долгосрочное соотношение между ценами на жильё и безработицей (trace 28,6 при критическом 19,96); на нём построен VECM-прогноз.</li>
+<li>Воспроизведение на квартальных данных Eurostat и ЕЦБ: VECM со ставкой по ипотеке точнее остальных моделей в проверке на 28 точках прогноза; до 2021 года её ошибка — 36% от ошибки наивного прогноза. <a href="https://wickedstacy085.github.io/projects/housing-vecm/">Код и отчёт</a></li>
+</ul>
+<p><strong>Финансовая эконометрика</strong> — School of Quants, 2023–2024</p>
+<ul>
+<li>Регрессия доходности акций с проверкой допущений МНК, MLE-оценка гамма-распределения, трёхфакторная модель Фамы–Френча для Berkshire Hathaway (Python, statsmodels).</li>
+</ul>
+</section>
+<section id="опыт" class="level2">
+<h2 class="anchored" data-anchor-id="опыт">Опыт</h2>
+<p><strong>OKKAM (OOM Agency)</strong>, медиапланер, digital и e-com · 05/2024 – н. в.</p>
+<ul>
+<li>Кампании Invitro, Aviasales и госзаказчиков с бюджетами больше 50 млн ₽: собираю данные Яндекс Метрики, Google Analytics и рекламных кабинетов, свожу в Excel (Power Query) и BI, готовлю отчёты для клиентов.</li>
+<li>Перераспределяла бюджет между каналами по итогам кампаний; ROMI выше 100% в нескольких кампаниях.</li>
+<li>Сравнивала programmatic-инструменты (DSP, SSP, DMP) для стратегий клиентов, готовила презентации для руководства клиентов в think-cell.</li>
+</ul>
+<p><strong>Ushoo</strong>, аналитик influence-маркетинга (параллельно с OKKAM) · 01/2025 – 09/2025</p>
+<ul>
+<li>Планировала кампании с несколькими блогерами одновременно, следила за KPI и сроками.</li>
+</ul>
+</section>
+<section id="образование" class="level2">
+<h2 class="anchored" data-anchor-id="образование">Образование</h2>
+<p><strong>НИУ ВШЭ</strong>, бакалавр экономики · 2021–2025<br>
+ВКР: «Эконометрическое прогнозирование цен на недвижимость в Германии».<br>
+Курсы: эконометрика, анализ временных рядов, макроэкономика, теория вероятностей, финансовые рынки и институты, анализ данных, машинное обучение.</p>
+<p><strong>School of Quants</strong> · 2023–2024<br>
+Стохастические методы, статистика в финансах, Python, риск-менеджмент и оптимизация портфеля.</p>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
