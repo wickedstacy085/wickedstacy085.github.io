@@ -60,63 +60,56 @@
     "href": "projects/housing-vecm/index.html",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "",
-    "text": "Выпускная квалификационная работа, НИУ ВШЭ · 2025 · R · код на GitHub"
+    "text": "ВКР, НИУ ВШЭ «Эконометрическое прогнозирование цен на недвижимость в Германии» · 2025 · R · код на GitHub"
   },
   {
     "objectID": "projects/housing-vecm/index.html#вопрос",
     "href": "projects/housing-vecm/index.html#вопрос",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Вопрос",
-    "text": "Вопрос\nКакие макрофакторы определяют динамику цен на жильё в долгосрочном и краткосрочном периоде и какая модель даёт лучший прогноз на два года вперёд?"
+    "text": "Вопрос\nКакие макрофакторы определяют динамику цен на жильё в Германии в долгосрочном и краткосрочном периоде и какая модель даёт лучший прогноз?"
   },
   {
     "objectID": "projects/housing-vecm/index.html#данные",
     "href": "projects/housing-vecm/index.html#данные",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Данные",
-    "text": "Данные\n12 месячных рядов, октябрь 2005 – октябрь 2023 (217 наблюдений): индекс цен на жильё, безработица, ВВП, население, инфляция, ставки (ключевая и ипотечная), курс евро, располагаемый доход, аренда, стоимость строительства. Источник: ⟨…⟩, описание в data/README.md.\n\n\nКод\nsource(\"R/01_data.R\"); source(\"R/02_stationarity.R\")\nsource(\"R/03_models.R\"); source(\"R/04_evaluation.R\")\ny_all &lt;- load_housing(\"data/housing.csv\")"
+    "text": "Данные\nИсходный файл ВКР не сохранился, поэтому расчёт воспроизведён на официальных открытых данных за тот же период. Это 72 квартала, IV кв. 2005 – III кв. 2023 (подробнее в data/README.md):\n\n\n\n\n\n\n\nРяд\nИсточник\n\n\n\n\nИндекс цен на жильё (2015 = 100)\nEurostat prc_hpi_q\n\n\nБезработица, %, SA\nEurostat une_rt_m, среднее за квартал\n\n\nСтавка по ипотеке (новые кредиты), %\nЕЦБ MIR M.DE.B.A2C.A.R.A.2250.EUR.N\n\n\nРеальный ВВП, SCA\nEurostat namq_10_gdp\n\n\nHICP\nEurostat prc_hicp_midx\n\n\nСтоимость строительства жилья\nEurostat sts_copi_q\n\n\n\nВ ВКР использовались месячные ряды 12 показателей. Здесь частота квартальная (индекс цен Eurostat публикуется поквартально), поэтому оценки отличаются от дипломных.\n\n\nКод\nop &lt;- par(mfrow = c(1, 2), mar = c(3, 4, 2, 1))\nplot(y_all[, \"Index\"], main = \"Индекс цен на жильё\", ylab = \"2015 = 100\", xlab = \"\", lwd = 2, col = \"firebrick\")\nplot(y_all[, \"Unemployment\"], main = \"Безработица, %\", ylab = \"\", xlab = \"\", lwd = 2, col = \"steelblue\")\npar(op)\n\n\n\n\n\n\n\n\nРисунок 1: Цены на жильё и безработица в Германии"
   },
   {
     "objectID": "projects/housing-vecm/index.html#шаг-1.-свойства-рядов",
     "href": "projects/housing-vecm/index.html#шаг-1.-свойства-рядов",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Шаг 1. Свойства рядов",
-    "text": "Шаг 1. Свойства рядов\nРяды нестационарны в уровнях, поэтому МНК на уровнях дал бы ложную регрессию. ADF и KPSS проверяют гипотезы с противоположными нулями: вывод о порядке интеграции делается, только когда тесты согласуются.\n\n\n\nТаблица 1: Тесты единичного корня (5%)\n\n\n\nКод\nknitr::kable(unit_root_table(y_all), digits = 2)"
+    "text": "Шаг 1. Свойства рядов\nADF и KPSS проверяют противоположные нулевые гипотезы, поэтому о порядке интеграции судим по согласию тестов.\n\n\nКод\nknitr::kable(unit_root_table(y_all), digits = 2)\n\n\n\n\nТаблица 1: Тесты единичного корня (TRUE = стационарен на 5%)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nvariable\nadf_level\nadf_level_I0\nkpss_level\nkpss_level_I0\nadf_diff\nadf_diff_I0\nkpss_diff\nkpss_diff_I0\n\n\n\n\nIndex\n-0.23\nFALSE\n1.70\nFALSE\n-3.12\nTRUE\n0.25\nTRUE\n\n\nUnemployment\n-2.86\nFALSE\n1.68\nFALSE\n-3.77\nTRUE\n0.79\nFALSE\n\n\nMRate\n-1.70\nFALSE\n1.34\nFALSE\n-4.54\nTRUE\n0.39\nTRUE\n\n\nGDP\n-1.16\nFALSE\n1.80\nFALSE\n-6.90\nTRUE\n0.05\nTRUE\n\n\nHICP\n2.12\nFALSE\n1.70\nFALSE\n-4.53\nTRUE\n0.56\nFALSE\n\n\nConstruction\n1.66\nFALSE\n1.63\nFALSE\n-3.56\nTRUE\n0.46\nTRUE"
   },
   {
-    "objectID": "projects/housing-vecm/index.html#шаг-2.-бенчмарки-arima-и-var",
-    "href": "projects/housing-vecm/index.html#шаг-2.-бенчмарки-arima-и-var",
+    "objectID": "projects/housing-vecm/index.html#шаг-2.-var-и-импульсные-отклики",
+    "href": "projects/housing-vecm/index.html#шаг-2.-var-и-импульсные-отклики",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
-    "section": "Шаг 2. Бенчмарки: ARIMA и VAR",
-    "text": "Шаг 2. Бенчмарки: ARIMA и VAR\nARIMA задаёт нижнюю планку точности. VAR показывает краткосрочную динамику через функции импульсного отклика. Порядок Холецкого идёт от медленных переменных к быстрым: ⟨население → ВВП → безработица → ставки → цены на жильё⟩.\n\n\nКод\ny_core &lt;- y_all[, c(\"Unemployment\", \"MRate\", \"DPI\", \"Construction\", \"Index\")]\nm_var  &lt;- fit_var(diff(y_core))\nplot(irf(m_var, impulse = \"Unemployment\", response = \"Index\", n.ahead = 24, boot = TRUE))"
+    "section": "Шаг 2. VAR и импульсные отклики",
+    "text": "Шаг 2. VAR и импульсные отклики\nVAR в разностях на 5 рядах. Порядок Холецкого идёт от медленных к быстрым: ВВП → безработица → стоимость строительства → ставка по ипотеке → цены на жильё.\n\n\nКод\ny_core &lt;- y_all[, c(\"GDP\", \"Unemployment\", \"Construction\", \"MRate\", \"Index\")]\ny_core[, \"GDP\"] &lt;- log(y_core[, \"GDP\"])\nm_var  &lt;- fit_var(diff(y_core))\nplot(irf(m_var, impulse = \"MRate\", response = \"Index\", n.ahead = 12, boot = TRUE, runs = 200))\n\n\n\n\n\n\n\n\nРисунок 2: Отклик цен на жильё на шок ставки по ипотеке, VAR в разностях"
   },
   {
     "objectID": "projects/housing-vecm/index.html#шаг-3.-коинтеграция-и-vecm",
     "href": "projects/housing-vecm/index.html#шаг-3.-коинтеграция-и-vecm",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Шаг 3. Коинтеграция и VECM",
-    "text": "Шаг 3. Коинтеграция и VECM\nVAR в разностях теряет информацию о долгосрочном равновесии, поэтому проверяется коинтеграция.\n\n\nКод\ny2   &lt;- y_all[, c(\"Index\", \"Unemployment\")]\nvecm &lt;- fit_vecm(y2)\nsummary(vecm$johansen)\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nВывод\n\n\n\n\nr ≤ 0\n28,58\n19,96\nотвергается: связь есть\n\n\nr ≤ 1\n1,07\n9,24\nне отвергается: связь одна\n\n\n\nНормированный коинтеграционный вектор: Index + 119,03·Unemployment − 911,12 ~ I(0). В равновесии рост безработицы на 1 п.п. соответствует снижению индекса цен примерно на 119 пунктов. Скорость корректировки α = ⟨…⟩: половина отклонения закрывается за ⟨…⟩ мес.\n\n\nКод\ncoef(vecm$ecm$rlm)[\"ect1\", ]\nhalf_life(coef(vecm$ecm$rlm)[\"ect1\", \"Index.d\"])\n\n\nДиагностика остатков: автокорреляции нет (Portmanteau), ARCH-эффектов нет. Нормальность отвергается (Jarque–Bera) из-за тяжёлых хвостов, поэтому интервалы строятся бутстрэпом."
+    "text": "Шаг 3. Коинтеграция и VECM\n\n\nКод\nknitr::kable(data.frame(`Гипотеза` = c(\"r = 0\", \"r ≤ 1\"), Trace = tr, `Крит. 5%` = cv,\n                        `Отвергается` = tr &gt; cv, check.names = FALSE), digits = 2)\n\n\n\n\nТаблица 2: Тест Йохансена (trace), цены на жильё и безработица\n\n\n\n\n\n\n\nГипотеза\nTrace\nКрит. 5%\nОтвергается\n\n\n\n\nr = 0 |\nr = 0\n17.42\n19.96\nFALSE\n\n\nr &lt;= 1 |\nr ≤ 1\n6.50\n9.24\nFALSE\n\n\n\n\n\n\n\n\nНормированный коинтеграционный вектор: Index + 43,50·Unemployment − 269,73. Коэффициент корректировки цен α = 0,001. Цены не корректируются к равновесию напрямую (α ≥ 0): подстройка идёт через рынок труда.\nДля сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24; вектор Index + 119,03·Unemployment − 911,12."
   },
   {
-    "objectID": "projects/housing-vecm/index.html#шаг-4.-насколько-хорош-прогноз",
-    "href": "projects/housing-vecm/index.html#шаг-4.-насколько-хорош-прогноз",
+    "objectID": "projects/housing-vecm/index.html#шаг-4.-качество-прогноза",
+    "href": "projects/housing-vecm/index.html#шаг-4.-качество-прогноза",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
-    "section": "Шаг 4. Насколько хорош прогноз",
-    "text": "Шаг 4. Насколько хорош прогноз\nМодели оценены на данных до октября 2021 года, прогноз сравнивается с фактом за ноябрь 2021 – октябрь 2023.\n\n\n\nТаблица 2: Точность прогноза Index на горизонте 24 мес.\n\n\n\nКод\nres &lt;- holdout_compare(y2, target = \"Index\", h = 24)\nknitr::kable(res, digits = 2)\n\n\n\n\n\n\nКод\np &lt;- attr(res, \"paths\")\nmatplot(p$time, p[, -1], type = \"l\", lty = 1, lwd = 2,\n        col = c(\"black\", \"grey60\", \"steelblue\", \"firebrick\"), xlab = \"\", ylab = \"Index\")\nlegend(\"topleft\", c(\"Факт\", \"Random walk\", \"ARIMA\", \"VECM\"), lwd = 2, bty = \"n\",\n       col = c(\"black\", \"grey60\", \"steelblue\", \"firebrick\"))"
-  },
-  {
-    "objectID": "projects/housing-vecm/index.html#выводы",
-    "href": "projects/housing-vecm/index.html#выводы",
-    "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
-    "section": "Выводы",
-    "text": "Выводы\n\n⟨Вывод о долгосрочной связи и её экономическом смысле⟩\n⟨Какие факторы двигают цены в краткосрочном периоде (FEVD)⟩\n⟨Какая модель выигрывает в прогнозе и на сколько⟩"
+    "section": "Шаг 4. Качество прогноза",
+    "text": "Шаг 4. Качество прогноза\nМодели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.\n\n\nКод\nknitr::kable(res, digits = 2)\n\n\n\n\nТаблица 3: Точность прогноза индекса цен, горизонт 8 кварталов\n\n\n\n\n\n\nmodel\nMAE\nRMSE\nRMSE_vs_RW\n\n\n\n\nRandom walk\n5.98\n6.58\n1.00\n\n\nARIMA\n23.52\n30.68\n4.66\n\n\nVECM\n19.67\n26.24\n3.99\n\n\n\n\n\n\n\n\n\n\nКод\np &lt;- attr(res, \"paths\")\nmatplot(p$time, p[, -1], type = \"l\", lty = 1, lwd = 2,\n        col = c(\"black\", \"grey60\", \"steelblue\", \"firebrick\"), xlab = \"\", ylab = \"Индекс, 2015 = 100\")\nlegend(\"topleft\", c(\"Факт\", \"Random walk\", \"ARIMA\", \"VECM\"), lwd = 2, bty = \"n\",\n       col = c(\"black\", \"grey60\", \"steelblue\", \"firebrick\"))\n\n\n\n\n\n\n\n\nРисунок 3: Факт и прогнозы на отложенной выборке\n\n\n\n\n\nОтложенная выборка приходится на разворот рынка 2022–2023 годов, когда ставки ЕЦБ резко выросли и цены пошли вниз после десятилетнего роста. Это жёсткий стресс-тест для любой модели, обученной на фазе роста."
   },
   {
     "objectID": "projects/housing-vecm/index.html#ограничения-и-дальнейшие-шаги",
     "href": "projects/housing-vecm/index.html#ограничения-и-дальнейшие-шаги",
     "title": "Цены на жильё в Германии: коинтеграционный анализ и прогноз",
     "section": "Ограничения и дальнейшие шаги",
-    "text": "Ограничения и дальнейшие шаги\n\nСтруктурные сдвиги 2008 и 2020 годов: тест Грегори–Хансена, дамми-переменные.\nVECM на 4–5 переменных и сценарные (условные) прогнозы по траектории ставки.\nБайесовский VAR как альтернатива на коротких выборках."
+    "text": "Ограничения и дальнейшие шаги\n\nСтруктурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.\nРасширение VECM до 3–4 переменных (ставка по ипотеке, доходы).\nБайесовский VAR как альтернатива на короткой квартальной выборке."
   },
   {
     "objectID": "projects/financial-econometrics/index.html",
@@ -158,6 +151,6 @@
     "href": "projects.html",
     "title": "Проекты",
     "section": "",
-    "text": "Цены на жильё в Германии: коинтеграционный анализ и прогноз\n\n\n\nR\n\nVAR\n\nVECM\n\nкоинтеграция\n\nпрогнозирование\n\n\n\nARIMA → VAR → VECM на 12 макрорядах за 2005–2023. Долгосрочная связь цен на жильё с рынком труда и честная оценка прогноза на отложенной выборке.\n\n\n\n1 июн. 2025 г.\n\n\n\n\n\n\n\n\n\n\nФинансовая эконометрика: МНК, MLE и факторные модели\n\n\n\nPython\n\nstatsmodels\n\nCAPM\n\nFama–French\n\nMLE\n\n\n\nЧто объясняет доходность акций и есть ли у Berkshire Hathaway альфа сверх факторных премий.\n\n\n\n1 мар. 2024 г.\n\n\n\n\n\n\n\n\n\n\nПроцесс Орнштейна–Уленбека: возврат к среднему\n\n\n\nPython\n\nстохастические процессы\n\nсимуляция\n\n\n\nТочная дискретизация OU, роль κ и θ, период полураспада шока как мост к интерпретации IRF.\n\n\n\n1 нояб. 2023 г.\n\n\n\n\n\n\nНет подходящих элементов"
+    "text": "Цены на жильё в Германии: коинтеграционный анализ и прогноз\n\n\n\nR\n\nVAR\n\nVECM\n\nкоинтеграция\n\nпрогнозирование\n\n\n\nARIMA → VAR → VECM: долгосрочная связь цен на жильё с рынком труда и честная проверка прогноза на отложенной выборке. Воспроизводимый расчёт на открытых данных Eurostat и…\n\n\n\n1 июн. 2025 г.\n\n\n\n\n\n\n\n\n\n\nФинансовая эконометрика: МНК, MLE и факторные модели\n\n\n\nPython\n\nstatsmodels\n\nCAPM\n\nFama–French\n\nMLE\n\n\n\nЧто объясняет доходность акций и есть ли у Berkshire Hathaway альфа сверх факторных премий.\n\n\n\n1 мар. 2024 г.\n\n\n\n\n\n\n\n\n\n\nПроцесс Орнштейна–Уленбека: возврат к среднему\n\n\n\nPython\n\nстохастические процессы\n\nсимуляция\n\n\n\nТочная дискретизация OU, роль κ и θ, период полураспада шока как мост к интерпретации IRF.\n\n\n\n1 нояб. 2023 г.\n\n\n\n\n\n\nНет подходящих элементов"
   }
 ]
