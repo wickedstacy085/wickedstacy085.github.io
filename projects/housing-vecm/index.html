@@ -350,8 +350,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#данные" id="toc-данные" class="nav-link" data-scroll-target="#данные">Данные</a></li>
   <li><a href="#шаг-1.-свойства-рядов" id="toc-шаг-1.-свойства-рядов" class="nav-link" data-scroll-target="#шаг-1.-свойства-рядов">Шаг 1. Свойства рядов</a></li>
   <li><a href="#шаг-2.-var-и-импульсные-отклики" id="toc-шаг-2.-var-и-импульсные-отклики" class="nav-link" data-scroll-target="#шаг-2.-var-и-импульсные-отклики">Шаг 2. VAR и импульсные отклики</a></li>
-  <li><a href="#шаг-3.-коинтеграция-и-vecm" id="toc-шаг-3.-коинтеграция-и-vecm" class="nav-link" data-scroll-target="#шаг-3.-коинтеграция-и-vecm">Шаг 3. Коинтеграция и VECM</a></li>
-  <li><a href="#шаг-4.-качество-прогноза" id="toc-шаг-4.-качество-прогноза" class="nav-link" data-scroll-target="#шаг-4.-качество-прогноза">Шаг 4. Качество прогноза</a></li>
+  <li><a href="#шаг-3.-коинтеграция-и-vecm" id="toc-шаг-3.-коинтеграция-и-vecm" class="nav-link" data-scroll-target="#шаг-3.-коинтеграция-и-vecm">Шаг 3. Коинтеграция и VECM</a>
+  <ul class="collapse">
+  <li><a href="#добавляем-ставку-по-ипотеке" id="toc-добавляем-ставку-по-ипотеке" class="nav-link" data-scroll-target="#добавляем-ставку-по-ипотеке">Добавляем ставку по ипотеке</a></li>
+  </ul></li>
+  <li><a href="#шаг-4.-качество-прогноза" id="toc-шаг-4.-качество-прогноза" class="nav-link" data-scroll-target="#шаг-4.-качество-прогноза">Шаг 4. Качество прогноза</a>
+  <ul class="collapse">
+  <li><a href="#одна-отложенная-выборка" id="toc-одна-отложенная-выборка" class="nav-link" data-scroll-target="#одна-отложенная-выборка">Одна отложенная выборка</a></li>
+  <li><a href="#скользящая-проверка" id="toc-скользящая-проверка" class="nav-link" data-scroll-target="#скользящая-проверка">Скользящая проверка</a></li>
+  </ul></li>
+  <li><a href="#выводы" id="toc-выводы" class="nav-link" data-scroll-target="#выводы">Выводы</a></li>
   <li><a href="#ограничения-и-дальнейшие-шаги" id="toc-ограничения-и-дальнейшие-шаги" class="nav-link" data-scroll-target="#ограничения-и-дальнейшие-шаги">Ограничения и дальнейшие шаги</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/housing-vecm/index.qmd" class="toc-action"><i class="bi bi-github"></i>Показать код</a></li></ul></div></nav>
@@ -401,7 +409,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p><strong>ВКР, НИУ ВШЭ</strong> «Эконометрическое прогнозирование цен на недвижимость в Германии» · 2025 · R · <a href="https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm">код на GitHub</a></p>
 </div>
 <div class="result-box">
-<p><strong>Главное.</strong> В ВКР (месячные данные 2005–2023) тест Йохансена нашёл одно долгосрочное соотношение между ценами на жильё и безработицей (trace 28,58 &gt; 19,96). На открытых квартальных данных Eurostat за тот же период воспроизведение даёт trace = 17,42 при критическом 19,96: на квартальных данных связь на 5% не подтверждается. На отложенной выборке VECM не обыгрывает наивный прогноз (RMSE хуже на 299%).</p>
+<p><strong>Главное.</strong> В ВКР (месячные данные 2005–2023) тест Йохансена нашёл долгосрочное соотношение «цены на жильё — безработица» (trace 28,58 &gt; 19,96). На открытых квартальных данных за тот же период эта пара связь на 5% не подтверждает (trace 17,42 &lt; 19,96). После добавления ставки по ипотеке коинтеграция есть (trace 51,78 &gt; 34,91). В скользящей проверке на 28 точках прогноза (горизонт 4 квартала) лучшая модель — <strong>VECM: + ставка по ипотеке</strong>. До разворота 2022 года ошибка VECM со ставкой составляет 36% от ошибки наивного прогноза, на развороте — 148%.</p>
 </div>
 <section id="вопрос" class="level2">
 <h2 class="anchored" data-anchor-id="вопрос">Вопрос</h2>
@@ -617,7 +625,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Код</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Гипотеза</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"r = 0"</span>, <span class="st">"r ≤ 1"</span>), <span class="at">Trace =</span> tr, <span class="st">`</span><span class="at">Крит. 5%</span><span class="st">`</span> <span class="ot">=</span> cv,</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr <span class="sc">&gt;</span> cv, <span class="at">check.names =</span> <span class="cn">FALSE</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr <span class="sc">&gt;</span> cv, <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="tbl-johansen" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
@@ -629,7 +637,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <table class="cell caption-top table table-sm table-striped small">
 <thead>
 <tr class="header">
-<th style="text-align: left;"></th>
 <th style="text-align: left;">Гипотеза</th>
 <th style="text-align: right;">Trace</th>
 <th style="text-align: right;">Крит. 5%</th>
@@ -638,14 +645,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">r = 0 |</td>
 <td style="text-align: left;">r = 0</td>
 <td style="text-align: right;">17.42</td>
 <td style="text-align: right;">19.96</td>
 <td style="text-align: left;">FALSE</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">r &lt;= 1 |</td>
 <td style="text-align: left;">r ≤ 1</td>
 <td style="text-align: right;">6.50</td>
 <td style="text-align: right;">9.24</td>
@@ -660,19 +665,73 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <p>Нормированный коинтеграционный вектор: Index + 43,50·Unemployment − 269,73. Коэффициент корректировки цен α = 0,001. Цены не корректируются к равновесию напрямую (α ≥ 0): подстройка идёт через рынок труда.</p>
 <p>Для сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24; вектор Index + 119,03·Unemployment − 911,12.</p>
+<section id="добавляем-ставку-по-ипотеке" class="level3">
+<h3 class="anchored" data-anchor-id="добавляем-ставку-по-ипотеке">Добавляем ставку по ипотеке</h3>
+<p>Пара «цены — безработица» не учитывает стоимость кредита. Именно рост ставок ЕЦБ в 2022 году развернул рынок жилья Германии. Ставка по ипотеке добавлена по экономической логике до проверки качества прогноза, и ниже показаны обе спецификации.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Код</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Гипотеза</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"r = 0"</span>, <span class="st">"r ≤ 1"</span>, <span class="st">"r ≤ 2"</span>), <span class="at">Trace =</span> tr3, <span class="st">`</span><span class="at">Крит. 5%</span><span class="st">`</span> <span class="ot">=</span> cv3,</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr3 <span class="sc">&gt;</span> cv3, <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-johansen3" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-johansen3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;3: Тест Йохансена (trace): цены, безработица, ставка по ипотеке
+</figcaption>
+<div aria-describedby="tbl-johansen3-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Гипотеза</th>
+<th style="text-align: right;">Trace</th>
+<th style="text-align: right;">Крит. 5%</th>
+<th style="text-align: left;">Отвергается</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">r = 0</td>
+<td style="text-align: right;">51.78</td>
+<td style="text-align: right;">34.91</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">r ≤ 1</td>
+<td style="text-align: right;">22.93</td>
+<td style="text-align: right;">19.96</td>
+<td style="text-align: left;">TRUE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">r ≤ 2</td>
+<td style="text-align: right;">7.24</td>
+<td style="text-align: right;">9.24</td>
+<td style="text-align: left;">FALSE</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+</section>
 </section>
 <section id="шаг-4.-качество-прогноза" class="level2">
 <h2 class="anchored" data-anchor-id="шаг-4.-качество-прогноза">Шаг 4. Качество прогноза</h2>
+<section id="одна-отложенная-выборка" class="level3">
+<h3 class="anchored" data-anchor-id="одна-отложенная-выборка">Одна отложенная выборка</h3>
 <p>Модели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Код</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(res, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(res, <span class="at">digits =</span> <span class="dv">2</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div id="tbl-holdout" class="cell quarto-float quarto-figure quarto-figure-center anchored">
 <figure class="quarto-float quarto-float-tbl figure">
 <figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-holdout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
-Таблица&nbsp;3: Точность прогноза индекса цен, горизонт 8 кварталов
+Таблица&nbsp;4: Точность прогноза индекса цен, горизонт 8 кварталов
 </figcaption>
 <div aria-describedby="tbl-holdout-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
 <div class="cell-output-display">
@@ -699,10 +758,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <td style="text-align: right;">4.66</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">VECM</td>
+<td style="text-align: left;">VECM: цены + безработица</td>
 <td style="text-align: right;">19.67</td>
 <td style="text-align: right;">26.24</td>
 <td style="text-align: right;">3.99</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">VECM: + ставка по ипотеке</td>
+<td style="text-align: right;">19.43</td>
+<td style="text-align: right;">25.96</td>
+<td style="text-align: right;">3.94</td>
 </tr>
 </tbody>
 </table>
@@ -714,11 +779,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Код</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">attr</span>(res, <span class="st">"paths"</span>)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(p<span class="sc">$</span>time, p[, <span class="sc">-</span><span class="dv">1</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"firebrick"</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Индекс, 2015 = 100"</span>)</span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Факт"</span>, <span class="st">"Random walk"</span>, <span class="st">"ARIMA"</span>, <span class="st">"VECM"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>,</span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"firebrick"</span>))</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">attr</span>(res, <span class="st">"paths"</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(p<span class="sc">$</span>time, p[, <span class="sc">-</span><span class="dv">1</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> cols, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Индекс, 2015 = 100"</span>)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Факт"</span>, <span class="fu">names</span>(p)[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)]), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">col =</span> cols, <span class="at">cex =</span> .<span class="dv">85</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-holdout" class="quarto-float quarto-figure quarto-figure-center anchored">
@@ -733,13 +797,106 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>Отложенная выборка приходится на разворот рынка 2022–2023 годов, когда ставки ЕЦБ резко выросли и цены пошли вниз после десятилетнего роста. Это жёсткий стресс-тест для любой модели, обученной на фазе роста.</p>
+</section>
+<section id="скользящая-проверка" class="level3">
+<h3 class="anchored" data-anchor-id="скользящая-проверка">Скользящая проверка</h3>
+<p>Одна выборка может случайно оказаться удобной или неудобной для модели. Поэтому модели переоцениваются каждый квартал с IV кв. 2015 (расширяющееся окно) и делают прогноз на 1–4 квартала вперёд.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Код</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(<span class="cf">function</span>(a, b) <span class="fu">merge</span>(a, b, <span class="at">by =</span> <span class="st">"model"</span>),</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>              <span class="fu">list</span>(<span class="fu">setNames</span>(r_all[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"Все"</span>)),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">setNames</span>(r_pre[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"До 2021"</span>)),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">setNames</span>(r_post[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"2021–2023"</span>))))</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tab)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Модель (RMSE / RMSE наивного)"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab[<span class="fu">order</span>(tab[[<span class="dv">2</span>]]), ], <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div id="tbl-rolling" class="cell quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-tbl figure">
+<figcaption class="quarto-float-caption-top quarto-float-caption quarto-float-tbl" id="tbl-rolling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Таблица&nbsp;5: RMSE прогноза на 4 квартала: все точки, до 2021 года и на развороте 2021–2023
+</figcaption>
+<div aria-describedby="tbl-rolling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<div class="cell-output-display">
+<table class="cell caption-top table table-sm table-striped small">
+<thead>
+<tr class="header">
+<th style="text-align: left;">Модель (RMSE / RMSE наивного)</th>
+<th style="text-align: right;">Все</th>
+<th style="text-align: right;">До 2021</th>
+<th style="text-align: right;">2021–2023</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">VECM: + ставка по ипотеке</td>
+<td style="text-align: right;">0.95</td>
+<td style="text-align: right;">0.36</td>
+<td style="text-align: right;">1.48</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Random walk</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+<td style="text-align: right;">1.00</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">ARIMA</td>
+<td style="text-align: right;">1.06</td>
+<td style="text-align: right;">0.38</td>
+<td style="text-align: right;">1.65</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">VECM: цены + безработица</td>
+<td style="text-align: right;">1.07</td>
+<td style="text-align: right;">0.37</td>
+<td style="text-align: right;">1.67</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</figure>
+</div>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Код</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>hz <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(error <span class="sc">~</span> model <span class="sc">+</span> horizon, roll, <span class="cf">function</span>(x) <span class="fu">sqrt</span>(<span class="fu">mean</span>(x<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ms <span class="ot">&lt;-</span> <span class="fu">unique</span>(hz<span class="sc">$</span>model); cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NA</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>), <span class="at">ylim =</span> <span class="fu">range</span>(hz<span class="sc">$</span>error), <span class="at">xlab =</span> <span class="st">"Горизонт, кварталов"</span>, <span class="at">ylab =</span> <span class="st">"RMSE"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(ms)) <span class="fu">with</span>(hz[hz<span class="sc">$</span>model <span class="sc">==</span> ms[i], ], <span class="fu">lines</span>(horizon, error, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> cols[i], <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, ms, <span class="at">col =</span> cols, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> .<span class="dv">85</span>)</span></code></pre></div><button title="Скопировать текст" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output-display">
+<div id="fig-rolling" class="quarto-float quarto-figure quarto-figure-center anchored">
+<figure class="quarto-float quarto-float-fig figure">
+<div aria-describedby="fig-rolling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+<img src="index_files/figure-html/fig-rolling-1.png" class="img-fluid figure-img" width="768">
+</div>
+<figcaption class="quarto-float-caption-bottom quarto-float-caption quarto-float-fig" id="fig-rolling-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca">
+Рисунок&nbsp;4: RMSE по горизонту прогноза, все точки
+</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="выводы" class="level2">
+<h2 class="anchored" data-anchor-id="выводы">Выводы</h2>
+<ol type="1">
+<li>Долгосрочная связь цен на жильё с безработицей, найденная в ВКР на месячных данных, на квартальных открытых данных за тот же период устойчиво не воспроизводится. Результат чувствителен к частоте и источнику данных.</li>
+<li>Разворот 2021–2023 годов, когда ставки ЕЦБ резко выросли, — самый трудный участок для прогноза: ошибка наивного прогноза на нём в 1,3 раза выше, чем до него.</li>
+<li>Даже VECM со ставкой по ипотеке на развороте не обыгрывает наивный прогноз (148% его ошибки). При смене режима ставок точечные прогнозы стоит дополнять сценарным анализом. Добавление ставки улучшает прогноз по сравнению с парой «цены — безработица».</li>
+</ol>
 </section>
 <section id="ограничения-и-дальнейшие-шаги" class="level2">
 <h2 class="anchored" data-anchor-id="ограничения-и-дальнейшие-шаги">Ограничения и дальнейшие шаги</h2>
 <ul>
 <li>Структурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.</li>
-<li>Расширение VECM до 3–4 переменных (ставка по ипотеке, доходы).</li>
+<li>Располагаемые доходы и предложение жилья (разрешения на строительство) как дополнительные драйверы.</li>
 <li>Байесовский VAR как альтернатива на короткой квартальной выборке.</li>
 </ul>
 
@@ -1324,149 +1481,211 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <script type="application/javascript">
   window.quartoScrollableRegionsLabels = {"code":"Прокручиваемый код","output":"Прокручиваемый вывод"};
   </script><div class="modal fade" id="quarto-embedded-source-code-modal" tabindex="-1" aria-labelledby="quarto-embedded-source-code-modal-label" aria-hidden="true"><div class="modal-dialog modal-dialog-scrollable"><div class="modal-content"><div class="modal-header"><h5 class="modal-title" id="quarto-embedded-source-code-modal-label">Исходный код</h5><button class="btn-close" data-bs-dismiss="modal"></button></div><div class="modal-body"><div class="">
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Цены на жильё в Германии: коинтеграционный анализ и прогноз"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "ARIMA → VAR → VECM: долгосрочная связь цен на жильё с рынком труда и честная проверка прогноза на отложенной выборке. Воспроизводимый расчёт на открытых данных Eurostat и ЕЦБ."</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [R, VAR, VECM, коинтеграция, прогнозирование]</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="an">order:</span><span class="co"> 1</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2025-06-01</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
-<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>::: {.case-meta}</span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>**ВКР, НИУ ВШЭ** «Эконометрическое прогнозирование цен на недвижимость в Германии» · 2025 · R ·</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">код на GitHub</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm)</span></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/01_data.R"</span>); <span class="fu">source</span>(<span class="st">"R/02_stationarity.R"</span>)</span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/03_models.R"</span>); <span class="fu">source</span>(<span class="st">"R/04_evaluation.R"</span>)</span>
-<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>y_all <span class="ot">&lt;-</span> <span class="fu">load_housing</span>(<span class="st">"data/housing.csv"</span>)</span>
-<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>y2    <span class="ot">&lt;-</span> y_all[, <span class="fu">c</span>(<span class="st">"Index"</span>, <span class="st">"Unemployment"</span>)]</span>
-<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>vecm  <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">fit_vecm</span>(y2))</span>
-<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>jo    <span class="ot">&lt;-</span> vecm<span class="sc">$</span>johansen</span>
-<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>tr    <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo<span class="sc">@</span>teststat); cv <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo<span class="sc">@</span>cval[, <span class="st">"5pct"</span>])     <span class="co"># [1] r = 0, [2] r &lt;= 1</span></span>
-<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>beta  <span class="ot">&lt;-</span> jo<span class="sc">@</span>V[, <span class="dv">1</span>] <span class="sc">/</span> jo<span class="sc">@</span>V[<span class="dv">1</span>, <span class="dv">1</span>]</span>
-<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">coef</span>(vecm<span class="sc">$</span>ecm<span class="sc">$</span>rlm)[<span class="st">"ect1"</span>, <span class="st">"Index.d"</span>]</span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>res   <span class="ot">&lt;-</span> <span class="fu">holdout_compare</span>(y2, <span class="at">target =</span> <span class="st">"Index"</span>, <span class="at">h =</span> <span class="dv">8</span>)</span>
-<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>gain  <span class="ot">&lt;-</span> <span class="dv">100</span> <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> res<span class="sc">$</span>RMSE[res<span class="sc">$</span>model <span class="sc">==</span> <span class="st">"VECM"</span>] <span class="sc">/</span> res<span class="sc">$</span>RMSE[res<span class="sc">$</span>model <span class="sc">==</span> <span class="st">"Random walk"</span>])</span>
-<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>fmt   <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">d =</span> <span class="dv">2</span>) <span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> d, <span class="at">decimal.mark =</span> <span class="st">","</span>)</span>
-<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>::: {.result-box}</span>
-<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>**Главное.** В ВКР (месячные данные 2005–2023) тест Йохансена нашёл одно долгосрочное соотношение</span>
-<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>между ценами на жильё и безработицей (trace 28,58 &gt; 19,96). На открытых квартальных данных</span>
-<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>Eurostat за тот же период воспроизведение даёт trace = <span class="in">`r fmt(tr[1])`</span> при критическом</span>
-<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a><span class="in">`r fmt(cv[1])`</span>: <span class="in">`r if (vecm$r_test &gt;= 1) "связь подтверждается" else "на квартальных данных связь на 5% не подтверждается"`</span>.</span>
-<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>На отложенной выборке VECM <span class="in">`r if (gain &gt; 0) paste0("снижает RMSE прогноза на ", fmt(gain, 0), "% относительно наивного прогноза") else paste0("не обыгрывает наивный прогноз (RMSE хуже на ", fmt(-gain, 0), "%)")`</span>.</span>
-<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>:::</span>
-<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a><span class="fu">## Вопрос</span></span>
-<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>Какие макрофакторы определяют динамику цен на жильё в Германии в долгосрочном и краткосрочном периоде</span>
-<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>и какая модель даёт лучший прогноз?</span>
-<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a><span class="fu">## Данные</span></span>
-<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>Исходный файл ВКР не сохранился, поэтому расчёт воспроизведён на официальных открытых данных за тот же период.</span>
-<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>Это 72 квартала, IV кв. 2005 – III кв. 2023</span>
-<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>(подробнее в <span class="co">[</span><span class="ot">`data/README.md`</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm/data)</span>):</span>
-<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-56"><a href="#cb7-56" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Ряд <span class="pp">|</span> Источник <span class="pp">|</span></span>
-<span id="cb7-57"><a href="#cb7-57" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
-<span id="cb7-58"><a href="#cb7-58" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Индекс цен на жильё (2015 = 100) <span class="pp">|</span> Eurostat <span class="in">`prc_hpi_q`</span> <span class="pp">|</span></span>
-<span id="cb7-59"><a href="#cb7-59" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Безработица, %, SA <span class="pp">|</span> Eurostat <span class="in">`une_rt_m`</span>, среднее за квартал <span class="pp">|</span></span>
-<span id="cb7-60"><a href="#cb7-60" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Ставка по ипотеке (новые кредиты), % <span class="pp">|</span> ЕЦБ MIR <span class="in">`M.DE.B.A2C.A.R.A.2250.EUR.N`</span> <span class="pp">|</span></span>
-<span id="cb7-61"><a href="#cb7-61" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Реальный ВВП, SCA <span class="pp">|</span> Eurostat <span class="in">`namq_10_gdp`</span> <span class="pp">|</span></span>
-<span id="cb7-62"><a href="#cb7-62" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> HICP <span class="pp">|</span> Eurostat <span class="in">`prc_hicp_midx`</span> <span class="pp">|</span></span>
-<span id="cb7-63"><a href="#cb7-63" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Стоимость строительства жилья <span class="pp">|</span> Eurostat <span class="in">`sts_copi_q`</span> <span class="pp">|</span></span>
-<span id="cb7-64"><a href="#cb7-64" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-65"><a href="#cb7-65" aria-hidden="true" tabindex="-1"></a>В ВКР использовались месячные ряды 12 показателей. Здесь частота квартальная (индекс цен Eurostat</span>
-<span id="cb7-66"><a href="#cb7-66" aria-hidden="true" tabindex="-1"></a>публикуется поквартально), поэтому оценки отличаются от дипломных.</span>
-<span id="cb7-67"><a href="#cb7-67" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-data</span></span>
-<span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Цены на жильё и безработица в Германии"</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y_all[, <span class="st">"Index"</span>], <span class="at">main =</span> <span class="st">"Индекс цен на жильё"</span>, <span class="at">ylab =</span> <span class="st">"2015 = 100"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"firebrick"</span>)</span>
-<span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y_all[, <span class="st">"Unemployment"</span>], <span class="at">main =</span> <span class="st">"Безработица, %"</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>)</span>
-<span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
-<span id="cb7-77"><a href="#cb7-77" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-78"><a href="#cb7-78" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-79"><a href="#cb7-79" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 1. Свойства рядов</span></span>
-<span id="cb7-80"><a href="#cb7-80" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-81"><a href="#cb7-81" aria-hidden="true" tabindex="-1"></a>ADF и KPSS проверяют противоположные нулевые гипотезы, поэтому о порядке интеграции судим по согласию тестов.</span>
-<span id="cb7-82"><a href="#cb7-82" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-85"><a href="#cb7-85" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-86"><a href="#cb7-86" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-unit-root</span></span>
-<span id="cb7-87"><a href="#cb7-87" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Тесты единичного корня (TRUE = стационарен на 5%)"</span></span>
-<span id="cb7-88"><a href="#cb7-88" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">unit_root_table</span>(y_all), <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb7-89"><a href="#cb7-89" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-90"><a href="#cb7-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-91"><a href="#cb7-91" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 2. VAR и импульсные отклики</span></span>
-<span id="cb7-92"><a href="#cb7-92" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-93"><a href="#cb7-93" aria-hidden="true" tabindex="-1"></a>VAR в разностях на 5 рядах. Порядок Холецкого идёт от медленных к быстрым:</span>
-<span id="cb7-94"><a href="#cb7-94" aria-hidden="true" tabindex="-1"></a>ВВП → безработица → стоимость строительства → ставка по ипотеке → цены на жильё.</span>
-<span id="cb7-95"><a href="#cb7-95" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-98"><a href="#cb7-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-99"><a href="#cb7-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-irf</span></span>
-<span id="cb7-100"><a href="#cb7-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Отклик цен на жильё на шок ставки по ипотеке, VAR в разностях"</span></span>
-<span id="cb7-101"><a href="#cb7-101" aria-hidden="true" tabindex="-1"></a>y_core <span class="ot">&lt;-</span> y_all[, <span class="fu">c</span>(<span class="st">"GDP"</span>, <span class="st">"Unemployment"</span>, <span class="st">"Construction"</span>, <span class="st">"MRate"</span>, <span class="st">"Index"</span>)]</span>
-<span id="cb7-102"><a href="#cb7-102" aria-hidden="true" tabindex="-1"></a>y_core[, <span class="st">"GDP"</span>] <span class="ot">&lt;-</span> <span class="fu">log</span>(y_core[, <span class="st">"GDP"</span>])</span>
-<span id="cb7-103"><a href="#cb7-103" aria-hidden="true" tabindex="-1"></a>m_var  <span class="ot">&lt;-</span> <span class="fu">fit_var</span>(<span class="fu">diff</span>(y_core))</span>
-<span id="cb7-104"><a href="#cb7-104" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">irf</span>(m_var, <span class="at">impulse =</span> <span class="st">"MRate"</span>, <span class="at">response =</span> <span class="st">"Index"</span>, <span class="at">n.ahead =</span> <span class="dv">12</span>, <span class="at">boot =</span> <span class="cn">TRUE</span>, <span class="at">runs =</span> <span class="dv">200</span>))</span>
-<span id="cb7-105"><a href="#cb7-105" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-106"><a href="#cb7-106" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-107"><a href="#cb7-107" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 3. Коинтеграция и VECM</span></span>
-<span id="cb7-108"><a href="#cb7-108" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-111"><a href="#cb7-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-112"><a href="#cb7-112" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-johansen</span></span>
-<span id="cb7-113"><a href="#cb7-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Тест Йохансена (trace), цены на жильё и безработица"</span></span>
-<span id="cb7-114"><a href="#cb7-114" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Гипотеза</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"r = 0"</span>, <span class="st">"r ≤ 1"</span>), <span class="at">Trace =</span> tr, <span class="st">`</span><span class="at">Крит. 5%</span><span class="st">`</span> <span class="ot">=</span> cv,</span>
-<span id="cb7-115"><a href="#cb7-115" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr <span class="sc">&gt;</span> cv, <span class="at">check.names =</span> <span class="cn">FALSE</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb7-116"><a href="#cb7-116" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-117"><a href="#cb7-117" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-118"><a href="#cb7-118" aria-hidden="true" tabindex="-1"></a>Нормированный коинтеграционный вектор: Index <span class="in">`r if (beta[2] &gt;= 0) "+" else "−"`</span> <span class="in">`r fmt(abs(beta[2]))`</span>·Unemployment</span>
-<span id="cb7-119"><a href="#cb7-119" aria-hidden="true" tabindex="-1"></a><span class="in">`r if (beta[3] &gt;= 0) "+" else "−"`</span> <span class="in">`r fmt(abs(beta[3]))`</span>. Коэффициент корректировки цен</span>
-<span id="cb7-120"><a href="#cb7-120" aria-hidden="true" tabindex="-1"></a>α = <span class="in">`r fmt(alpha, 3)`</span>.</span>
-<span id="cb7-121"><a href="#cb7-121" aria-hidden="true" tabindex="-1"></a><span class="in">`r if (alpha &lt; 0 &amp;&amp; alpha &gt; -1) paste0("Половина отклонения от равновесия закрывается примерно за ", fmt(half_life(alpha), 1), " кв.") else "Цены не корректируются к равновесию напрямую (α ≥ 0): подстройка идёт через рынок труда."`</span></span>
-<span id="cb7-122"><a href="#cb7-122" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-123"><a href="#cb7-123" aria-hidden="true" tabindex="-1"></a>Для сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24;</span>
-<span id="cb7-124"><a href="#cb7-124" aria-hidden="true" tabindex="-1"></a>вектор Index + 119,03·Unemployment − 911,12.</span>
-<span id="cb7-125"><a href="#cb7-125" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-126"><a href="#cb7-126" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 4. Качество прогноза</span></span>
-<span id="cb7-127"><a href="#cb7-127" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-128"><a href="#cb7-128" aria-hidden="true" tabindex="-1"></a>Модели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.</span>
-<span id="cb7-129"><a href="#cb7-129" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-132"><a href="#cb7-132" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-133"><a href="#cb7-133" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-holdout</span></span>
-<span id="cb7-134"><a href="#cb7-134" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Точность прогноза индекса цен, горизонт 8 кварталов"</span></span>
-<span id="cb7-135"><a href="#cb7-135" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(res, <span class="at">digits =</span> <span class="dv">2</span>)</span>
-<span id="cb7-136"><a href="#cb7-136" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-137"><a href="#cb7-137" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-140"><a href="#cb7-140" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
-<span id="cb7-141"><a href="#cb7-141" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-holdout</span></span>
-<span id="cb7-142"><a href="#cb7-142" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Факт и прогнозы на отложенной выборке"</span></span>
-<span id="cb7-143"><a href="#cb7-143" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">attr</span>(res, <span class="st">"paths"</span>)</span>
-<span id="cb7-144"><a href="#cb7-144" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(p<span class="sc">$</span>time, p[, <span class="sc">-</span><span class="dv">1</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>,</span>
-<span id="cb7-145"><a href="#cb7-145" aria-hidden="true" tabindex="-1"></a>        <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"firebrick"</span>), <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Индекс, 2015 = 100"</span>)</span>
-<span id="cb7-146"><a href="#cb7-146" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Факт"</span>, <span class="st">"Random walk"</span>, <span class="st">"ARIMA"</span>, <span class="st">"VECM"</span>), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>,</span>
-<span id="cb7-147"><a href="#cb7-147" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"firebrick"</span>))</span>
-<span id="cb7-148"><a href="#cb7-148" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb7-149"><a href="#cb7-149" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-150"><a href="#cb7-150" aria-hidden="true" tabindex="-1"></a>Отложенная выборка приходится на разворот рынка 2022–2023 годов, когда ставки ЕЦБ резко выросли и цены</span>
-<span id="cb7-151"><a href="#cb7-151" aria-hidden="true" tabindex="-1"></a>пошли вниз после десятилетнего роста. Это жёсткий стресс-тест для любой модели, обученной на фазе роста.</span>
-<span id="cb7-152"><a href="#cb7-152" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-153"><a href="#cb7-153" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ограничения и дальнейшие шаги</span></span>
-<span id="cb7-154"><a href="#cb7-154" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-155"><a href="#cb7-155" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Структурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.</span>
-<span id="cb7-156"><a href="#cb7-156" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Расширение VECM до 3–4 переменных (ставка по ипотеке, доходы).</span>
-<span id="cb7-157"><a href="#cb7-157" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Байесовский VAR как альтернатива на короткой квартальной выборке.</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10" data-shortcodes="false"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "Цены на жильё в Германии: коинтеграционный анализ и прогноз"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">description:</span><span class="co"> "ARIMA → VAR → VECM: долгосрочная связь цен на жильё с рынком труда и честная проверка прогноза на отложенной выборке. Воспроизводимый расчёт на открытых данных Eurostat и ЕЦБ."</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">categories:</span><span class="co"> [R, VAR, VECM, коинтеграция, прогнозирование]</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="an">order:</span><span class="co"> 1</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> 2025-06-01</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="an">execute:</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="co">  echo: true</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co">  warning: false</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="co">  message: false</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>::: {.case-meta}</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>**ВКР, НИУ ВШЭ** «Эконометрическое прогнозирование цен на недвижимость в Германии» · 2025 · R ·</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">код на GitHub</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm)</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>:::</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: setup</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="co">#| include: false</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/01_data.R"</span>); <span class="fu">source</span>(<span class="st">"R/02_stationarity.R"</span>)</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"R/03_models.R"</span>); <span class="fu">source</span>(<span class="st">"R/04_evaluation.R"</span>)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>y_all <span class="ot">&lt;-</span> <span class="fu">load_housing</span>(<span class="st">"data/housing.csv"</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>y2    <span class="ot">&lt;-</span> y_all[, <span class="fu">c</span>(<span class="st">"Index"</span>, <span class="st">"Unemployment"</span>)]</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>vecm  <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">fit_vecm</span>(y2))</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>jo    <span class="ot">&lt;-</span> vecm<span class="sc">$</span>johansen</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>tr    <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo<span class="sc">@</span>teststat); cv <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo<span class="sc">@</span>cval[, <span class="st">"5pct"</span>])     <span class="co"># [1] r = 0, [2] r &lt;= 1</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>beta  <span class="ot">&lt;-</span> jo<span class="sc">@</span>V[, <span class="dv">1</span>] <span class="sc">/</span> jo<span class="sc">@</span>V[<span class="dv">1</span>, <span class="dv">1</span>]</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>alpha <span class="ot">&lt;-</span> <span class="fu">coef</span>(vecm<span class="sc">$</span>ecm<span class="sc">$</span>rlm)[<span class="st">"ect1"</span>, <span class="st">"Index.d"</span>]</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>y3    <span class="ot">&lt;-</span> y_all[, <span class="fu">c</span>(<span class="st">"Index"</span>, <span class="st">"Unemployment"</span>, <span class="st">"MRate"</span>)]</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>vecm3 <span class="ot">&lt;-</span> <span class="fu">suppressWarnings</span>(<span class="fu">fit_vecm</span>(y3))</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>jo3   <span class="ot">&lt;-</span> vecm3<span class="sc">$</span>johansen</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>tr3   <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo3<span class="sc">@</span>teststat); cv3 <span class="ot">&lt;-</span> <span class="fu">rev</span>(jo3<span class="sc">@</span>cval[, <span class="st">"5pct"</span>])</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>res   <span class="ot">&lt;-</span> <span class="fu">holdout_compare</span>(y_all, <span class="at">target =</span> <span class="st">"Index"</span>, <span class="at">h =</span> <span class="dv">8</span>)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>roll  <span class="ot">&lt;-</span> <span class="fu">rolling_compare</span>(y_all, <span class="at">target =</span> <span class="st">"Index"</span>, <span class="at">h =</span> <span class="dv">4</span>, <span class="at">first_origin =</span> <span class="fl">2015.75</span>)</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>r_all  <span class="ot">&lt;-</span> <span class="fu">rolling_rmse</span>(roll, <span class="at">horizon =</span> <span class="dv">4</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>r_pre  <span class="ot">&lt;-</span> <span class="fu">rolling_rmse</span>(roll, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">to =</span> <span class="dv">2021</span>)       <span class="co"># прогнозы до разворота</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>r_post <span class="ot">&lt;-</span> <span class="fu">rolling_rmse</span>(roll, <span class="at">horizon =</span> <span class="dv">4</span>, <span class="at">from =</span> <span class="dv">2021</span>)     <span class="co"># прогнозы на 2022–2023</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>best  <span class="ot">&lt;-</span> r_all<span class="sc">$</span>model[<span class="dv">1</span>]</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>v3    <span class="ot">&lt;-</span> <span class="st">"VECM: + ставка по ипотеке"</span>; v2 <span class="ot">&lt;-</span> <span class="st">"VECM: цены + безработица"</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>rel   <span class="ot">&lt;-</span> <span class="cf">function</span>(tab, m) tab<span class="sc">$</span>RMSE_vs_RW[tab<span class="sc">$</span>model <span class="sc">==</span> m]</span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>fmt   <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">d =</span> <span class="dv">2</span>) <span class="fu">formatC</span>(x, <span class="at">format =</span> <span class="st">"f"</span>, <span class="at">digits =</span> d, <span class="at">decimal.mark =</span> <span class="st">","</span>)</span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>:::: {.result-box}</span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>**Главное.** В ВКР (месячные данные 2005–2023) тест Йохансена нашёл долгосрочное соотношение</span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>«цены на жильё — безработица» (trace 28,58 &gt; 19,96). На открытых квартальных данных за тот же</span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>период эта пара связь на 5% не подтверждает (trace <span class="in">`r fmt(tr[1])`</span> &lt; <span class="in">`r fmt(cv[1])`</span>).</span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a><span class="in">`r if (vecm3$r_test &gt;= 1) paste0("После добавления ставки по ипотеке коинтеграция есть (trace ", fmt(tr3[1]), " &gt; ", fmt(cv3[1]), ").") else paste0("Добавление ставки по ипотеке связь тоже не даёт (trace ", fmt(tr3[1]), " &lt; ", fmt(cv3[1]), ").")`</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a>В скользящей проверке на <span class="in">`r length(unique(roll$origin))`</span> точках прогноза (горизонт 4 квартала)</span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>лучшая модель — **`r best`**. До разворота 2022 года ошибка VECM со ставкой составляет</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a><span class="in">`r fmt(100 * rel(r_pre, v3), 0)`</span>% от ошибки наивного прогноза, на развороте —</span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a><span class="in">`r fmt(100 * rel(r_post, v3), 0)`</span>%.</span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>::::</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a><span class="fu">## Вопрос</span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>Какие макрофакторы определяют динамику цен на жильё в Германии в долгосрочном и краткосрочном периоде</span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>и какая модель даёт лучший прогноз?</span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a><span class="fu">## Данные</span></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>Исходный файл ВКР не сохранился, поэтому расчёт воспроизведён на официальных открытых данных за тот же период.</span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a>Это 72 квартала, IV кв. 2005 – III кв. 2023</span>
+<span id="cb10-67"><a href="#cb10-67" aria-hidden="true" tabindex="-1"></a>(подробнее в <span class="co">[</span><span class="ot">`data/README.md`</span><span class="co">](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm/data)</span>):</span>
+<span id="cb10-68"><a href="#cb10-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-69"><a href="#cb10-69" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Ряд <span class="pp">|</span> Источник <span class="pp">|</span></span>
+<span id="cb10-70"><a href="#cb10-70" aria-hidden="true" tabindex="-1"></a><span class="pp">|---|---|</span></span>
+<span id="cb10-71"><a href="#cb10-71" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Индекс цен на жильё (2015 = 100) <span class="pp">|</span> Eurostat <span class="in">`prc_hpi_q`</span> <span class="pp">|</span></span>
+<span id="cb10-72"><a href="#cb10-72" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Безработица, %, SA <span class="pp">|</span> Eurostat <span class="in">`une_rt_m`</span>, среднее за квартал <span class="pp">|</span></span>
+<span id="cb10-73"><a href="#cb10-73" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Ставка по ипотеке (новые кредиты), % <span class="pp">|</span> ЕЦБ MIR <span class="in">`M.DE.B.A2C.A.R.A.2250.EUR.N`</span> <span class="pp">|</span></span>
+<span id="cb10-74"><a href="#cb10-74" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Реальный ВВП, SCA <span class="pp">|</span> Eurostat <span class="in">`namq_10_gdp`</span> <span class="pp">|</span></span>
+<span id="cb10-75"><a href="#cb10-75" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> HICP <span class="pp">|</span> Eurostat <span class="in">`prc_hicp_midx`</span> <span class="pp">|</span></span>
+<span id="cb10-76"><a href="#cb10-76" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> Стоимость строительства жилья <span class="pp">|</span> Eurostat <span class="in">`sts_copi_q`</span> <span class="pp">|</span></span>
+<span id="cb10-77"><a href="#cb10-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-78"><a href="#cb10-78" aria-hidden="true" tabindex="-1"></a>В ВКР использовались месячные ряды 12 показателей. Здесь частота квартальная (индекс цен Eurostat</span>
+<span id="cb10-79"><a href="#cb10-79" aria-hidden="true" tabindex="-1"></a>публикуется поквартально), поэтому оценки отличаются от дипломных.</span>
+<span id="cb10-80"><a href="#cb10-80" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-83"><a href="#cb10-83" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-84"><a href="#cb10-84" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-data</span></span>
+<span id="cb10-85"><a href="#cb10-85" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Цены на жильё и безработица в Германии"</span></span>
+<span id="cb10-86"><a href="#cb10-86" aria-hidden="true" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>), <span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb10-87"><a href="#cb10-87" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y_all[, <span class="st">"Index"</span>], <span class="at">main =</span> <span class="st">"Индекс цен на жильё"</span>, <span class="at">ylab =</span> <span class="st">"2015 = 100"</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"firebrick"</span>)</span>
+<span id="cb10-88"><a href="#cb10-88" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(y_all[, <span class="st">"Unemployment"</span>], <span class="at">main =</span> <span class="st">"Безработица, %"</span>, <span class="at">ylab =</span> <span class="st">""</span>, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> <span class="st">"steelblue"</span>)</span>
+<span id="cb10-89"><a href="#cb10-89" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(op)</span>
+<span id="cb10-90"><a href="#cb10-90" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-91"><a href="#cb10-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-92"><a href="#cb10-92" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 1. Свойства рядов</span></span>
+<span id="cb10-93"><a href="#cb10-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-94"><a href="#cb10-94" aria-hidden="true" tabindex="-1"></a>ADF и KPSS проверяют противоположные нулевые гипотезы, поэтому о порядке интеграции судим по согласию тестов.</span>
+<span id="cb10-95"><a href="#cb10-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-98"><a href="#cb10-98" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-99"><a href="#cb10-99" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-unit-root</span></span>
+<span id="cb10-100"><a href="#cb10-100" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Тесты единичного корня (TRUE = стационарен на 5%)"</span></span>
+<span id="cb10-101"><a href="#cb10-101" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">unit_root_table</span>(y_all), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb10-102"><a href="#cb10-102" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-103"><a href="#cb10-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-104"><a href="#cb10-104" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 2. VAR и импульсные отклики</span></span>
+<span id="cb10-105"><a href="#cb10-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-106"><a href="#cb10-106" aria-hidden="true" tabindex="-1"></a>VAR в разностях на 5 рядах. Порядок Холецкого идёт от медленных к быстрым:</span>
+<span id="cb10-107"><a href="#cb10-107" aria-hidden="true" tabindex="-1"></a>ВВП → безработица → стоимость строительства → ставка по ипотеке → цены на жильё.</span>
+<span id="cb10-108"><a href="#cb10-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-111"><a href="#cb10-111" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-112"><a href="#cb10-112" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-irf</span></span>
+<span id="cb10-113"><a href="#cb10-113" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Отклик цен на жильё на шок ставки по ипотеке, VAR в разностях"</span></span>
+<span id="cb10-114"><a href="#cb10-114" aria-hidden="true" tabindex="-1"></a>y_core <span class="ot">&lt;-</span> y_all[, <span class="fu">c</span>(<span class="st">"GDP"</span>, <span class="st">"Unemployment"</span>, <span class="st">"Construction"</span>, <span class="st">"MRate"</span>, <span class="st">"Index"</span>)]</span>
+<span id="cb10-115"><a href="#cb10-115" aria-hidden="true" tabindex="-1"></a>y_core[, <span class="st">"GDP"</span>] <span class="ot">&lt;-</span> <span class="fu">log</span>(y_core[, <span class="st">"GDP"</span>])</span>
+<span id="cb10-116"><a href="#cb10-116" aria-hidden="true" tabindex="-1"></a>m_var  <span class="ot">&lt;-</span> <span class="fu">fit_var</span>(<span class="fu">diff</span>(y_core))</span>
+<span id="cb10-117"><a href="#cb10-117" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="fu">irf</span>(m_var, <span class="at">impulse =</span> <span class="st">"MRate"</span>, <span class="at">response =</span> <span class="st">"Index"</span>, <span class="at">n.ahead =</span> <span class="dv">12</span>, <span class="at">boot =</span> <span class="cn">TRUE</span>, <span class="at">runs =</span> <span class="dv">200</span>))</span>
+<span id="cb10-118"><a href="#cb10-118" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-119"><a href="#cb10-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-120"><a href="#cb10-120" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 3. Коинтеграция и VECM</span></span>
+<span id="cb10-121"><a href="#cb10-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-124"><a href="#cb10-124" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-125"><a href="#cb10-125" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-johansen</span></span>
+<span id="cb10-126"><a href="#cb10-126" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Тест Йохансена (trace), цены на жильё и безработица"</span></span>
+<span id="cb10-127"><a href="#cb10-127" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Гипотеза</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"r = 0"</span>, <span class="st">"r ≤ 1"</span>), <span class="at">Trace =</span> tr, <span class="st">`</span><span class="at">Крит. 5%</span><span class="st">`</span> <span class="ot">=</span> cv,</span>
+<span id="cb10-128"><a href="#cb10-128" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr <span class="sc">&gt;</span> cv, <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb10-129"><a href="#cb10-129" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-130"><a href="#cb10-130" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-131"><a href="#cb10-131" aria-hidden="true" tabindex="-1"></a>Нормированный коинтеграционный вектор: Index <span class="in">`r if (beta[2] &gt;= 0) "+" else "−"`</span> <span class="in">`r fmt(abs(beta[2]))`</span>·Unemployment</span>
+<span id="cb10-132"><a href="#cb10-132" aria-hidden="true" tabindex="-1"></a><span class="in">`r if (beta[3] &gt;= 0) "+" else "−"`</span> <span class="in">`r fmt(abs(beta[3]))`</span>. Коэффициент корректировки цен</span>
+<span id="cb10-133"><a href="#cb10-133" aria-hidden="true" tabindex="-1"></a>α = <span class="in">`r fmt(alpha, 3)`</span>.</span>
+<span id="cb10-134"><a href="#cb10-134" aria-hidden="true" tabindex="-1"></a><span class="in">`r if (alpha &lt; 0 &amp;&amp; alpha &gt; -1) paste0("Половина отклонения от равновесия закрывается примерно за ", fmt(half_life(alpha), 1), " кв.") else "Цены не корректируются к равновесию напрямую (α ≥ 0): подстройка идёт через рынок труда."`</span></span>
+<span id="cb10-135"><a href="#cb10-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-136"><a href="#cb10-136" aria-hidden="true" tabindex="-1"></a>Для сравнения, в ВКР на месячных данных: r ≤ 0, trace 28,58 &gt; 19,96; r ≤ 1, trace 1,07 &lt; 9,24;</span>
+<span id="cb10-137"><a href="#cb10-137" aria-hidden="true" tabindex="-1"></a>вектор Index + 119,03·Unemployment − 911,12.</span>
+<span id="cb10-138"><a href="#cb10-138" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-139"><a href="#cb10-139" aria-hidden="true" tabindex="-1"></a><span class="fu">### Добавляем ставку по ипотеке</span></span>
+<span id="cb10-140"><a href="#cb10-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-141"><a href="#cb10-141" aria-hidden="true" tabindex="-1"></a>Пара «цены — безработица» не учитывает стоимость кредита. Именно рост ставок ЕЦБ в 2022 году</span>
+<span id="cb10-142"><a href="#cb10-142" aria-hidden="true" tabindex="-1"></a>развернул рынок жилья Германии. Ставка по ипотеке добавлена по экономической логике до проверки</span>
+<span id="cb10-143"><a href="#cb10-143" aria-hidden="true" tabindex="-1"></a>качества прогноза, и ниже показаны обе спецификации.</span>
+<span id="cb10-144"><a href="#cb10-144" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-147"><a href="#cb10-147" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-148"><a href="#cb10-148" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-johansen3</span></span>
+<span id="cb10-149"><a href="#cb10-149" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Тест Йохансена (trace): цены, безработица, ставка по ипотеке"</span></span>
+<span id="cb10-150"><a href="#cb10-150" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(<span class="fu">data.frame</span>(<span class="st">`</span><span class="at">Гипотеза</span><span class="st">`</span> <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"r = 0"</span>, <span class="st">"r ≤ 1"</span>, <span class="st">"r ≤ 2"</span>), <span class="at">Trace =</span> tr3, <span class="st">`</span><span class="at">Крит. 5%</span><span class="st">`</span> <span class="ot">=</span> cv3,</span>
+<span id="cb10-151"><a href="#cb10-151" aria-hidden="true" tabindex="-1"></a>                        <span class="st">`</span><span class="at">Отвергается</span><span class="st">`</span> <span class="ot">=</span> tr3 <span class="sc">&gt;</span> cv3, <span class="at">check.names =</span> <span class="cn">FALSE</span>, <span class="at">row.names =</span> <span class="cn">NULL</span>), <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb10-152"><a href="#cb10-152" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-153"><a href="#cb10-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-154"><a href="#cb10-154" aria-hidden="true" tabindex="-1"></a><span class="fu">## Шаг 4. Качество прогноза</span></span>
+<span id="cb10-155"><a href="#cb10-155" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-156"><a href="#cb10-156" aria-hidden="true" tabindex="-1"></a><span class="fu">### Одна отложенная выборка</span></span>
+<span id="cb10-157"><a href="#cb10-157" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-158"><a href="#cb10-158" aria-hidden="true" tabindex="-1"></a>Модели оценены на данных до III кв. 2021, прогноз на 8 кварталов сравнивается с фактом.</span>
+<span id="cb10-159"><a href="#cb10-159" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-162"><a href="#cb10-162" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-163"><a href="#cb10-163" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-holdout</span></span>
+<span id="cb10-164"><a href="#cb10-164" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "Точность прогноза индекса цен, горизонт 8 кварталов"</span></span>
+<span id="cb10-165"><a href="#cb10-165" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(res, <span class="at">digits =</span> <span class="dv">2</span>)</span>
+<span id="cb10-166"><a href="#cb10-166" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-167"><a href="#cb10-167" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-170"><a href="#cb10-170" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-171"><a href="#cb10-171" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-holdout</span></span>
+<span id="cb10-172"><a href="#cb10-172" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "Факт и прогнозы на отложенной выборке"</span></span>
+<span id="cb10-173"><a href="#cb10-173" aria-hidden="true" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">attr</span>(res, <span class="st">"paths"</span>)</span>
+<span id="cb10-174"><a href="#cb10-174" aria-hidden="true" tabindex="-1"></a>cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"black"</span>, <span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>)</span>
+<span id="cb10-175"><a href="#cb10-175" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(p<span class="sc">$</span>time, p[, <span class="sc">-</span><span class="dv">1</span>], <span class="at">type =</span> <span class="st">"l"</span>, <span class="at">lty =</span> <span class="dv">1</span>, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> cols, <span class="at">xlab =</span> <span class="st">""</span>, <span class="at">ylab =</span> <span class="st">"Индекс, 2015 = 100"</span>)</span>
+<span id="cb10-176"><a href="#cb10-176" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">c</span>(<span class="st">"Факт"</span>, <span class="fu">names</span>(p)[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>)]), <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">col =</span> cols, <span class="at">cex =</span> .<span class="dv">85</span>)</span>
+<span id="cb10-177"><a href="#cb10-177" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-178"><a href="#cb10-178" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-179"><a href="#cb10-179" aria-hidden="true" tabindex="-1"></a><span class="fu">### Скользящая проверка</span></span>
+<span id="cb10-180"><a href="#cb10-180" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-181"><a href="#cb10-181" aria-hidden="true" tabindex="-1"></a>Одна выборка может случайно оказаться удобной или неудобной для модели. Поэтому модели</span>
+<span id="cb10-182"><a href="#cb10-182" aria-hidden="true" tabindex="-1"></a>переоцениваются каждый квартал с IV кв. 2015 (расширяющееся окно) и делают прогноз на 1–4 квартала вперёд.</span>
+<span id="cb10-183"><a href="#cb10-183" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-186"><a href="#cb10-186" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-187"><a href="#cb10-187" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: tbl-rolling</span></span>
+<span id="cb10-188"><a href="#cb10-188" aria-hidden="true" tabindex="-1"></a><span class="co">#| tbl-cap: "RMSE прогноза на 4 квартала: все точки, до 2021 года и на развороте 2021–2023"</span></span>
+<span id="cb10-189"><a href="#cb10-189" aria-hidden="true" tabindex="-1"></a>tab <span class="ot">&lt;-</span> <span class="fu">Reduce</span>(<span class="cf">function</span>(a, b) <span class="fu">merge</span>(a, b, <span class="at">by =</span> <span class="st">"model"</span>),</span>
+<span id="cb10-190"><a href="#cb10-190" aria-hidden="true" tabindex="-1"></a>              <span class="fu">list</span>(<span class="fu">setNames</span>(r_all[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"Все"</span>)),</span>
+<span id="cb10-191"><a href="#cb10-191" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">setNames</span>(r_pre[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"До 2021"</span>)),</span>
+<span id="cb10-192"><a href="#cb10-192" aria-hidden="true" tabindex="-1"></a>                   <span class="fu">setNames</span>(r_post[, <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"RMSE_vs_RW"</span>)], <span class="fu">c</span>(<span class="st">"model"</span>, <span class="st">"2021–2023"</span>))))</span>
+<span id="cb10-193"><a href="#cb10-193" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(tab)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Модель (RMSE / RMSE наивного)"</span></span>
+<span id="cb10-194"><a href="#cb10-194" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(tab[<span class="fu">order</span>(tab[[<span class="dv">2</span>]]), ], <span class="at">digits =</span> <span class="dv">2</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-195"><a href="#cb10-195" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-196"><a href="#cb10-196" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-199"><a href="#cb10-199" aria-hidden="true" tabindex="-1"></a><span class="in">```{r}</span></span>
+<span id="cb10-200"><a href="#cb10-200" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-rolling</span></span>
+<span id="cb10-201"><a href="#cb10-201" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "RMSE по горизонту прогноза, все точки"</span></span>
+<span id="cb10-202"><a href="#cb10-202" aria-hidden="true" tabindex="-1"></a>hz <span class="ot">&lt;-</span> <span class="fu">aggregate</span>(error <span class="sc">~</span> model <span class="sc">+</span> horizon, roll, <span class="cf">function</span>(x) <span class="fu">sqrt</span>(<span class="fu">mean</span>(x<span class="sc">^</span><span class="dv">2</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb10-203"><a href="#cb10-203" aria-hidden="true" tabindex="-1"></a>ms <span class="ot">&lt;-</span> <span class="fu">unique</span>(hz<span class="sc">$</span>model); cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"grey60"</span>, <span class="st">"steelblue"</span>, <span class="st">"darkorange"</span>, <span class="st">"firebrick"</span>)</span>
+<span id="cb10-204"><a href="#cb10-204" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="cn">NA</span>, <span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">4</span>), <span class="at">ylim =</span> <span class="fu">range</span>(hz<span class="sc">$</span>error), <span class="at">xlab =</span> <span class="st">"Горизонт, кварталов"</span>, <span class="at">ylab =</span> <span class="st">"RMSE"</span>, <span class="at">xaxt =</span> <span class="st">"n"</span>)</span>
+<span id="cb10-205"><a href="#cb10-205" aria-hidden="true" tabindex="-1"></a><span class="fu">axis</span>(<span class="dv">1</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span>
+<span id="cb10-206"><a href="#cb10-206" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">seq_along</span>(ms)) <span class="fu">with</span>(hz[hz<span class="sc">$</span>model <span class="sc">==</span> ms[i], ], <span class="fu">lines</span>(horizon, error, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">col =</span> cols[i], <span class="at">type =</span> <span class="st">"b"</span>, <span class="at">pch =</span> <span class="dv">19</span>))</span>
+<span id="cb10-207"><a href="#cb10-207" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, ms, <span class="at">col =</span> cols, <span class="at">lwd =</span> <span class="dv">2</span>, <span class="at">bty =</span> <span class="st">"n"</span>, <span class="at">cex =</span> .<span class="dv">85</span>)</span>
+<span id="cb10-208"><a href="#cb10-208" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-209"><a href="#cb10-209" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-210"><a href="#cb10-210" aria-hidden="true" tabindex="-1"></a><span class="fu">## Выводы</span></span>
+<span id="cb10-211"><a href="#cb10-211" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-212"><a href="#cb10-212" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>Долгосрочная связь цен на жильё с безработицей, найденная в ВКР на месячных данных,</span>
+<span id="cb10-213"><a href="#cb10-213" aria-hidden="true" tabindex="-1"></a>   на квартальных открытых данных за тот же период устойчиво не воспроизводится. Результат</span>
+<span id="cb10-214"><a href="#cb10-214" aria-hidden="true" tabindex="-1"></a>   чувствителен к частоте и источнику данных.</span>
+<span id="cb10-215"><a href="#cb10-215" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>Разворот 2021–2023 годов, когда ставки ЕЦБ резко выросли, — самый трудный участок для прогноза:</span>
+<span id="cb10-216"><a href="#cb10-216" aria-hidden="true" tabindex="-1"></a>   ошибка наивного прогноза на нём в <span class="in">`r fmt(r_post$RMSE[r_post$model == "Random walk"] / r_pre$RMSE[r_pre$model == "Random walk"], 1)`</span></span>
+<span id="cb10-217"><a href="#cb10-217" aria-hidden="true" tabindex="-1"></a>   раза выше, чем до него.</span>
+<span id="cb10-218"><a href="#cb10-218" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span><span class="in">`r if (rel(r_post, v3) &lt; 1) paste0("VECM со ставкой по ипотеке на развороте точнее наивного прогноза (", fmt(100 * rel(r_post, v3), 0), "% его ошибки): правильный драйвер важнее сложности модели.") else paste0("Даже VECM со ставкой по ипотеке на развороте не обыгрывает наивный прогноз (", fmt(100 * rel(r_post, v3), 0), "% его ошибки). При смене режима ставок точечные прогнозы стоит дополнять сценарным анализом.")`</span></span>
+<span id="cb10-219"><a href="#cb10-219" aria-hidden="true" tabindex="-1"></a>   <span class="in">`r if (rel(r_all, v3) &lt; rel(r_all, v2)) "Добавление ставки улучшает прогноз по сравнению с парой «цены — безработица»." else "Добавление ставки прогноз по сравнению с парой «цены — безработица» не улучшает."`</span></span>
+<span id="cb10-220"><a href="#cb10-220" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-221"><a href="#cb10-221" aria-hidden="true" tabindex="-1"></a><span class="fu">## Ограничения и дальнейшие шаги</span></span>
+<span id="cb10-222"><a href="#cb10-222" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-223"><a href="#cb10-223" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Структурный сдвиг 2022 года: тесты Грегори–Хансена, сценарный анализ по траектории ставки.</span>
+<span id="cb10-224"><a href="#cb10-224" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Располагаемые доходы и предложение жилья (разрешения на строительство) как дополнительные драйверы.</span>
+<span id="cb10-225"><a href="#cb10-225" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>Байесовский VAR как альтернатива на короткой квартальной выборке.</span>
 </code></pre></div><button title="Скопировать текст" class="code-copy-button" data-in-quarto-modal=""><i class="bi"></i></button></div>
 </div></div></div></div></div>
 </div> <!-- /content -->
