@@ -8,8 +8,8 @@ execute:
 website:
   title: "Анастасия Смирнова"
   description: "Эконометрика временных рядов и макропрогнозирование"
-  site-url: "https://USERNAME.github.io"
-  repo-url: "https://github.com/USERNAME/USERNAME.github.io"
+  site-url: "https://wickedstacy085.github.io"
+  repo-url: "https://github.com/wickedstacy085/wickedstacy085.github.io"
   repo-actions: [source]
   page-navigation: true
   navbar:
@@ -22,7 +22,7 @@ website:
         text: Резюме
     right:
       - icon: github
-        href: "https://github.com/USERNAME"
+        href: "https://github.com/wickedstacy085"
         aria-label: GitHub
       - icon: envelope
         href: "mailto:anastasiasmirnova085@gmail.com"

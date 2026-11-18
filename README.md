@@ -1,10 +1,10 @@
 # Анастасия Смирнова · портфолио
 
-Эконометрика временных рядов и макропрогнозирование. Сайт: https://USERNAME.github.io
+Эконометрика временных рядов и макропрогнозирование. Сайт: https://wickedstacy085.github.io
 
 | Проект | Методы | Стек |
 |---|---|---|
-| [Цены на жильё: коинтеграция и прогноз](projects/housing-vecm/) | ARIMA, VAR, VECM, Йохансен, IRF, FEVD | R |
+| [Цены на жильё в Германии: коинтеграция и прогноз](projects/housing-vecm/) | ARIMA, VAR, VECM, Йохансен, IRF, FEVD | R |
 | [Финансовая эконометрика](projects/financial-econometrics/) | МНК, MLE, CAPM, Fama–French | Python |
 | [Процесс Орнштейна–Уленбека](projects/ou-process/) | стохастические процессы, симуляция | Python |
 

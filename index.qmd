@@ -6,7 +6,7 @@ about:
   links:
     - icon: github
       text: GitHub
-      href: https://github.com/USERNAME
+      href: https://github.com/wickedstacy085
     - icon: file-earmark-pdf
       text: Резюме (PDF)
       href: cv.pdf
@@ -21,7 +21,7 @@ toc: false
 
 ## Избранные проекты
 
-- **[Цены на жильё: коинтеграционный анализ и прогноз](projects/housing-vecm/index.qmd)**:
+- **[Цены на жильё в Германии: коинтеграция и прогноз](projects/housing-vecm/index.qmd)**:
   ARIMA → VAR → VECM на 12 макрорядах за 2005–2023; долгосрочная связь цен с безработицей.
 - **[Финансовая эконометрика](projects/financial-econometrics/index.qmd)**:
   МНК с проверкой гипотез, MLE, альфа Berkshire Hathaway в CAPM и Fama–French.
