@@ -1,0 +1,19 @@
+---
+title: "Малая QPM-модель российской экономики"
+description: "Полуструктурная модель: IS, кривая Филлипса, правило Тейлора, UIP. IRF на шок ставки и прогноз инфляции."
+categories: [QPM, DSGE, Dynare, денежно-кредитная политика]
+order: 0
+draft: true          # снять, когда проект готов: до этого страница не публикуется
+---
+
+## Вопрос
+Как шок ключевой ставки и шок курса передаются в инфляцию и разрыв выпуска в России?
+
+## Модель
+- IS: $\hat y_t = \beta_1 \hat y_{t-1} - \beta_2 (r_t - \bar r_t) - \beta_3 \hat z_t + \varepsilon^y_t$
+- Филлипс: $\pi_t = \alpha_1 \pi_{t+1} + (1-\alpha_1)\pi_{t-1} + \alpha_2 \hat y_t + \alpha_3 \Delta z_t + \varepsilon^\pi_t$
+- Тейлор: $i_t = \gamma_1 i_{t-1} + (1-\gamma_1)(\bar r_t + \pi^e_t + \gamma_2(\pi^e_t - \pi^*) + \gamma_3 \hat y_t) + \varepsilon^i_t$
+- UIP: $s_t = s^e_{t+1} + (i^*_t - i_t + prem_t)/4 + \varepsilon^s_t$
+
+## Данные, калибровка, IRF, прогноз, выводы
+Заполняется по ходу проекта.
