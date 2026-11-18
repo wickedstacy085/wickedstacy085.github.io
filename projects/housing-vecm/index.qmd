@@ -213,7 +213,7 @@ legend("topleft", ms, col = cols, lwd = 2, bty = "n", cex = .85)
 ## Воспроизведение
 
 1. Склонировать репозиторий: `git clone https://github.com/wickedstacy085/wickedstacy085.github.io`.
-2. Установить R ≥ 4.3 и пакеты: `install.packages(c("vars", "urca", "forecast", "tseries", "readr", "dplyr", "purrr", "tibble", "knitr", "rmarkdown"))`.
+2. Установить R ≥ 4.3 и пакеты: `install.packages(c("vars", "urca", "forecast", "readr", "dplyr", "purrr", "tibble", "zoo", "knitr", "rmarkdown"))`.
 3. Выполнить `quarto render projects/housing-vecm/index.qmd`.
 
 Все таблицы и рисунки на этой странице строит этот файл с функциями из `R/`, полная сборка занимает
@@ -226,6 +226,6 @@ legend("topleft", ms, col = cols, lwd = 2, bty = "n", cex = .85)
 #| echo: false
 si <- sessionInfo()
 cat(R.version.string, "\n")
-pk <- c("vars", "urca", "forecast", "tseries", "readr", "dplyr", "knitr")
+pk <- c("vars", "urca", "forecast", "readr", "dplyr", "knitr")
 cat(paste0(pk, " ", sapply(pk, function(x) as.character(packageVersion(x)))), sep = "\n")
 ```

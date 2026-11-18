@@ -18,7 +18,7 @@
 
 ## Требования
 
-- R ≥ 4.3; пакеты: vars, urca, forecast, tseries, readr, dplyr, purrr, tibble, knitr, rmarkdown.
+- R ≥ 4.3; пакеты: vars, urca, forecast, readr, dplyr, purrr, tibble, knitr, rmarkdown.
   Версии последней сборки печатаются в конце страницы проекта.
 - Quarto ≥ 1.4.
 - Случайность: только бутстрэп-интервалы IRF (рис. 2, 200 повторений).
