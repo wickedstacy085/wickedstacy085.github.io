@@ -5,6 +5,9 @@ categories: [R, VAR, VECM, коинтеграция, прогнозирован�
 order: 1
 date: 2025-06-01
 author: Анастасия Смирнова
+format:
+  html:
+    code-tools: true
 execute:
   echo: true
   warning: false
