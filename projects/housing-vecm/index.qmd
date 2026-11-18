@@ -3,7 +3,7 @@ title: "Цены на жильё в Германии: коинтеграцион
 description: "Связаны ли цены на жильё в Германии с безработицей и ставкой по ипотеке и какая модель лучше их прогнозирует. ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы."
 categories: [R, VAR, VECM, коинтеграция, прогнозирование]
 order: 2
-date: 2026-11-18
+date: 2025-06-01
 author: Анастасия Смирнова
 format:
   html:
@@ -15,7 +15,7 @@ execute:
 ---
 
 ::: {.case-meta}
-Проект на R: исходная версия на месячных данных, воспроизведение на открытых данных Eurostat и ЕЦБ, 2026 ·
+Проект, 2025 · R · воспроизведение на открытых данных Eurostat и ЕЦБ — 2026 ·
 [Код](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm) ·
 [Данные](https://github.com/wickedstacy085/wickedstacy085.github.io/tree/main/projects/housing-vecm/data) ·
 [README](https://github.com/wickedstacy085/wickedstacy085.github.io/blob/main/projects/housing-vecm/README.md)
