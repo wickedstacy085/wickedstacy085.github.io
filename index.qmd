@@ -13,6 +13,10 @@ toc: false
 
 ## Проекты
 
+**[Малая QPM-модель российской экономики](projects/qpm-russia/index.qmd)**\
+Полуструктурная модель по образцу МВФ на данных Росстата, BIS и FRED за 2011–2026 годы: как шоки
+ключевой ставки и курса рубля передаются в инфляцию и выпуск.
+
 **[Цены на жильё в Германии: коинтеграция и прогноз](projects/housing-vecm/index.qmd)**\
 ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы. Модель со ставкой
 по ипотеке прогнозирует лучше остальных, но на 2021–2023 годах уступает наивному прогнозу.
@@ -26,4 +30,4 @@ Hathaway — с разбором ошибки в исходном расчёте
 
 ## Инструменты
 
-R (vars, urca, forecast), Python (statsmodels, scipy, pandas), Quarto, Git, Excel, PowerPoint.
+R (vars, urca, forecast), Python (numpy, statsmodels, scipy, pandas), Quarto, Git, Excel, PowerPoint.
