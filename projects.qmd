@@ -1,0 +1,12 @@
+---
+title: "Проекты"
+listing:
+  contents: projects/*/index.qmd
+  type: grid
+  sort: "order"
+  fields: [title, description, categories, date]
+  categories: true
+  grid-columns: 2
+page-layout: full
+title-block-banner: false
+---
