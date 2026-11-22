@@ -23,8 +23,3 @@
   date: 2025-05-15
   description: "ВКР, НИУ ВШЭ: панель по 81 региону за 2018–2023 годы, FE/RE, Driscoll–Kraay, GMM."
   categories: [Stata, панельные данные]
-- title: "Финансовая эконометрика: МНК, MLE и факторная модель"
-  path: projects/financial-econometrics/index.qmd
-  date: 2023-11-16
-  description: "Регрессия доходности акций, MLE для гамма-распределения, модель Фамы–Френча для Berkshire Hathaway."
-  categories: [Python, statsmodels]

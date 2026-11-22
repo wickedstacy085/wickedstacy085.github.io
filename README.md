@@ -9,7 +9,6 @@
 | [Кредитный скоринг (PD)](https://wickedstacy085.github.io/credit-scoring/) | WoE/IV, логит, скоринговая карта, Gini/KS/PSI, калибровка | Python | [репозиторий](https://github.com/wickedstacy085/credit-scoring) |
 | [Малая QPM-модель России](projects/qpm-russia/) | IS, кривая Филлипса, правило ставки, UIP; рациональные ожидания | Python | [README](projects/qpm-russia/README.md) |
 | [Цены на жильё в Германии](projects/housing-vecm/) | ARIMA, VAR, VECM, тест Йохансена, скользящая проверка прогнозов | R | [README](projects/housing-vecm/README.md) |
-| [Финансовая эконометрика](projects/financial-econometrics/) | МНК, MLE, модель Фамы–Френча | Python | — |
 
 ## Структура
 
