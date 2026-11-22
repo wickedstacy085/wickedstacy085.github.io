@@ -6,7 +6,7 @@ toc: false
 [PDF](cv.pdf){.btn .btn-outline-secondary .btn-sm} [English PDF](cv-en.pdf){.btn .btn-outline-secondary .btn-sm}
 
 **Анастасия Смирнова** · Аналитик: эконометрика временных рядов, макропрогнозирование\
-Москва · +7 (953) 898-40-86 · anastasiasmirnova085@gmail.com\
+Москва · anastasiasmirnova085@gmail.com\
 [github.com/wickedstacy085](https://github.com/wickedstacy085) · [wickedstacy085.github.io](https://wickedstacy085.github.io)
 
 ## О себе
@@ -42,6 +42,14 @@ VECM) и малую QPM-модель российской экономики; к
   [Описание и код](https://wickedstacy085.github.io/projects/thesis-bankruptcy/)
 
 ## Проекты
+
+**Кредитный скоринг (PD)** — проект, 2026, Python
+
+- Скоринговая карта на 30 000 держателях кредитных карт (UCI): биннинг и WoE, отбор по IV и корреляции,
+  логистическая регрессия с пошаговым исключением, шкала 600/50:1/PDO 20; пол и семейное положение исключены.
+- Валидация: Gini 0,52 на отложенной выборке, KS 0,40, PSI 0,002, калибровка по децилям; градиентный бустинг —
+  +0,03 Gini. Порог одобрения по прибыли: 75% одобренных, доля дефолтов 22% → 13%.
+  [Код и отчёт](https://wickedstacy085.github.io/credit-scoring/)
 
 **Малая QPM-модель российской экономики** — проект, 2026
 
