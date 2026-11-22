@@ -81,7 +81,7 @@ ul.task-list li input[type="checkbox"] {
 
 
 <meta property="og:title" content="Анастасия Смирнова">
-<meta property="og:description" content="Аналитик: эконометрика временных рядов, макропрогнозирование">
+<meta property="og:description" content="Аналитик: макроэкономика, финансы, риски">
 <meta property="og:site_name" content="Анастасия Смирнова">
 </head>
 
@@ -316,7 +316,7 @@ ul.task-list li input[type="checkbox"] {
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
 <h1 class="title">Анастасия Смирнова</h1>
-<p class="subtitle lead">Аналитик: эконометрика временных рядов, макропрогнозирование</p>
+<p class="subtitle lead">Аналитик: макроэкономика, финансы, риски</p>
 </div>
 
 
@@ -333,31 +333,44 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<p><a href="https://github.com/wickedstacy085" class="btn btn-outline-secondary btn-sm">GitHub</a> <a href="cv.pdf" class="btn btn-outline-secondary btn-sm">Резюме, PDF</a> <a href="cv-en.pdf" class="btn btn-outline-secondary btn-sm">CV in English, PDF</a> <a href="mailto:anastasiasmirnova085@gmail.com" class="btn btn-outline-secondary btn-sm">anastasiasmirnova085@gmail.com</a></p>
-<p>Экономист, НИУ ВШЭ (2025). Строю модели временных рядов для макроданных на R и Python. Код и данные всех проектов лежат на GitHub, страницы собираются из них автоматически.</p>
+<p><a href="cv.pdf" class="btn btn-outline-secondary btn-sm">Резюме, PDF</a> <a href="cv-en.pdf" class="btn btn-outline-secondary btn-sm">CV in English, PDF</a> <a href="https://github.com/wickedstacy085" class="btn btn-outline-secondary btn-sm">GitHub</a> <a href="mailto:anastasiasmirnova085@gmail.com" class="btn btn-outline-secondary btn-sm">anastasiasmirnova085@gmail.com</a></p>
+<p>Экономист, НИУ ВШЭ (2025). Строю модели риска и макроэкономики на Python, R и Stata: кредитный скоринг, рыночный риск, малые макромодели, временные ряды и панельные данные. В каждом проекте — код, данные, тесты и отчёт; страницы собираются из репозиториев автоматически.</p>
+<section id="ключевые-результаты" class="level2">
+<h2 class="anchored" data-anchor-id="ключевые-результаты">Ключевые результаты</h2>
+<ul>
+<li><strong>Кредитный скоринг:</strong> карта PD из 12 признаков, Gini 0,52 на отложенной выборке, PSI 0,002; порог одобрения выбран по прибыли — доля дефолтов среди одобренных 22% → 13%.</li>
+<li><strong>Рыночный риск:</strong> из четырёх методов VaR по индексу Мосбиржи бэктест Купика и Кристофферсена на 2014–2026 годах проходит только filtered historical simulation.</li>
+<li><strong>Выпускная работа:</strong> панель по 81 региону — модель с фиксированными эффектами объясняет 91% внутрирегиональной вариации доли банкротств граждан.</li>
+</ul>
+</section>
+<section id="риски" class="level2">
+<h2 class="anchored" data-anchor-id="риски">Риски</h2>
+<p><strong><a href="https://wickedstacy085.github.io/credit-scoring/">Кредитный скоринг: вероятность дефолта по кредитным картам</a></strong><br>
+Скоринговая карта PD на 30 000 клиентах: биннинг и WoE, отбор по IV, логит, перевод в баллы, валидация (Gini, KS, калибровка, PSI), сравнение с градиентным бустингом и выбор порога одобрения в деньгах.</p>
+<p><strong><a href="https://wickedstacy085.github.io/market-risk-moex/">Рыночный риск: VaR и ES по индексу Мосбиржи</a></strong><br>
+Историческая симуляция, нормальный VaR, EWMA и FHS на 2014–2026 годах; бэктест Купика, Кристофферсена и светофор Базеля; разбор 24.02.2022; ставка RUONIA как процесс Орнштейна–Уленбека.</p>
+</section>
+<section id="макроэкономика" class="level2">
+<h2 class="anchored" data-anchor-id="макроэкономика">Макроэкономика</h2>
+<p><strong><a href="./projects/qpm-russia/index.html">Малая QPM-модель российской экономики</a></strong><br>
+Полуструктурная модель по образцу МВФ на данных Росстата, BIS и FRED за 2011–2026 годы: как шоки ключевой ставки и курса рубля передаются в инфляцию и выпуск.</p>
+<p><strong><a href="./projects/housing-vecm/index.html">Цены на жильё в Германии: коинтеграция и прогноз</a></strong><br>
+ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы. Модель со ставкой по ипотеке прогнозирует лучше остальных, но на 2021–2023 годах уступает наивному прогнозу.</p>
+</section>
 <section id="выпускная-работа" class="level2">
 <h2 class="anchored" data-anchor-id="выпускная-работа">Выпускная работа</h2>
 <p><strong><a href="./projects/thesis-bankruptcy/index.html">Региональные факторы банкротств в России</a></strong><br>
 ВКР, НИУ ВШЭ, 2025. Панель по 81 региону за 2018–2023 годы, модели с фиксированными эффектами в Stata: какие особенности регионов связаны с долей банкротств граждан и компаний.</p>
 </section>
-<section id="проекты" class="level2">
-<h2 class="anchored" data-anchor-id="проекты">Проекты</h2>
-<p><strong><a href="https://wickedstacy085.github.io/market-risk-moex/">Рыночный риск: VaR и ES по индексу Мосбиржи</a></strong>Четыре метода VaR на 2014–2026 годах с бэктестом Купика, Кристофферсена и светофором Базеля: проходит только filtered historical simulation. Разбор 24.02.2022 и ставка RUONIA как процесс Орнштейна–Уленбека.</p>
-<p><strong><a href="https://wickedstacy085.github.io/credit-scoring/">Кредитный скоринг: вероятность дефолта по кредитным картам</a></strong>Скоринговая карта PD на 30 000 клиентах: биннинг и WoE, отбор по IV, логит, перевод в баллы. Gini 0,52 на отложенной выборке, PSI 0,002; бустинг лучше лишь на 0,03. Порог одобрения выбран по прибыли.</p>
-<p><strong><a href="./projects/qpm-russia/index.html">Малая QPM-модель российской экономики</a></strong><br>
-Полуструктурная модель по образцу МВФ на данных Росстата, BIS и FRED за 2011–2026 годы: как шоки ключевой ставки и курса рубля передаются в инфляцию и выпуск.</p>
-<p><strong><a href="./projects/housing-vecm/index.html">Цены на жильё в Германии: коинтеграция и прогноз</a></strong><br>
-ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы. Модель со ставкой по ипотеке прогнозирует лучше остальных, но на 2021–2023 годах уступает наивному прогнозу.</p>
-<p><strong><a href="./projects/financial-econometrics/index.html">Финансовая эконометрика</a></strong><br>
-Регрессия доходности акций, MLE для гамма-распределения, модель Фамы–Френча для Berkshire Hathaway — с разбором ошибки в исходном расчёте.</p>
-<p><strong><a href="./projects/consumer-survey/index.html">Что важно покупателям при выборе товара онлайн</a></strong><br>
-Разведочный анализ четырёх опросов, 3700 анкет: отзывы важнее фото и описания, в лекарствах решает рекомендация врача.</p>
-<p><strong><a href="./projects/ou-process/index.html">Процесс Орнштейна–Уленбека</a></strong><br>
-Симуляция возврата к среднему с точной дискретизацией.</p>
-</section>
 <section id="инструменты" class="level2">
 <h2 class="anchored" data-anchor-id="инструменты">Инструменты</h2>
-<p>R (vars, urca, forecast), Stata (панельные модели), Python (numpy, statsmodels, scipy, pandas), Quarto, Git, Excel, PowerPoint.</p>
+<ul>
+<li><strong>Риск-модели:</strong> WoE/IV, логистическая регрессия, скоринговые карты, Gini/KS/PSI; VaR/ES (историческая симуляция, EWMA, FHS), бэктест Купика и Кристофферсена</li>
+<li><strong>Эконометрика:</strong> панельные данные (FE, RE, Driscoll–Kraay, GMM), ARIMA, VAR, VECM, QPM, процесс Орнштейна–Уленбека</li>
+<li><strong>Python:</strong> pandas, numpy, statsmodels, scipy, scikit-learn, matplotlib, pytest · <strong>R:</strong> vars, urca, forecast · <strong>Stata:</strong> xtreg, xtscc</li>
+<li><strong>Отчёты:</strong> Quarto, Git, GitHub Actions, Excel, PowerPoint</li>
+</ul>
+<p>Другое направление — маркетинговая и продуктовая аналитика (SQL, A/B-тесты, дашборды): <a href="https://wickedstacy085.github.io/analytics/">wickedstacy085.github.io/analytics</a>.</p>
 
 
 </section>
