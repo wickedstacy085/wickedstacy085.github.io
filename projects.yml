@@ -1,0 +1,30 @@
+- title: "Кредитный скоринг: вероятность дефолта по кредитным картам"
+  path: https://wickedstacy085.github.io/credit-scoring/
+  date: 2026-11-22
+  description: "Скоринговая карта PD: WoE/IV, логит, баллы, Gini/KS/PSI, калибровка, сравнение с бустингом, порог одобрения в деньгах."
+  categories: [Python, кредитный риск, скоринг]
+- title: "Рыночный риск: VaR и ES по индексу Мосбиржи"
+  path: https://wickedstacy085.github.io/market-risk-moex/
+  date: 2026-11-22
+  description: "Четыре метода VaR/ES на 2014–2026 годах, бэктест Купика и Кристофферсена, светофор Базеля; RUONIA как процесс Орнштейна–Уленбека."
+  categories: [Python, рыночный риск, VaR]
+- title: "Малая QPM-модель российской экономики"
+  path: projects/qpm-russia/index.qmd
+  date: 2026-11-18
+  description: "Полуструктурная модель по образцу МВФ: IS-кривая, кривая Филлипса, правило ставки, UIP; отклики на шоки ставки и курса."
+  categories: [Python, QPM, денежно-кредитная политика]
+- title: "Цены на жильё в Германии: коинтеграция и прогноз"
+  path: projects/housing-vecm/index.qmd
+  date: 2025-06-01
+  description: "ARIMA, VAR и VECM на квартальных данных Eurostat и ЕЦБ за 2005–2023 годы; скользящая проверка прогнозов."
+  categories: [R, VAR, VECM]
+- title: "Региональные факторы банкротств в России"
+  path: projects/thesis-bankruptcy/index.qmd
+  date: 2025-05-15
+  description: "ВКР, НИУ ВШЭ: панель по 81 региону за 2018–2023 годы, FE/RE, Driscoll–Kraay, GMM."
+  categories: [Stata, панельные данные]
+- title: "Финансовая эконометрика: МНК, MLE и факторная модель"
+  path: projects/financial-econometrics/index.qmd
+  date: 2023-11-16
+  description: "Регрессия доходности акций, MLE для гамма-распределения, модель Фамы–Френча для Berkshire Hathaway."
+  categories: [Python, statsmodels]

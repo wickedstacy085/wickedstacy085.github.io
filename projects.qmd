@@ -1,12 +1,11 @@
 ---
 title: "Проекты"
 listing:
-  contents: projects/*/index.qmd
+  contents: projects.yml
   type: default
-  sort: "order"
+  sort: false
   fields: [title, date, description, categories]
   date-format: "YYYY"
   categories: false
-  image-placeholder: ""
 title-block-banner: false
 ---
